@@ -1,3 +1,5 @@
+package model;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -9,7 +11,7 @@
  * @author User
  */
 public class STUDENT {
-    private String studId;
+    private int studId;
     private String studName;
     private String studEmail;
     private String studProgram;
@@ -19,11 +21,11 @@ public class STUDENT {
     private String studPassword;
 
     // Setter and Getter for studId
-    public void setStudId(String studId) {
+    public void setStudId(int studId) {
         this.studId = studId;
     }
 
-    public String getStudId() {
+    public int getStudId() {
         return studId;
     }
 
