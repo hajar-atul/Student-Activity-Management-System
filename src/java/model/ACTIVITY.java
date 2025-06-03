@@ -32,7 +32,7 @@ public class ACTIVITY {
         this.activityName = activityName;
     }
 
-    public String getactivityName() {
+    public String getActivityName() {
         return activityName;
     }
     
