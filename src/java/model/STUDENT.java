@@ -14,9 +14,9 @@ public class STUDENT {
     private int studId;
     private String studName;
     private String studEmail;
-    private String studProgram;
+    private String studCourse;
     private String studSemester;
-    private int studNoPhone;
+    private String studNoPhone;
     private String studType;
     private String studPassword;
 
@@ -48,12 +48,12 @@ public class STUDENT {
     }
 
     // Setter and Getter for studProgram
-    public void setStudProgram(String studProgram) {
-        this.studProgram = studProgram;
+    public void setStudCourse(String studCourse) {
+        this.studCourse = studCourse;
     }
 
-    public String getStudProgram() {
-        return studProgram;
+    public String getStudCourse() {
+        return studCourse;
     }
 
     // Setter and Getter for studSemester
@@ -66,11 +66,11 @@ public class STUDENT {
     }
 
     // Setter and Getter for studNoPhone
-    public void setStudNoPhone(int studNoPhone) {
+    public void setStudNoPhone(String studNoPhone) {
         this.studNoPhone = studNoPhone;
     }
 
-    public int getStudNoPhone() {
+    public String getStudNoPhone() {
         return studNoPhone;
     }
 
