@@ -51,9 +51,8 @@ package Controller;
         //doGet(request, response);
         
         response.setContentType("text/html");
-        PrintWriter out=response.getWriter();
   
-        String studName = request.getParameter("studName");
+        String studName = request.getParameter("fullName");
         String studPassword = request.getParameter("studPassword");
         String confirmPassword = request.getParameter("confirmPassword");
         String studEmail = request.getParameter("studEmail");
@@ -62,7 +61,16 @@ package Controller;
         String studNoPhone = request.getParameter("studNoPhone");
         String studType = request.getParameter("studType");
 
-        int studID=001;
+        PrintWriter out=response.getWriter();
+        out.print(studName);
+        out.print(studPassword);
+        out.print(studEmail);
+        out.print(studCourse);
+        out.print(studSemester);
+        out.print(studNoPhone);
+        out.print(studType);
+        
+        /*int studID=2001;
         
         try
         {
@@ -238,7 +246,7 @@ con.prepareStatement("INSERT INTO student VALUES (?,?,?,?,?,?,?,?)");
         System.out.println(e2);
         e2.printStackTrace();
     }
-    out.close();
+    out.close();*/
  }
         
  }
