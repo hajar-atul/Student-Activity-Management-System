@@ -63,7 +63,7 @@
     /* Left image section */
     .image-section {
       flex: 1;
-      background-image: url("umpsa.jpg"); /* Replace with actual path */
+      background-image: url("image/umpsa.jpg"); /* Replace with actual path */
       background-size: cover;
       background-position: center;
     }
@@ -153,7 +153,7 @@
 
   <!-- Header -->
   <div class="header">
-    <img src="logoUMP.jpg" alt="Logo" class="logo">
+   <img src="image/logoUMP.jpg" alt="Logo" class="logo">
     <div class="header-text">
       <div class="welcome">Welcome To</div>
       <div class="system-name">STUDENT ACTIVITIES MANAGEMENT SYSTEM</div>
