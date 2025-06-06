@@ -22,8 +22,8 @@
 
         .sidebar img {
             border-radius: 50%;
-            width: 120px;
-            height: 120px;
+            width: 150px;
+            height: 150px;
             display: block;
             margin: 0 auto;
         }
@@ -109,9 +109,19 @@
             height: 24px;
         }
 
-        .profile-icon {
+        .top-icons img.umpsa-icon {
+            width: 36px;
+            height: 36px;
+        }
+
+        .notification-btn img {
             width: 32px;
             height: 32px;
+        }
+
+        .profile-icon {
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
         }
 
@@ -190,7 +200,7 @@
 <body>
     <!-- Sidebar -->
     <div class="sidebar">
-        <img src="user.png" alt="Profile Picture">
+        <img src="image/Raccoon.gif" alt="Profile Picture">
         <h3><%= request.getAttribute("name") %><br><%= request.getAttribute("studentId") %></h3>
         <div class="menu">
             <a href="#">DASHBOARD</a>
@@ -209,15 +219,15 @@
         </div>
         <div class="dashboard-title">DASHBOARD</div>
         <div class="top-icons">
-            <img src="shield.png" alt="Shield">
+            <img src="image/umpsa.png" alt="UMPSA" class="umpsa-icon">
             <button class="notification-btn" id="notificationBtn">
-                <img src="bell.png" alt="Notification">
+                <img src="image/bell.png" alt="Notification">
             </button>
             <div class="notification-dropdown" id="notificationDropdown">
                 <p>No new notifications</p>
                 <!-- Example notification: <p>New event: Coding Competition!</p> -->
             </div>
-            <img src="user.png" alt="Profile" class="profile-icon">
+            <img src="image/Raccoon.gif" alt="Profile" class="profile-icon">
         </div>
     </div>
 
