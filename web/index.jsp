@@ -188,7 +188,7 @@
         </div>
 
         <button type="submit" class="button">SIGN IN</button>
-        <button type="button" class="button" onclick="location.href='register.jsp'">SIGN UP</button>
+        <button type="button" class="button" onclick="location.href='RegisterPage.jsp'">SIGN UP</button>
 
       </form>
     </div>
