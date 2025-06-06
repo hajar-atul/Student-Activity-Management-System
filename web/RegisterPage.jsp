@@ -166,14 +166,46 @@
 
     <!-- Registration Form -->
     <form class="form-section" action="RegisterServlet" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+        <label>Student ID <span class="required">*</span></label>
+        <input type="text" name="userId" placeholder="Enter your ID" required>
+      </div>
+        
       <div class="form-group">
         <label>Full Name <span class="required">*</span></label>
         <input type="text" name="fullName" placeholder="Enter your full name" required>
       </div>
 
-      <div class="form-group">
-        <label>ID <span class="required">*</span></label>
-        <input type="text" name="userId" placeholder="Enter your ID" required>
+      <div class="form-group password-toggle">
+        <label>Password <span class="required">*</span></label>
+        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+        <button type="button" onclick="togglePassword('password')">👁️</button>
+      </div>
+        
+        <div class="form-group password-toggle">
+        <label>Confirm Password <span class="required">*</span></label>
+        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
+        <button type="button" onclick="togglePassword('confirmPassword')">👁️</button>
+      </div>
+        
+        <div class="form-group">
+        <label>Email <span class="required">*</span></label>
+        <input type="email" name="email" placeholder="Enter your Email" required>
+      </div>
+        
+        <div class="form-group">
+        <label>Course <span class="required">*</span></label>
+        <input type="text" name="course" placeholder="Enter your Course" required>
+      </div>
+        
+        <div class="form-group">
+        <label>Semester <span class="required">*</span></label>
+        <input type="text" name="sem" placeholder="Enter your Current Semester" required>
+      </div>
+        
+        <div class="form-group">
+        <label>Phone No <span class="required">*</span></label>
+        <input type="text" name="umobile" placeholder="Enter your phone number" required>
       </div>
 
       <div class="form-group">
@@ -183,23 +215,6 @@
           <option value="admin">Admin</option>
           <option value="student">Student</option>
         </select>
-      </div>
-
-      <div class="form-group">
-        <label>Email <span class="required">*</span></label>
-        <input type="email" name="email" placeholder="Enter your Email" required>
-      </div>
-
-      <div class="form-group password-toggle">
-        <label>Password <span class="required">*</span></label>
-        <input type="password" id="password" name="password" placeholder="Enter your password" required>
-        <button type="button" onclick="togglePassword('password')">👁️</button>
-      </div>
-
-      <div class="form-group password-toggle">
-        <label>Confirm Password <span class="required">*</span></label>
-        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
-        <button type="button" onclick="togglePassword('confirmPassword')">👁️</button>
       </div>
 
       <!-- Submit Button -->
