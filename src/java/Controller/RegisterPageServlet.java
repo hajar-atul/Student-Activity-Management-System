@@ -15,11 +15,13 @@ package Controller;
  import javax.servlet.http.HttpSession;
 
  import java.sql.PreparedStatement;
+import javax.servlet.annotation.MultipartConfig;
 
  /**
  * Servlet implementation class ResgisterPageCustomerServlet
  */
  @WebServlet("/register")
+ @MultipartConfig
  public class RegisterPageServlet extends HttpServlet {
         private static final long serialVersionUID = 1L;
         
@@ -51,24 +53,25 @@ package Controller;
         //doGet(request, response);
         
         response.setContentType("text/html");
-  
+        
+        String studID = request.getPart("userId").getInputStream().toString(); // OR use a helper
         String studName = request.getParameter("fullName");
-        String studPassword = request.getParameter("studPassword");
+        String studPassword = request.getParameter("password");
         String confirmPassword = request.getParameter("confirmPassword");
-        String studEmail = request.getParameter("studEmail");
-        String studCourse = request.getParameter("studCourse");
-        String studSemester = request.getParameter("studSemester");
-        String studNoPhone = request.getParameter("studNoPhone");
-        String studType = request.getParameter("studType");
+        String studEmail = request.getParameter("email");
+        String studCourse = request.getParameter("course");
+        String studSemester = request.getParameter("sem");
+        String studNoPhone = request.getParameter("umobile");
+        String studType = request.getParameter("userRole");
 
         PrintWriter out=response.getWriter();
-        out.print(studName);
-        out.print(studPassword);
+        out.print(studID);
+        /*out.print(studPassword);
         out.print(studEmail);
         out.print(studCourse);
         out.print(studSemester);
         out.print(studNoPhone);
-        out.print(studType);
+        out.print(studType);*/
         
         /*int studID=2001;
         

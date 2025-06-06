@@ -165,7 +165,7 @@
     </div>
 
     <!-- Registration Form -->
-    <form class="form-section" action="RegisterServlet" method="post" enctype="multipart/form-data">
+    <form class="form-section" action="register" method="post" enctype="multipart/form-data">
         <div class="form-group">
         <label>Student ID <span class="required">*</span></label>
         <input type="text" name="userId" placeholder="Enter your ID" required>
