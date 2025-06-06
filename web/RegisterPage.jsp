@@ -150,7 +150,7 @@
 <body>
 
   <div class="header">
-    <img src="logoUMP.jpg" alt="UMP Logo">
+    <img src="image/logoUMP.jpg" alt="UMP Logo">
     <h1>REGISTER</h1>
     <div style="width: 60px;"></div>
   </div>
