@@ -171,7 +171,7 @@
       <form action="<%= request.getContextPath() %>/LoginServlet" method="post">
         
         <div class="roles">
-          <label><input type="radio" name="role" value="admin" required> Amin</label>
+          <label><input type="radio" name="role" value="admin" required> Admin</label>
           <label><input type="radio" name="role" value="staff"> Staff</label>
           <label><input type="radio" name="role" value="club"> Club</label>
           <label><input type="radio" name="role" value="student"> Student</label>
