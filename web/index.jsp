@@ -187,7 +187,7 @@
           <a href="#">Forgot Password?</a>
         </div>
 
-        <button type="submit" class="button">SIGN IN</button>
+        <button type="submit" class="button" onclick="location.href='StudentDashboardPage.jsp'">SIGN IN</button>
         <button type="button" class="button" onclick="location.href='RegisterPage.jsp'">SIGN UP</button>
 
       </form>
