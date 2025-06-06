@@ -206,7 +206,7 @@
       <div class="submit-section">
         <button type="submit">SIGN UP</button>
         <div class="signin-link">
-          Already have an account? <a href="login.jsp">Sign In</a>
+          Already have an account? <a href="index.jsp">Sign In</a>
         </div>
       </div>
     </form>
