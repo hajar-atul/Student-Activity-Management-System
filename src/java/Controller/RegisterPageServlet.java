@@ -7,7 +7,7 @@ import javax.servlet.annotation.*;
 
 @WebServlet("/PageRegisterServlet")
 @MultipartConfig
-public class PageRegisterServlet extends HttpServlet {
+public class RegisterPageServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
         throws ServletException, IOException {
@@ -36,5 +36,8 @@ public class PageRegisterServlet extends HttpServlet {
 
         // Here, add code to insert into database
         response.getWriter().println("Registered successfully!");
+        
+        // Forward to JSP
+        request.getRequestDispatcher("RegisterPage.jsp").forward(request, response);
     }
 }

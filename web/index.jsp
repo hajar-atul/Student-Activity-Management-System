@@ -136,7 +136,7 @@
 
 
         <div class="signup">
-            Don’t have an account? <a href="register.jsp">SIGN UP</a>
+            Don’t have an account? <a href="RegisterPage.jsp">SIGN UP</a>
         </div>
     </div>
 </body>
