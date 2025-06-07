@@ -143,8 +143,8 @@
     }
 
     .notification-btn img {
-      width: 32px;
-      height: 32px;
+      width: 30px;
+      height: 30px;
     }
 
     .profile-icon {
