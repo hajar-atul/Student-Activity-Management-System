@@ -200,7 +200,7 @@
 
   <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
-    <img src="profile.jpg" alt="Profile Picture" class="profile-pic">
+    <img src="image/Raccoon.gif" alt="Profile Picture" class="profile-pic">
     <h4>MUHAMMAD AMINUDDIN BIN HASNAN</h4>
     <p>2023217854</p>
 
@@ -222,11 +222,11 @@
     <div class="activity-section">
       <!-- 3 top + 2 bottom = 5 images -->
       <div class="activity-images">
-        <img src="palap1.jfif" alt="Activity 1">
-        <img src="palap6.jfif" alt="Activity 2">
-        <img src="palap5.jfif" alt="Activity 3">
-        <img src="palap4.jfif" alt="Activity 4">
-        <img src="hiking.jfif" alt="Activity 5">
+        <img src="image/palap1.jfif" alt="Activity 1">
+        <img src="image/palap6.jfif" alt="Activity 2">
+        <img src="image/palap5.jfif" alt="Activity 3">
+        <img src="image/palap4.jfif" alt="Activity 4">
+        <img src="image/hiking.jfif" alt="Activity 5">
       </div>
 
       <!-- Action Buttons beside bottom row -->
