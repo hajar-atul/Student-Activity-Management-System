@@ -4,7 +4,7 @@
     Author     : User
 --%>
 
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -40,15 +40,14 @@
     }
 
     .sidebar img.profile-pic {
-  width: 100px;
-  aspect-ratio: 1 / 1;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: 15px;
-  border: 3px solid white;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-}
-
+      width: 100px;
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 15px;
+      border: 3px solid white;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    }
 
     .sidebar h4,
     .sidebar p {
@@ -104,14 +103,68 @@
     }
 
     /* Header */
-    .header-title {
-      font-size: 28px;
-      font-weight: bold;
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       background-color: #0a8079;
       color: white;
       padding: 20px 40px;
-      border-radius: 0;
       width: 100%;
+    }
+
+    .header-title {
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .top-icons {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .top-icons img {
+      width: 24px;
+      height: 24px;
+    }
+
+    .top-icons img.umpsa-icon {
+      width: 36px;
+      height: 36px;
+    }
+
+    .notification-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .notification-btn img {
+      width: 30px;
+      height: 30px;
+    }
+
+    .profile-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+    }
+
+    .notification-dropdown {
+      position: absolute;
+      top: 80px;
+      right: 40px;
+      background-color: white;
+      color: black;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 10px;
+      width: 200px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      display: none;
+      z-index: 100;
     }
 
     /* Content Layout */
@@ -146,16 +199,15 @@
 
     /* Action Buttons */
     .action-buttons {
-  position: fixed;
-  right: 30px;
-  bottom: 30px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  max-width: 250px;
-  z-index: 5;
-}
-
+      position: fixed;
+      right: 30px;
+      bottom: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      max-width: 250px;
+      z-index: 5;
+    }
 
     .action-buttons button {
       padding: 12px;
@@ -190,6 +242,16 @@
         margin-left: 0;
         margin-top: 20px;
       }
+
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .top-icons {
+        align-self: flex-end;
+      }
     }
   </style>
 </head>
@@ -215,12 +277,26 @@
 
   <!-- Main Content -->
   <div class="main-content" id="mainContent">
-    <!-- Full width header -->
-    <div class="header-title">Activities</div>
+
+    <!-- Header with icons on the right -->
+    <div class="header">
+      <div class="header-title">Activities</div>
+      <div class="top-icons">
+        <img src="image/umpsa.png" alt="UMPSA" class="umpsa-icon">
+        <button class="notification-btn" id="notificationBtn">
+          <img src="image/bell.png" alt="Notification">
+        </button>
+        <img src="image/Raccoon.gif" alt="Profile" class="profile-icon">
+      </div>
+    </div>
+
+    <!-- Dropdown for notifications -->
+    <div class="notification-dropdown" id="notificationDropdown">
+      <p>No new notifications</p>
+    </div>
 
     <!-- Activities Section -->
     <div class="activity-section">
-      <!-- 3 top + 2 bottom = 5 images -->
       <div class="activity-images">
         <img src="image/palap1.jfif" alt="Activity 1">
         <img src="image/palap6.jfif" alt="Activity 2">
@@ -229,7 +305,7 @@
         <img src="image/hiking.jfif" alt="Activity 5">
       </div>
 
-      <!-- Action Buttons beside bottom row -->
+      <!-- Action Buttons -->
       <div class="action-buttons">
         <button onclick="location.href='CurrentActivities.jsp'">Current Activity List</button>
         <button onclick="location.href='JoinActivity.jsp'">Join Activity</button>
@@ -238,6 +314,7 @@
     </div>
   </div>
 
+  <!-- Script -->
   <script>
     function toggleSidebar() {
       const sidebar = document.getElementById('sidebar');
@@ -245,6 +322,11 @@
       sidebar.classList.toggle('closed');
       main.classList.toggle('full-width');
     }
+
+    document.getElementById("notificationBtn").addEventListener("click", function () {
+      const dropdown = document.getElementById("notificationDropdown");
+      dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
+    });
   </script>
 
 </body>
