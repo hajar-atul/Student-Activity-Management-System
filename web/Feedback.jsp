@@ -125,11 +125,6 @@
       gap: 15px;
     }
 
-    .top-icons img {
-      width: 24px;
-      height: 24px;
-    }
-
     .top-icons img.umpsa-icon {
       width: 36px;
       height: 36px;
@@ -167,74 +162,73 @@
       display: none;
       z-index: 100;
     }
-    
-    /* Table Section */
-.feedback-container {
-  background-color: #ffffff;
-  padding: 50px 20px;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: start;
-}
 
-.feedback-container h1 {
-     padding: 40px;
-}
+    /* Feedback Section */
+    .feedback-container {
+      background-color: #ffffff;
+      padding: 50px 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: start;
+    }
 
-.feedback-box {
-  background-color: #f0f0f0;
-  padding: 30px;
-  border-radius: 20px;
-  width: 60%;
-  max-width: 700px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
+    .feedback-container h1 {
+      padding: 40px;
+    }
 
-.feedback-box label {
-  display: block;
-  font-size: 18px;
-  margin-bottom: 10px;
-}
+    .feedback-box {
+      background-color: #f0f0f0;
+      padding: 30px;
+      border-radius: 20px;
+      width: 60%;
+      max-width: 700px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
 
-.feedback-box textarea {
-  width: 100%;
-  height: 150px;
-  padding: 15px;
-  font-size: 16px;
-  border-radius: 12px;
-  border: 1px solid #ccc;
-  resize: none;
-  font-family: 'Poppins', sans-serif;
-}
+    .feedback-box label {
+      display: block;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
 
-.feedback-box .buttons {
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-}
+    .feedback-box textarea {
+      width: 100%;
+      height: 150px;
+      padding: 15px;
+      font-size: 16px;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      resize: none;
+      font-family: 'Poppins', sans-serif;
+    }
 
-.feedback-box button {
-  padding: 10px 25px;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
+    .feedback-box .buttons {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
 
-.feedback-box button.submit {
-  background-color: #00796B;
-  color: white;
-}
+    .feedback-box button {
+      padding: 10px 25px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
 
-.feedback-box button.view {
-  background-color: #ccc;
-  color: #333;
-}
+    .feedback-box button.submit {
+      background-color: #00796B;
+      color: white;
+    }
 
+    .feedback-box button.view {
+      background-color: #ccc;
+      color: #333;
+    }
   </style>
 </head>
 <body>
@@ -259,16 +253,14 @@
 
   <!-- Main Content -->
   <div class="main-content" id="mainContent">
-
-    <!-- Header -->
     <div class="header">
-      <div class="header-title">Activities</div>
+      <div class="header-title">ACTIVITIES</div>
       <div class="top-icons">
-        <img src="image/umpsa.png" alt="UMPSA Logo" />
-        <button class="notification-btn" id="notificationBtn">
+        <img src="image/umpsa.png" alt="Universiti Malaysia Pahang Logo" class="umpsa-icon" />
+        <button class="notification-btn" id="notificationBtn" aria-label="Toggle Notifications">
           <img src="image/bell.png" alt="Notifications" />
         </button>
-        <img src="image/Raccoon.gif" alt="Profile Icon" />
+        <img src="image/Raccoon.gif" alt="User Avatar" class="profile-icon" />
       </div>
     </div>
 
@@ -277,18 +269,19 @@
       <p>No new notifications</p>
     </div>
 
-    <!-- Activity List Section -->
+    <!-- Feedback Section -->
     <div class="feedback-container">
-         <h1>FEEDBACK</h1>
-     <div class="feedback-box">
-         <label for="comments">Comments:</label>
-         <textarea id="comments" placeholder="Your Feedback..."></textarea>
-      <div class="buttons">
-         <button class="submit">Submit Feedback</button>
-         <button class="view">View Response</button>
+      <h1>FEEDBACK</h1>
+      <div class="feedback-box">
+        <label for="comments">Comments:</label>
+        <textarea id="comments" placeholder="Your Feedback..."></textarea>
+        <div class="buttons">
+          <button class="submit">Submit Feedback</button>
+          <button class="view">View Response</button>
+        </div>
       </div>
-     </div>
     </div>
+  </div>
 
   <!-- Script -->
   <script>
@@ -301,9 +294,10 @@
 
     document.getElementById("notificationBtn").addEventListener("click", function () {
       const dropdown = document.getElementById("notificationDropdown");
-      dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
+      dropdown.style.display = dropdown.style.display === "none" || dropdown.style.display === "" ? "block" : "none";
     });
   </script>
 
 </body>
 </html>
+

@@ -124,11 +124,6 @@
       gap: 15px;
     }
 
-    .top-icons img {
-      width: 24px;
-      height: 24px;
-    }
-
     .top-icons img.umpsa-icon {
       width: 36px;
       height: 36px;

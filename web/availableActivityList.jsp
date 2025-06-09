@@ -125,11 +125,6 @@
       gap: 15px;
     }
 
-    .top-icons img {
-      width: 24px;
-      height: 24px;
-    }
-
     .top-icons img.umpsa-icon {
       width: 36px;
       height: 36px;
@@ -242,17 +237,15 @@
   </div>
 
   <!-- Main Content -->
-  <div class="main-content" id="mainContent">
-
-    <!-- Header -->
+ <div class="main-content" id="mainContent">
     <div class="header">
-      <div class="header-title">Activities</div>
+      <div class="header-title">ACTIVITIES</div>
       <div class="top-icons">
-        <img src="image/umpsa.png" alt="UMPSA Logo" />
+        <img src="image/umpsa.png" alt="Universiti Malaysia Pahang Logo" class="umpsa-icon" />
         <button class="notification-btn" id="notificationBtn">
           <img src="image/bell.png" alt="Notifications" />
         </button>
-        <img src="image/Raccoon.gif" alt="Profile Icon" />
+        <img src="image/Raccoon.gif" alt="User Avatar" class="profile-icon" />
       </div>
     </div>
 

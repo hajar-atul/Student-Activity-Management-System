@@ -1,6 +1,6 @@
 <%-- 
-    Document   : currentActivityList
-    Created on : Jun 8, 2025, 12:54:58 AM
+    Document   : ClubActivitiesPage
+    Created on : Jun 9, 2025, 10:46:41 PM
     Author     : User
 --%>
 
@@ -9,7 +9,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Student Activity List</title>
+  <title>Activity Action Page</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
   <style>
     * {
@@ -19,7 +19,7 @@
     }
 
     body {
-      font-family: 'Poppins', Arial, sans-serif;
+      font-family: 'Poppins', sans-serif;
     }
 
     /* Sidebar */
@@ -50,8 +50,7 @@
       box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
     }
 
-    .sidebar h4,
-    .sidebar p {
+    .sidebar h3 {
       margin-bottom: 10px;
     }
 
@@ -104,16 +103,15 @@
     }
 
     /* Header */
-    .header {
+   .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       background-color: #0a8079;
       color: white;
       padding: 20px 40px;
-      width: 100%;
     }
-
+    
     .header-title {
       font-size: 28px;
       font-weight: bold;
@@ -162,47 +160,81 @@
       display: none;
       z-index: 100;
     }
-    
-    /* Table Section */
-    .activity-section {
-      padding: 40px;
+
+    /* New Boxes Section */
+    .box-section {
+      height: calc(100vh - 100px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      padding: 20px;
     }
 
-    .activity-section h2 {
+
+    .action-box {
+      width: 250px;
+      height: 250px;
+      border: 3px solid #004d40;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
       text-align: center;
-      font-size: 32px;
+      background-color: white;
+    }
+
+    .action-box:hover {
+      transform: scale(1.02);
+    }
+
+    .action-box.active {
+      background-color: #004d40;
+      color: white;
+    }
+
+    .action-box img {
+      width: 90px;
+      height: 90px;
+      margin-bottom: 15px;
+      transition: filter 0.3s ease;
+    }
+
+    .action-box.active img {
+      filter: brightness(0) invert(1);
+    }
+
+    .action-title {
+      font-size: 18px;
       font-weight: bold;
     }
 
-    .table-wrapper {
-      margin-top: 30px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      overflow-x: auto;
-    }
+    @media (max-width: 768px) {
+      .main-content {
+        margin-left: 0 !important;
+      }
 
-    .table-wrapper .title-bar {
-      padding: 12px 20px;
-      font-weight: bold;
-      border-bottom: 3px solid #009688;
-      background-color: #f5f5f5;
-    }
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: static;
+        transform: none !important;
+      }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-    }
+      .toggle-btn {
+        position: absolute;
+        left: 10px;
+        top: 10px;
+      }
 
-    th, td {
-      padding: 12px 20px;
-      border-bottom: 1px solid #ccc;
+      .box-section {
+        flex-direction: column;
+      }
     }
-
-    tbody tr:hover {
-      background-color: #f9f9f9;
-    }
-
   </style>
 </head>
 <body>
@@ -212,10 +244,8 @@
 
   <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
-    <img src="image/Raccoon.gif" alt="Profile Picture" class="profile-pic">
-    <h4>MUHAMMAD AMINUDDIN BIN HASNAN</h4>
-    <p>2023217854</p>
-
+    <img src="image/Raccoon.gif" alt="User Profile Picture" class="profile-pic">
+    <h3>Basketball Clubs</h3>
     <ul>
       <li><a href="dashboard.jsp">Dashboard</a></li>
       <li><a href="activities.jsp" class="active">Activities</a></li>
@@ -226,7 +256,7 @@
   </div>
 
   <!-- Main Content -->
-   <div class="main-content" id="mainContent">
+  <div class="main-content" id="mainContent">
     <div class="header">
       <div class="header-title">ACTIVITIES</div>
       <div class="top-icons">
@@ -243,50 +273,18 @@
       <p>No new notifications</p>
     </div>
 
-    <!-- Activity List Section -->
-    <div class="activity-section">
-      <h2>ACTIVITY LIST</h2>
-      <div class="table-wrapper">
-        <div class="title-bar">My Activities</div>
-        <table>
-          <thead>
-            <tr style="background-color: #f0f0f0;">
-              <th>ACTIVITY</th>
-              <th>DATE</th>
-              <th>STATUS</th>
-              <th>ROLE</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Flood Rescue Volunteer</td>
-              <td>12 Jan 2026</td>
-              <td>Upcoming</td>
-              <td>Participant</td>
-            </tr>
-            <tr>
-              <td>Basketball Clinic</td>
-              <td>8 Sep 2025</td>
-              <td>Upcoming</td>
-              <td>Participant</td>
-            </tr>
-            <tr>
-              <td>Elder Care Visit</td>
-              <td>23 March 2025</td>
-              <td>Upcoming</td>
-              <td>Participant</td>
-            </tr>
-            <tr>
-              <td>Biodiversity Seminar</td>
-              <td>22 May 2026</td>
-              <td>Upcoming</td>
-              <td>Participant</td>
-            </tr>
-          </tbody>
-        </table>
+    <!-- Action Boxes Section -->
+    <div class="box-section">
+      <div class="action-box" onclick="selectBox(this)">
+        <img src="image/create_icon.png" alt="Create Icon">
+        <div class="action-title">Create Activity</div>
+      </div>
+
+      <div class="action-box" onclick="selectBox(this)">
+        <img src="image/track_icon.png" alt="Track Icon">
+        <div class="action-title">Track Approval</div>
       </div>
     </div>
-
   </div>
 
   <!-- Script -->
@@ -302,6 +300,12 @@
       const dropdown = document.getElementById("notificationDropdown");
       dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
     });
+
+    function selectBox(box) {
+      const boxes = document.querySelectorAll('.action-box');
+      boxes.forEach(b => b.classList.remove('active'));
+      box.classList.add('active');
+    }
   </script>
 
 </body>
