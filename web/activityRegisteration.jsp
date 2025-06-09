@@ -1,7 +1,7 @@
 <%-- 
     Document   : activityRegisteration
     Created on : Jun 9, 2025, 3:50:45 PM
-    Author     : User
+    Author     : wafa
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>

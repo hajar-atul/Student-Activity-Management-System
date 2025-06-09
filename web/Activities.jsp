@@ -1,7 +1,7 @@
 <%-- 
     Document   : Activities
     Created on : Jun 6, 2025, 3:49:37 PM
-    Author     : User
+    Author     : wafa
 --%>
 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -275,7 +275,7 @@
 
     <!-- Header with icons on the right -->
     <div class="header">
-      <div class="header-title">Activities</div>
+      <div class="header-title">ACTIVITIES</div>
       <div class="top-icons">
         <img src="image/umpsa.png" alt="UMPSA" class="umpsa-icon">
         <button class="notification-btn" id="notificationBtn">

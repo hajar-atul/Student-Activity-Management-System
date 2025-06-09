@@ -1,3 +1,9 @@
+<%-- 
+    Document   : pastActivitiesList
+    Created on : Jun 6, 2025, 1:46:36 PM
+    Author     : wafa
+--%>
+
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">

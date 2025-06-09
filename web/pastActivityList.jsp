@@ -1,7 +1,7 @@
 <%-- 
     Document   : pastActivitiesList
     Created on : Jun 9, 2025, 1:46:36 PM
-    Author     : User
+    Author     : wafa
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>

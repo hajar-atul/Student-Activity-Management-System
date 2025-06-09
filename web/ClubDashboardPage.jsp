@@ -1,7 +1,7 @@
 <%-- 
     Document   : Clubs
     Created on : Jun 6, 2025, 3:51:43 PM
-    Author     : User
+    Author     : wafa
 --%>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
