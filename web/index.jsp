@@ -3,7 +3,6 @@
     Created on : Jun 6, 2025, 3:56:06 PM
     Author     : User
 --%>
-//login page
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
