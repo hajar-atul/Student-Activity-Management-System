@@ -9,7 +9,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Activity Action Page</title>
+  <title>Club Activities</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
   <style>
     * {
@@ -22,61 +22,28 @@
       font-family: 'Poppins', sans-serif;
     }
 
-    /* Sidebar */
-    .sidebar {
-      width: 270px;
-      height: 100vh;
-      background-color: #00796B;
-      color: white;
-      position: fixed;
-      padding: 70px 20px 20px 20px;
-      transition: transform 0.3s ease;
-      overflow-y: auto;
-      text-align: center;
-      z-index: 10;
-    }
+ /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: #008b8b;
+            color: white;
+            padding: 20px;
+            height: 100vh;
+        }
 
-    .sidebar.closed {
-      transform: translateX(-100%);
-    }
+        .sidebar img {
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            display: block;
+            margin: 0 auto;
+        }
 
-    .sidebar img.profile-pic {
-      width: 100px;
-      aspect-ratio: 1 / 1;
-      border-radius: 50%;
-      object-fit: cover;
-      margin-bottom: 15px;
-      border: 3px solid white;
-      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-    }
-
-    .sidebar h3 {
-      margin-bottom: 10px;
-    }
-
-    .sidebar ul {
-      list-style: none;
-      padding-left: 0;
-      margin-top: 20px;
-    }
-
-    .sidebar ul li {
-      margin-bottom: 15px;
-    }
-
-    .sidebar ul li a {
-      color: white;
-      text-decoration: none;
-      padding: 10px;
-      display: block;
-      border-radius: 5px;
-      transition: background-color 0.2s ease;
-    }
-
-    .sidebar ul li a:hover,
-    .sidebar ul li a.active {
-      background-color: rgba(0, 0, 0, 0.2);
-    }
+        .sidebar h3 {
+            text-align: center;
+            font-size: 14px;
+            margin: 10px 0 0;
+        }
 
     /* Toggle Button */
     .toggle-btn {
@@ -247,11 +214,11 @@
     <img src="image/Raccoon.gif" alt="User Profile Picture" class="profile-pic">
     <h3>Basketball Clubs</h3>
     <ul>
-      <li><a href="dashboard.jsp">Dashboard</a></li>
-      <li><a href="activities.jsp" class="active">Activities</a></li>
-      <li><a href="clubs.jsp">Clubs</a></li>
-      <li><a href="achievements.jsp">Achievements</a></li>
-      <li><a href="settings.jsp">Settings</a></li>
+      <li><a href="clubDashboardPage.jsp">Dashboard</a></li>
+      <li><a href="clubActivitiesPage.jsp" class="active">Activities</a></li>
+      
+      <li><a href="clubAchievements.jsp">Achievements</a></li>
+      <li><a href="clubSettings.jsp">Settings</a></li>
     </ul>
   </div>
 

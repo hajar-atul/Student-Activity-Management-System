@@ -18,66 +18,51 @@
       box-sizing: border-box;
     }
 
-    body {
-      font-family: 'Poppins', sans-serif;
-    }
+           body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            background-color: #f0f0f0;
+        }
 
- .sidebar {
-      width: 270px;
-      height: 100vh;
-      background-color: #00796B;
-      color: white;
-      position: fixed;
-      padding: 70px 20px 20px 20px;
-      transition: transform 0.3s ease;
-      overflow-y: auto;
-      text-align: center;
-      z-index: 10;
-    }
 
-    .sidebar.closed {
-      transform: translateX(-100%);
-    }
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: #008b8b;
+            color: white;
+            padding: 20px;
+            height: 100vh;
+        }
 
-    .sidebar img.profile-pic {
-      width: 100px;
-      aspect-ratio: 1 / 1;
-      border-radius: 50%;
-      object-fit: cover;
-      margin-bottom: 15px;
-      border: 3px solid white;
-      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-    }
+        .sidebar img {
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            display: block;
+            margin: 0 auto;
+        }
 
-    .sidebar h4,
-    .sidebar p {
-      margin-bottom: 10px;
-    }
+        .sidebar h3 {
+            text-align: center;
+            font-size: 14px;
+            margin: 10px 0 0;
+        }
 
-    .sidebar ul {
-      list-style: none;
-      padding-left: 0;
-      margin-top: 20px;
-    }
+        .menu {
+            margin-top: 30px;
+        }
 
-    .sidebar ul li {
-      margin-bottom: 15px;
-    }
-
-    .sidebar ul li a {
-      color: white;
-      text-decoration: none;
-      padding: 10px;
-      display: block;
-      border-radius: 5px;
-      transition: background-color 0.2s ease;
-    }
-
-    .sidebar ul li a:hover,
-    .sidebar ul li a.active {
-      background-color: rgba(0, 0, 0, 0.2);
-    }
-
+        .menu a {
+            display: block;
+            padding: 10px;
+            background-color: #0a6d6d;
+            margin-top: 10px;
+            text-decoration: none;
+            color: white;
+            border-radius: 5px;
+            text-align: center;
+        }
     /* Toggle Button */
     .toggle-btn {
       position: fixed;
@@ -109,7 +94,7 @@
       align-items: center;
       background-color: #0a8079;
       color: white;
-      padding: 20px 40px;
+      padding: 80px 40px 40px 40px;;
       width: 100%;
     }
 
@@ -216,19 +201,18 @@
 
   <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
 
-  <div class="sidebar" id="sidebar">
-    <img src="image/Raccoon.gif" alt="Profile Picture" class="profile-pic">
-    <h4>MUHAMMAD AMINUDDIN BIN HASNAN</h4>
-    <p>2023217854</p>
-
-    <ul>
-      <li><a href="dashboard.jsp">Dashboard</a></li>
-      <li><a href="activities.jsp" class="active">Activities</a></li>
-      <li><a href="clubs.jsp">Clubs</a></li>
-      <li><a href="achievements.jsp">Achievements</a></li>
-      <li><a href="settings.jsp">Settings</a></li>
-    </ul>
-  </div>
+  <!-- Sidebar -->
+    <div class="sidebar">
+        <img src="image/Raccoon.gif" alt="Profile Picture">
+        <h3><%= request.getAttribute("name") %><br><%= request.getAttribute("studentId") %></h3>
+        <div class="menu">
+            <a href="studentDashboardPage.jsp">DASHBOARD</a>
+            <a href="activities.jsp">ACTIVITIES</a>
+            <a href="studentClub.jsp">CLUBS</a>
+            <a href="achievements.jsp">ACHIEVEMENTS</a>
+            <a href="settings.jsp">SETTINGS</a>
+        </div>
+    </div>
 
   <div class="main-content" id="mainContent">
     <div class="header">

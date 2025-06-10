@@ -1,13 +1,8 @@
-<%-- 
-    Document   : Login
-    Created on : Jun 6, 2025, 3:56:06 PM
-    Author     : wafa
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Login - Student Activities Management System</title>
+  <title>Student Login - Student Activities Management System</title>
   <style>
     * {
       margin: 0;
@@ -23,7 +18,6 @@
       flex-direction: column;
     }
 
-    /* Header bar */
     .header {
       background-color: #0a8079;
       color: white;
@@ -33,7 +27,7 @@
     }
 
     .logo {
-      height: 60px; 
+      height: 60px;
       margin-right: 20px;
     }
 
@@ -52,21 +46,18 @@
       margin-top: 5px;
     }
 
-    /* Layout wrapper */
     .main-content {
       display: flex;
       flex: 1;
     }
 
-    /* Left image section */
     .image-section {
       flex: 1;
-      background-image: url("image/umpsa_1.png"); 
+      background-image: url("image/umpsa_1.png");
       background-size: cover;
       background-position: center;
     }
 
-    /* Right login form */
     .login-container {
       flex: 1;
       background-color: white;
@@ -83,7 +74,6 @@
       max-width: 400px;
     }
 
-    /* Role selector styles */
     .roles {
       margin-bottom: 30px;
       display: flex;
@@ -169,22 +159,17 @@
 </head>
 <body>
 
-  <!-- Header -->
   <div class="header">
     <img src="image/logoUMP.jpg" alt="Logo" class="logo">
     <div class="header-text">
       <div class="welcome">Welcome To</div>
       <div class="system-name">STUDENT ACTIVITIES MANAGEMENT SYSTEM</div>
     </div>
-  </div>   
+  </div>
 
-  <!-- Page layout -->
   <div class="main-content">
-    
-    <!-- Left half image -->
     <div class="image-section"></div>
 
-    <!-- Right login form -->
     <div class="login-container">
       <form action="<%= request.getContextPath() %>/LoginServlet" method="post">
 
@@ -198,7 +183,7 @@
           <input type="radio" id="club" name="role" value="club" required onclick="location.href='indexClub.jsp'">
           <label for="club">Club</label>
 
-          <input type="radio" id="student" name="role" value="student" required onclick="location.href='indexStudent.jsp'">
+          <input type="radio" id="student" name="role" value="student" checked required onclick="location.href='indexStudent.jsp'">
           <label for="student">Student</label>
         </div>
 
@@ -212,7 +197,7 @@
           <a href="#">Forgot Password?</a>
         </div>
 
-        <button type="submit" class="button" >SIGN IN</button>
+        <button type="submit" class="button" onclick="location.href='studentDashboardPage.jsp'">SIGN IN</button>
         <button type="button" class="button" onclick="location.href='registerPage.jsp'">SIGN UP</button>
 
       </form>

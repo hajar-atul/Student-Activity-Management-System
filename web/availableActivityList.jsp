@@ -228,9 +228,9 @@
     <p>2023217854</p>
 
     <ul>
-      <li><a href="dashboard.jsp">Dashboard</a></li>
+      <li><a href="studentDashboardPage.jsp">Dashboard</a></li>
       <li><a href="activities.jsp" class="active">Activities</a></li>
-      <li><a href="clubs.jsp">Clubs</a></li>
+      <li><a href="studentClub.jsp">Clubs</a></li>
       <li><a href="achievements.jsp">Achievements</a></li>
       <li><a href="settings.jsp">Settings</a></li>
     </ul>
@@ -267,7 +267,7 @@
   <div class="activity-card">
     <h3>IT Workshop</h3>
     <p>15 Sept 2025</p>
-    <button>Register</button>
+    <button  onclick="location.href='qrPaymentTypePage.jsp'" >Register</button>
   </div>
   <div class="activity-card">
     <h3>LEADERSHIP CAMP</h3>

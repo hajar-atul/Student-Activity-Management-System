@@ -203,11 +203,11 @@
         <img src="image/Raccoon.gif" alt="Profile Picture">
         <h3><%= request.getAttribute("name") %><br><%= request.getAttribute("studentId") %></h3>
         <div class="menu">
-            <a href="#">DASHBOARD</a>
-            <a href="#">ACTIVITIES</a>
-            <a href="#">CLUBS</a>
-            <a href="#">ACHIEVEMENTS</a>
-            <a href="#">SETTINGS</a>
+            <a href="studentDashboardPage.jsp">DASHBOARD</a>
+            <a href="activities.jsp">ACTIVITIES</a>
+            <a href="studentClub.jsp">CLUBS</a>
+            <a href="achievements.jsp">ACHIEVEMENTS</a>
+            <a href="settings.jsp">SETTINGS</a>
         </div>
     </div>
 
