@@ -9,7 +9,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Student Activity List</title>
+  <title>Club Achievements</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
   <style>
     * {
@@ -157,6 +157,10 @@
 
     .activity-section {
       padding: 40px;
+    }
+    
+    .activity-section:hover {
+      padding: none;
     }
 
     .activity-section h2 {
@@ -396,11 +400,11 @@
   <img src="image/Raccoon.gif" alt="User Profile Picture" class="profile-pic">
   <h3>Basketball Club</h3>
   <ul>
-    <li><a href="dashboard.jsp" class="active">Dashboard</a></li>
-    <li><a href="activities.jsp">Activities</a></li>
-    <li><a href="clubs.jsp">Clubs</a></li>
-    <li><a href="achievements.jsp">Achievements</a></li>
-    <li><a href="settings.jsp">Settings</a></li>
+    <li><a href="clubDashboardPage.jsp" class="active">Dashboard</a></li>
+    <li><a href="clubActivitiesPage.jsp">Activities</a></li>
+    
+    <li><a href="clubAchievements.jsp">Achievements</a></li>
+    <li><a href="clubSettings.jsp">Settings</a></li>
   </ul>
 </div>
 
@@ -418,66 +422,6 @@
 
   <div class="notification-dropdown" id="notificationDropdown">
     <p>No new notifications</p>
-  </div>
-
-  <div class="activity-section">
-    <div class="summary-container">
-      <div class="summary-card">
-        <div class="summary-icon"><img src="image/venue_icon.png" alt="Venue"></div>
-        <div class="summary-text"><h3>Venue Booking</h3><p>2</p></div>
-      </div>
-      <div class="summary-card">
-        <div class="summary-icon"><img src="image/resource_icon.png" alt="Resource"></div>
-        <div class="summary-text"><h3>Resource Request</h3><p>5</p></div>
-      </div>
-    </div>
-
-    <!-- Rejected Activities -->
-    <div class="rejected-activities-box">
-      <div class="rejected-header">
-        <h2>Rejected Activities</h2>
-        <button class="view-all-btn">View All</button>
-      </div>
-      <div class="rejected-cards-container">
-        <div class="activity-card">
-          <img src="image/basketballPlayer_icon.png" alt="Activity Image">
-          <div class="activity-info">
-            <h4>3v3 Basketball Match</h4>
-            <p>Date: June 5, 2025</p>
-            <p>Venue: UMPSA Indoor Court</p>
-            <div class="card-actions">
-              <span class="rejected-label">Rejected</span>
-              <button class="appeal-btn" onclick="openModal()">Appeal</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="activity-card">
-          <img src="image/streetballPlayer_icon.png" alt="Activity Image">
-          <div class="activity-info">
-            <h4>Streetball Tournament</h4>
-            <p>Date: May 30, 2025</p>
-            <p>Venue: Main Hall</p>
-            <div class="card-actions">
-              <span class="rejected-label">Rejected</span>
-              <button class="appeal-btn" onclick="openModal()">Appeal</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Appeal Modal -->
-<div class="modal" id="appealModal">
-  <div class="modal-content">
-    <h3>Submit Appeal</h3>
-    <textarea placeholder="Write your appeal reason here..."></textarea>
-    <div class="modal-buttons">
-      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
-      <button class="btn-submit" onclick="submitAppeal()">Submit</button>
-    </div>
   </div>
 </div>
 
@@ -500,11 +444,6 @@
 
   function closeModal() {
     document.getElementById("appealModal").style.display = "none";
-  }
-
-  function submitAppeal() {
-    alert("Appeal submitted successfully!");
-    closeModal();
   }
 </script>
 

@@ -54,7 +54,7 @@ import javax.servlet.annotation.MultipartConfig;
         
         response.setContentType("text/html");
         
-        String studID = request.getPart("userId").getInputStream().toString(); // OR use a helper
+        String studID = request.getPart("userId").getInputStream().toString(); 
         String studName = request.getParameter("fullName");
         String studPassword = request.getParameter("password");
         String confirmPassword = request.getParameter("confirmPassword");
