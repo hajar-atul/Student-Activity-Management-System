@@ -62,7 +62,7 @@
     /* Left image section */
     .image-section {
       flex: 1;
-      background-image: url("image/umpsa.jpg"); /* Replace with actual path */
+      background-image: url("image/umpsa_1.png"); /* Replace with actual path */
       background-size: cover;
       background-position: center;
     }
