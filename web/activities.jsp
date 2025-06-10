@@ -17,67 +17,50 @@
       box-sizing: border-box;
     }
 
-    body {
-      font-family: 'Poppins', Arial, sans-serif;
-    }
+          body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            background-color: #f0f0f0;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: #008b8b;
+            color: white;
+            padding: 20px;
+            height: 100vh;
+        }
 
-    /* Sidebar */
-    .sidebar {
-      width: 270px;
-      height: 100vh;
-      background-color: #00796B;
-      color: white;
-      position: fixed;
-      padding: 70px 20px 20px 20px;
-      transition: transform 0.3s ease;
-      overflow-y: auto;
-      text-align: center;
-      z-index: 10;
-    }
+        .sidebar img {
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            display: block;
+            margin: 0 auto;
+        }
 
-    .sidebar.closed {
-      transform: translateX(-100%);
-    }
+        .sidebar h3 {
+            text-align: center;
+            font-size: 14px;
+            margin: 10px 0 0;
+        }
 
-    .sidebar img.profile-pic {
-      width: 100px;
-      aspect-ratio: 1 / 1;
-      border-radius: 50%;
-      object-fit: cover;
-      margin-bottom: 15px;
-      border: 3px solid white;
-      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-    }
+        .menu {
+            margin-top: 30px;
+        }
 
-    .sidebar h4,
-    .sidebar p {
-      margin-bottom: 10px;
-    }
-
-    .sidebar ul {
-      list-style: none;
-      padding-left: 0;
-      margin-top: 20px;
-    }
-
-    .sidebar ul li {
-      margin-bottom: 15px;
-    }
-
-    .sidebar ul li a {
-      color: white;
-      text-decoration: none;
-      padding: 10px;
-      display: block;
-      border-radius: 5px;
-      transition: background-color 0.2s ease;
-    }
-
-    .sidebar ul li a:hover,
-    .sidebar ul li a.active {
-      background-color: rgba(0, 0, 0, 0.2);
-    }
-
+        .menu a {
+            display: block;
+            padding: 10px;
+            background-color: #0a6d6d;
+            margin-top: 10px;
+            text-decoration: none;
+            color: white;
+            border-radius: 5px;
+            text-align: center;
+        }
     /* Toggle Button */
     .toggle-btn {
       position: fixed;
