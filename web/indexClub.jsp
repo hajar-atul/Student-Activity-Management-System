@@ -170,8 +170,17 @@
   <div class="main-content">
     <div class="image-section"></div>
 
-    <div class="login-container">
-      <form action="<%= request.getContextPath() %>/LoginServlet" method="post">
+<div class="login-container">
+
+  <%-- Show error message if role is invalid or not selected --%>
+  <% if ("invalid_role".equals(request.getParameter("error"))) { %>
+    <p style="color:red; font-weight: bold; margin-bottom: 20px;">
+      Please select a valid role before submitting.
+    </p>
+  <% } %>
+
+  <form action="<%= request.getContextPath() %>/LoginServlet" method="post">
+
 
         <div class="roles">
           <input type="radio" id="admin" name="role" value="admin" required onclick="location.href='indexAdmin.jsp'">

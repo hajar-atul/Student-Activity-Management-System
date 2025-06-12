@@ -170,8 +170,16 @@
   <div class="main-content">
     <div class="image-section"></div>
 
-    <div class="login-container">
-      <form action="<%= request.getContextPath() %>/LoginServlet" method="post">
+<div class="login-container">
+
+  <%-- Show error message if role is invalid or not selected --%>
+  <% if ("invalid_role".equals(request.getParameter("error"))) { %>
+    <p style="color:red; font-weight: bold; margin-bottom: 20px;">
+      Please select a valid role before submitting.
+    </p>
+  <% } %>
+
+  <form action="<%= request.getContextPath() %>/LoginServlet" method="post">
 
         <div class="roles">
           <input type="radio" id="admin" name="role" value="admin" checked required onclick="location.href='indexAdmin.jsp'">
@@ -197,12 +205,33 @@
           <a href="#">Forgot Password?</a>
         </div>
 
-        <button type="submit" class="button" onclick="location.href='adminDashboard.jsp'">SIGN IN</button>
+        <button type="submit" class="button">SIGN IN</button>
         <button type="button" class="button" onclick="location.href='registerPage.jsp'">SIGN UP</button>
 
       </form>
     </div>
   </div>
+<script>
+    function validateForm() {
+      const roles = document.getElementsByName("role");
+      let selected = false;
 
+      for (let i = 0; i < roles.length; i++) {
+        if (roles[i].checked) {
+          selected = true;
+          break;
+        }
+      }
+
+      if (!selected) {
+        document.getElementById("roleError").innerText = "You haven't selected a role!";
+        return false;
+      }
+
+      document.getElementById("roleError").innerText = "";
+      return true;
+    }
+  </script>
+  
 </body>
 </html>

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Controller;
 
 import java.io.IOException;
@@ -13,78 +8,63 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-/**
- *
- * @author User
- */
 public class LoginServlet extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+
         try (PrintWriter out = response.getWriter()) {
-            
-        // Get form input (boleh jadi apa saja)
-        String email = request.getParameter("email");
-        String role = request.getParameter("role");
+            // Get form input
+            String email = request.getParameter("email");
+            String password = request.getParameter("password"); // assuming password used later
+            String role = request.getParameter("role");
 
-        // Simpan dalam session (untuk nanti guna dalam dashboard kalau perlu)
-        HttpSession session = request.getSession();
-        session.setAttribute("user", email);
-        session.setAttribute("role", role);
-        session.setAttribute("name", "Nama Pengguna Demo");
+            // Create session and store attributes
+            HttpSession session = request.getSession();
+            session.setAttribute("user", email);
+            session.setAttribute("role", role);
+            session.setAttribute("name", "Nama Pengguna Demo"); // placeholder, can customize later
 
-        // Terus redirect ke student dashboard
-        response.sendRedirect(request.getContextPath() + "/student_dashboard.jsp");
+            // Redirect based on role
+            String redirectPage = "";
+            switch (role) {
+                case "student":
+                    redirectPage = "/studentDashboardPage.jsp";
+                    break;
+                case "staff":
+                    redirectPage = "/staffDashboardPage.jsp";
+                    break;
+                case "club":
+                    redirectPage = "/clubDashboardPage.jsp";
+                    break;
+                case "admin":
+                    redirectPage = "/adminDashboard.jsp";
+                    break;
+                default:
+                    // If role is not selected or unrecognized, send back to login with error
+                    redirectPage = "/index.jsp?error=invalid_role";
+                    break;
+            }
+
+            response.sendRedirect(request.getContextPath() + redirectPage);
+        }
     }
-    }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
+        return "Handles user login and redirects based on role";
+    }
 }

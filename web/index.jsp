@@ -85,7 +85,7 @@
 
     /* Role selector styles */
     .roles {
-      margin-bottom: 30px;
+      margin-bottom: 10px;
       display: flex;
       justify-content: space-between;
       flex-wrap: wrap;
@@ -165,6 +165,12 @@
     .button:hover {
       background-color: #005f5f;
     }
+
+    .error-message {
+      color: red;
+      font-size: 0.9em;
+      margin-bottom: 15px;
+    }
   </style>
 </head>
 <body>
@@ -185,22 +191,32 @@
     <div class="image-section"></div>
 
     <!-- Right login form -->
-    <div class="login-container">
-      <form action="<%= request.getContextPath() %>/LoginServlet" method="post">
+   <div class="login-container">
 
-        <div class="roles">
-          <input type="radio" id="admin" name="role" value="admin" required onclick="location.href='indexAdmin.jsp'">
+  <% if ("invalid_role".equals(request.getParameter("error"))) { %>
+    <p style="color:red; font-weight: bold; margin-bottom: 20px;">
+      Please select a valid role before submitting.
+    </p>
+  <% } %>
+
+  <form action="<%= request.getContextPath() %>/LoginServlet" method="post" onsubmit="return validateForm();">
+
+
+        <div class="roles" id="roleContainer">
+          <input type="radio" id="admin" name="role" value="admin" onclick="location.href='indexAdmin.jsp'">
           <label for="admin">Admin</label>
 
-          <input type="radio" id="staff" name="role" value="staff" required onclick="location.href='indexStaff.jsp'">
+          <input type="radio" id="staff" name="role" value="staff" onclick="location.href='indexStaff.jsp'">
           <label for="staff">Staff</label>
 
-          <input type="radio" id="club" name="role" value="club" required onclick="location.href='indexClub.jsp'">
+          <input type="radio" id="club" name="role" value="club" onclick="location.href='indexClub.jsp'">
           <label for="club">Club</label>
 
-          <input type="radio" id="student" name="role" value="student" required onclick="location.href='indexStudent.jsp'">
+          <input type="radio" id="student" name="role" value="student" onclick="location.href='indexStudent.jsp'">
           <label for="student">Student</label>
         </div>
+
+        <p id="roleError" class="error-message"></p>
 
         <label>Username:</label>
         <input type="text" name="email" required>
@@ -212,12 +228,35 @@
           <a href="#">Forgot Password?</a>
         </div>
 
-        <button type="submit" class="button" >SIGN IN</button>
+        <button type="submit" class="button">SIGN IN</button>
         <button type="button" class="button" onclick="location.href='registerPage.jsp'">SIGN UP</button>
 
       </form>
     </div>
   </div>
+
+  <!-- JS Validation -->
+  <script>
+    function validateForm() {
+      const roles = document.getElementsByName("role");
+      let selected = false;
+
+      for (let i = 0; i < roles.length; i++) {
+        if (roles[i].checked) {
+          selected = true;
+          break;
+        }
+      }
+
+      if (!selected) {
+        document.getElementById("roleError").innerText = "You haven't selected a role!";
+        return false;
+      }
+
+      document.getElementById("roleError").innerText = "";
+      return true;
+    }
+  </script>
 
 </body>
 </html>

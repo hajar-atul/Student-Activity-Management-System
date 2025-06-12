@@ -302,9 +302,9 @@
     <p>2023217854</p>
 
     <ul>
-      <li><a href="dashboard.jsp">Dashboard</a></li>
+      <li><a href="studentDashboardPage.jsp">Dashboard</a></li>
       <li><a href="activities.jsp" class="active">Activities</a></li>
-      <li><a href="clubs.jsp">Clubs</a></li>
+      <li><a href="studentClub.jsp">Clubs</a></li>
       <li><a href="achievements.jsp">Achievements</a></li>
       <li><a href="settings.jsp">Settings</a></li>
     </ul>
@@ -379,28 +379,28 @@
               <td>12 Apr 2025</td>
               <td>Attended</td>
               <td>Participant</td>
-              <td><button>Feedback →</button></td>
+              <td><button onclick="location.href='feedback.jsp'">Feedback →</button></td>
             </tr>
             <tr>
               <td>BADMINTON LEAGUE</td>
               <td>8 Apr 2025</td>
               <td>Attended</td>
               <td>Participant</td>
-              <td><button>Feedback →</button></td>
+              <td><button onclick="location.href='feedback.jsp'">Feedback →</button></td>
             </tr>
             <tr>
               <td>ACADEMIC CONFERENCE</td>
               <td>23 March 2025</td>
               <td>Attended</td>
               <td>Participant</td>
-              <td><button>Feedback →</button></td>
+              <td><button onclick="location.href='feedback.jsp'">Feedback →</button></td>
             </tr>
             <tr>
               <td>VISIT TO ORPHANAGE</td>
               <td>22 Feb 2025</td>
               <td>Attended</td>
               <td>Participant</td>
-              <td><button>Feedback →</button></td>
+              <td><button onclick="location.href='feedback.jsp'">Feedback →</button></td>
             </tr>
           </tbody>
         </table>
