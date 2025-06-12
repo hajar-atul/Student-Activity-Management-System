@@ -113,7 +113,7 @@
       display: block;
     }
 
-    input[type="text"],
+    input[type="number"],
     input[type="password"] {
       width: 100%;
       padding: 10px;
@@ -121,6 +121,12 @@
       background-color: #e0ffff;
       border: 1px solid #ccc;
       border-radius: 5px;
+    }
+
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
     }
 
     .forgot-password {
@@ -172,15 +178,21 @@
 
     <div class="login-container">
 
-  <%-- Show error message if role is invalid or not selected --%>
-  <% if ("invalid_role".equals(request.getParameter("error"))) { %>
-    <p style="color:red; font-weight: bold; margin-bottom: 20px;">
-      Please select a valid role before submitting.
-    </p>
-  <% } %>
+      <% if ("invalid_role".equals(request.getParameter("error"))) { %>
+        <p style="color:red; font-weight: bold; margin-bottom: 20px;">
+          Please select a valid role before submitting.
+        </p>
+      <% } else if ("not_found".equals(request.getParameter("error"))) { %>
+        <p style="color:red; font-weight: bold; margin-bottom: 20px;">
+          Student ID not found. First time here? <a href="registerPage.jsp">Sign up now</a>
+        </p>
+      <% } else if ("wrong_password".equals(request.getParameter("error"))) { %>
+        <p style="color:red; font-weight: bold; margin-bottom: 20px;">
+          Incorrect password. Please try again.
+        </p>
+      <% } %>
 
-  <form action="<%= request.getContextPath() %>/LoginServlet" method="post">
-
+      <form action="<%= request.getContextPath() %>/LoginServlet" method="post">
 
         <div class="roles">
           <input type="radio" id="admin" name="role" value="admin" required onclick="location.href='indexAdmin.jsp'">
@@ -192,12 +204,12 @@
           <input type="radio" id="club" name="role" value="club" required onclick="location.href='indexClub.jsp'">
           <label for="club">Club</label>
 
-          <input type="radio" id="student" name="role" value="student" checked required onclick="location.href='indexStudent.jsp'">
+          <input type="radio" id="student" name="role" value="student" checked required>
           <label for="student">Student</label>
         </div>
 
-        <label>Username:</label>
-        <input type="text" name="email" required>
+        <label>Student ID:</label>
+        <input type="number" name="studID" required placeholder="Enter your Student ID">
 
         <label>Password:</label>
         <input type="password" name="password" required>

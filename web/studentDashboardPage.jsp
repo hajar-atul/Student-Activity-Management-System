@@ -11,7 +11,6 @@
             background-color: #f0f0f0;
         }
 
-        /* Sidebar */
         .sidebar {
             width: 250px;
             background-color: #008b8b;
@@ -49,7 +48,6 @@
             text-align: center;
         }
 
-        /* Topbar */
         .topbar {
             position: fixed;
             top: 0;
@@ -125,7 +123,6 @@
             border-radius: 50%;
         }
 
-        /* Notification Dropdown */
         .notification-dropdown {
             display: none;
             position: absolute;
@@ -139,17 +136,21 @@
             border-radius: 8px;
             color: #333;
         }
+
         .notification-dropdown.show {
             display: block;
         }
+
         .notification-dropdown p {
             margin: 0;
             padding: 10px 20px;
             border-bottom: 1px solid #eee;
         }
+
         .notification-dropdown p:last-child {
             border-bottom: none;
         }
+
         .notification-btn {
             background: none;
             border: none;
@@ -158,10 +159,9 @@
             position: relative;
         }
 
-        /* Content */
         .content {
             flex-grow: 1;
-            padding: 100px 40px 40px 40px; /* top padding to avoid topbar overlap */
+            padding: 100px 40px 40px 40px;
             margin-left: 250px;
         }
 
@@ -198,10 +198,14 @@
     </style>
 </head>
 <body>
+
     <!-- Sidebar -->
     <div class="sidebar">
         <img src="image/Raccoon.gif" alt="Profile Picture">
-        <h3><%= request.getAttribute("name") %><br><%= request.getAttribute("studentId") %></h3>
+        <h3>
+            <%= session.getAttribute("studName") %><br>
+            <%= session.getAttribute("studID") %>
+        </h3>
         <div class="menu">
             <a href="studentDashboardPage.jsp">DASHBOARD</a>
             <a href="activities.jsp">ACTIVITIES</a>
@@ -225,7 +229,6 @@
             </button>
             <div class="notification-dropdown" id="notificationDropdown">
                 <p>No new notifications</p>
-                <!-- Example notification: <p>New event: Coding Competition!</p> -->
             </div>
             <img src="image/Raccoon.gif" alt="Profile" class="profile-icon">
         </div>
@@ -233,18 +236,18 @@
 
     <!-- Main Content -->
     <div class="content">
-        <h1>Welcome, <%= request.getAttribute("name") %></h1>
+        <h1>Welcome, <%= session.getAttribute("studName") %></h1>
         <div class="profile-box">
             <h2>STUDENT PROFILE</h2>
             <table>
-                <tr><td>STUDENTID</td><td><%= request.getAttribute("studentId") %></td></tr>
-                <tr><td>NAME</td><td><%= request.getAttribute("name") %></td></tr>
-                <tr><td>DATE OF BIRTH</td><td><%= request.getAttribute("dob") %></td></tr>
-                <tr><td>PROGRAMME</td><td><%= request.getAttribute("programme") %></td></tr>
-                <tr><td>MOBILE NUMBER</td><td><%= request.getAttribute("mobileNumber") %></td></tr>
-                <tr><td>CURRENT EMAIL</td><td><%= request.getAttribute("email") %></td></tr>
-                <tr><td>MUET STATUS</td><td><%= request.getAttribute("muetStatus") %></td></tr>
-                <tr><td>ADVISOR</td><td><%= request.getAttribute("advisor") %></td></tr>
+                <tr><td>STUDENT ID</td><td><%= session.getAttribute("studID") %></td></tr>
+                <tr><td>NAME</td><td><%= session.getAttribute("studName") %></td></tr>
+                <tr><td>DATE OF BIRTH</td><td><%= session.getAttribute("dob") %></td></tr>
+                <tr><td>PROGRAM</td><td><%= session.getAttribute("studCourse") %></td></tr>
+                <tr><td>MOBILE NUMBER</td><td><%= session.getAttribute("studNoPhone") %></td></tr>
+                <tr><td>CURRENT EMAIL</td><td><%= session.getAttribute("studEmail") %></td></tr>
+                <tr><td>MUET STATUS</td><td><%= session.getAttribute("muetStatus") %></td></tr>
+                <tr><td>ADVISOR</td><td><%= session.getAttribute("advisor") %></td></tr>
             </table>
         </div>
     </div>
@@ -258,7 +261,6 @@
             notificationDropdown.classList.toggle('show');
         });
 
-        // Hide dropdown when clicking outside
         window.addEventListener('click', function(event) {
             if (!notificationDropdown.contains(event.target) && !notificationBtn.contains(event.target)) {
                 notificationDropdown.classList.remove('show');

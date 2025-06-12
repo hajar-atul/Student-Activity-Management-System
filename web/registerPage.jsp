@@ -1,8 +1,12 @@
 <%-- 
-    Document   : pastActivitiesList
+    Document   : registerPage
     Created on : Jun 6, 2025, 1:46:36 PM
-    Author     : wafa
+    Author     : wafa & aniq
 --%>
+<% String error = (String) request.getAttribute("error"); %>
+<% if (error != null) { %>
+  <p style="color:red; text-align:center;"><%= error %></p>
+<% } %>
 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -166,25 +170,25 @@
     <div class="profile-section">
       <label>Profile Picture <span class="required">*</span></label>
       <div class="profile-img"></div>
-      <input type="file" name="profileImage" accept="image/*" required>
+      <input type="file" name="profileImage" accept=".jpg,.jpeg,.png" required>
       <p>Select Image</p>
     </div>
 
     <!-- Registration Form -->
-    <form class="form-section" action="register" method="post" enctype="multipart/form-data">
+    <form class="form-section" action="RegisterPageServlet" method="post" enctype="multipart/form-data">
         <div class="form-group">
         <label>Student ID <span class="required">*</span></label>
-        <input type="text" name="userId" placeholder="Enter your ID" required>
+        <input type="text" name="studID" placeholder="Enter your ID" required>
       </div>
         
       <div class="form-group">
         <label>Full Name <span class="required">*</span></label>
-        <input type="text" name="fullName" placeholder="Enter your full name" required>
+        <input type="text" name="studName" placeholder="Enter your full name" required>
       </div>
 
       <div class="form-group password-toggle">
         <label>Password <span class="required">*</span></label>
-        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+        <input type="password" id="password" name="studPassword" placeholder="Enter your password" required>
         <button type="button" onclick="togglePassword('password')">👁️</button>
       </div>
         
@@ -196,27 +200,27 @@
         
         <div class="form-group">
         <label>Email <span class="required">*</span></label>
-        <input type="email" name="email" placeholder="Enter your Email" required>
+        <input type="email" name="studEmail" placeholder="Enter your Email" required>
       </div>
         
         <div class="form-group">
         <label>Course <span class="required">*</span></label>
-        <input type="text" name="course" placeholder="Enter your Course" required>
+        <input type="text" name="studCourse" placeholder="Enter your Course" required>
       </div>
         
         <div class="form-group">
         <label>Semester <span class="required">*</span></label>
-        <input type="text" name="sem" placeholder="Enter your Current Semester" required>
+        <input type="text" name="studSemester" placeholder="Enter your Current Semester" required>
       </div>
         
         <div class="form-group">
         <label>Phone No <span class="required">*</span></label>
-        <input type="text" name="umobile" placeholder="Enter your phone number" required>
+        <input type="text" name="studNoPhone" placeholder="Enter your phone number" required>
       </div>
 
       <div class="form-group">
         <label>User <span class="required">*</span></label>
-        <select name="userRole" required>
+        <select name="studType" required>
           <option value="" disabled selected>Select Role</option>
           <option value="admin">Admin</option>
           <option value="student">Student</option>
