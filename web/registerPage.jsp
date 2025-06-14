@@ -48,32 +48,7 @@
     .container {
       display: flex;
       justify-content: center;
-      gap: 40px;
       padding: 40px;
-    }
-
-    .profile-section {
-      text-align: center;
-    }
-
-    .profile-section label {
-      display: block;
-      margin-bottom: 10px;
-      font-weight: bold;
-      font-size: 18px;
-    }
-
-    .profile-img {
-      width: 200px;
-      height: 200px;
-      border: 5px solid black;
-      border-radius: 50%;
-      background-color: #f2f2f2;
-      background-image: url('https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png');
-      background-size: 70%;
-      background-repeat: no-repeat;
-      background-position: center;
-      margin: 10px auto;
     }
 
     .form-section {
@@ -166,16 +141,8 @@
   </div>
 
   <div class="container">
-    <!-- Profile Image -->
-    <div class="profile-section">
-      <label>Profile Picture <span class="required">*</span></label>
-      <div class="profile-img"></div>
-      <input type="file" name="profileImage" accept=".jpg,.jpeg,.png" required>
-      <p>Select Image</p>
-    </div>
-
     <!-- Registration Form -->
-    <form class="form-section" action="RegisterPageServlet" method="post" enctype="multipart/form-data">
+    <form class="form-section" action="RegisterPageServlet" method="post">
         <div class="form-group">
         <label>Student ID <span class="required">*</span></label>
         <input type="text" name="studID" placeholder="Enter your ID" required>
@@ -216,6 +183,30 @@
         <div class="form-group">
         <label>Phone No <span class="required">*</span></label>
         <input type="text" name="studNoPhone" placeholder="Enter your phone number" required>
+      </div>
+
+      <div class="form-group">
+        <label>Date of Birth <span class="required">*</span></label>
+        <input type="date" name="dob" required>
+      </div>
+
+      <div class="form-group">
+        <label>MUET Results <span class="required">*</span></label>
+        <select name="muetStatus" required>
+          <option value="" disabled selected>Select MUET Band</option>
+          <option value="Band 1">Band 1</option>
+          <option value="Band 2">Band 2</option>
+          <option value="Band 3">Band 3</option>
+          <option value="Band 4">Band 4</option>
+          <option value="Band 5">Band 5</option>
+          <option value="Band 6">Band 6</option>
+          <option value="Not Taken">Not Taken</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Student Advisor <span class="required">*</span></label>
+        <input type="text" name="advisor" placeholder="Enter your advisor's name" required>
       </div>
 
       <div class="form-group">

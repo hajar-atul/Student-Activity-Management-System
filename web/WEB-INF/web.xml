@@ -15,17 +15,25 @@
         <url-pattern>/LoginServlet</url-pattern>
     </servlet-mapping>
 
+    <!-- Activities Servlet Mapping -->
+    <servlet>
+        <servlet-name>ActivitiesServlet</servlet-name>
+        <servlet-class>Controller.ActivitiesServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ActivitiesServlet</servlet-name>
+        <url-pattern>/ActivitiesServlet</url-pattern>
+    </servlet-mapping>
+
     <!-- Register Page Servlet Mapping -->
     <servlet>
-    <servlet-name>RegisterPageServlet</servlet-name>
-    <servlet-class>Controller.RegisterPageServlet</servlet-class>
-</servlet>
-
-<servlet-mapping>
-    <servlet-name>RegisterPageServlet</servlet-name>
-    <url-pattern>/RegisterPageServlet</url-pattern>
-</servlet-mapping>
-
+        <servlet-name>RegisterPageServlet</servlet-name>
+        <servlet-class>Controller.RegisterPageServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RegisterPageServlet</servlet-name>
+        <url-pattern>/RegisterPageServlet</url-pattern>
+    </servlet-mapping>
 
     <!-- Session Timeout (in minutes) -->
     <session-config>

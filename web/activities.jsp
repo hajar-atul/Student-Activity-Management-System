@@ -41,7 +41,7 @@
             margin: 0 auto;
         }
 
-        .sidebar h3 {
+        .sidebar h2 {
             text-align: center;
             font-size: 14px;
             margin: 10px 0 0;
@@ -241,10 +241,10 @@
   <!-- Sidebar -->
     <div class="sidebar">
         <img src="image/Raccoon.gif" alt="Profile Picture">
-        <h3><%= request.getAttribute("name") %><br><%= request.getAttribute("studentId") %></h3>
+        <h2><%= session.getAttribute("studName") %><br><%= session.getAttribute("studID") %></h2>
         <div class="menu">
             <a href="studentDashboardPage.jsp">DASHBOARD</a>
-            <a href="activities.jsp">ACTIVITIES</a>
+            <a href="ActivitiesServlet">ACTIVITIES</a>
             <a href="studentClub.jsp">CLUBS</a>
             <a href="achievements.jsp">ACHIEVEMENTS</a>
             <a href="settings.jsp">SETTINGS</a>

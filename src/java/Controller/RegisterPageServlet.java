@@ -1,16 +1,13 @@
 package Controller;
 
 import java.io.*;
-import java.nio.file.*;
 import java.sql.*;
 import javax.servlet.*;
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.*;
 
-@MultipartConfig
 public class RegisterPageServlet extends HttpServlet {
 
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/student?useSSL=false&serverTimezone=UTC";
+    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/student?zeroDateTimeBehavior=convertToNull";
     private static final String DB_USER = "root";
     private static final String DB_PASSWORD = "";
 
@@ -21,6 +18,7 @@ public class RegisterPageServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
 
+        // Get all form parameters
         String studID = request.getParameter("studID");
         String studName = request.getParameter("studName");
         String studEmail = request.getParameter("studEmail");
@@ -30,47 +28,43 @@ public class RegisterPageServlet extends HttpServlet {
         String studSemester = request.getParameter("studSemester");
         String studNoPhone = request.getParameter("studNoPhone");
         String studType = request.getParameter("studType");
-
-        Part filePart = request.getPart("profileImage");
-
-        // File validation
-        String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-        String fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
-        if (!(fileExtension.equals("jpg") || fileExtension.equals("jpeg") || fileExtension.equals("png"))) {
-            request.setAttribute("error", "Only JPG and PNG files are allowed for profile picture.");
-            request.getRequestDispatcher("registerPage.jsp").forward(request, response);
-            return;
-        }
+        String dob = request.getParameter("dob");
+        String muetStatus = request.getParameter("muetStatus");
+        String advisor = request.getParameter("advisor");
 
         // Password match check
         if (!studPassword.equals(confirmPassword)) {
-            request.setAttribute("error", "Password and Confirm Password do not match.");
-            request.getRequestDispatcher("registerPage.jsp").forward(request, response);
+            response.sendRedirect("registerResult.jsp?status=error&message=Password+and+Confirm+Password+do+not+match");
             return;
         }
-
-        // Save file to /uploads
-        String uploadsDir = getServletContext().getRealPath("/") + "uploads";
-        File uploadsFolder = new File(uploadsDir);
-        if (!uploadsFolder.exists()) uploadsFolder.mkdir();
-        String savedFilePath = uploadsDir + File.separator + fileName;
-        filePart.write(savedFilePath);
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
 
-                String checkQuery = "SELECT * FROM student WHERE studEmail = ?";
+                // Check if email already exists
+                String checkQuery = "SELECT * FROM student WHERE studEmail = ? OR studID = ?";
                 PreparedStatement checkStmt = conn.prepareStatement(checkQuery);
                 checkStmt.setString(1, studEmail);
+                checkStmt.setString(2, studID);
                 ResultSet rs = checkStmt.executeQuery();
+                
                 if (rs.next()) {
-                    request.setAttribute("error", "Email already registered.");
-                    request.getRequestDispatcher("registerPage.jsp").forward(request, response);
+                    String errorMessage;
+                    if (rs.getString("studEmail").equals(studEmail)) {
+                        errorMessage = "Email+already+registered";
+                    } else {
+                        errorMessage = "Student+ID+already+registered";
+                    }
+                    response.sendRedirect("registerResult.jsp?status=error&message=" + errorMessage);
                     return;
                 }
 
-                String insertQuery = "INSERT INTO student (studID, studName, studEmail, studCourse, studSemester, studNoPhone, studType, studPassword) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                // Insert new student record with all fields
+                String insertQuery = "INSERT INTO student (studID, studName, studEmail, studCourse, studSemester, " +
+                                   "studNoPhone, studType, studPassword, dob, muetStatus, advisor) " +
+                                   "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                
                 PreparedStatement insertStmt = conn.prepareStatement(insertQuery);
                 insertStmt.setString(1, studID);
                 insertStmt.setString(2, studName);
@@ -80,18 +74,22 @@ public class RegisterPageServlet extends HttpServlet {
                 insertStmt.setString(6, studNoPhone);
                 insertStmt.setString(7, studType);
                 insertStmt.setString(8, studPassword);
+                insertStmt.setString(9, dob);
+                insertStmt.setString(10, muetStatus);
+                insertStmt.setString(11, advisor);
+                
                 int rows = insertStmt.executeUpdate();
 
                 if (rows > 0) {
-                    response.sendRedirect("index.jsp?message=Registration+successful");
+                    // Registration successful
+                    response.sendRedirect("registerResult.jsp?status=success&message=Registration+successful!+You+can+now+login+with+your+credentials");
                 } else {
-                    request.setAttribute("error", "Registration failed. Please try again.");
-                    request.getRequestDispatcher("registerPage.jsp").forward(request, response);
+                    response.sendRedirect("registerResult.jsp?status=error&message=Registration+failed.+Please+try+again");
                 }
             }
         } catch (Exception e) {
-            request.setAttribute("error", "Error: " + e.getMessage());
-            request.getRequestDispatcher("registerPage.jsp").forward(request, response);
+            e.printStackTrace();
+            response.sendRedirect("registerResult.jsp?status=error&message=Error+during+registration:+Please+try+again+later");
         }
     }
 }
