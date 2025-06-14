@@ -61,10 +61,10 @@
         <img src="image/mppUMPSA.jpg" alt="Logo" class="round-img"/>
         <h2>MAJLIS PERWAKILAN PELAJAR</h2>
         <ul>
-            <li>MANAGE ACTIVITIES</li>
-            <li class="active">STUDENT LIST</li>
-            <li>FEEDBACK</li>
-            <li>REPORT</li>
+            <li class="active">MANAGE ACTIVITIES</li>
+            <li><a href="studentList.jsp">STUDENT LIST</a></li>
+            <li><a href="feedbackAdmin.jsp">FEEDBACK</a></li>
+            <li><a href="adminReport.jsp">REPORT</a></li>
         </ul>
     </div>
     <div class="main">
