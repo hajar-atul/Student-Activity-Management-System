@@ -238,7 +238,7 @@
 
   <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
-    <img src="image/Raccoon.gif" alt="Profile Picture" class="profile-pic">
+    <img src="image/amin.jpg" alt="Profile Picture" class="profile-pic">
     <h4>MUHAMMAD AMINUDDIN BIN HASNAN</h4>
     <p>2023217854</p>
 
@@ -260,7 +260,7 @@
         <button class="notification-btn" id="notificationBtn" aria-label="Toggle Notifications">
           <img src="image/bell.png" alt="Notifications" />
         </button>
-        <img src="image/Raccoon.gif" alt="User Avatar" class="profile-icon" />
+        <img src="image/amin.jpg" alt="User Avatar" class="profile-icon" />
       </div>
     </div>
 

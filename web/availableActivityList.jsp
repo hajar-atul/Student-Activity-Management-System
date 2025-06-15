@@ -223,7 +223,7 @@
 
   <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
-    <img src="image/Raccoon.gif" alt="Profile Picture" class="profile-pic">
+    <img src="image/amin.jpg" alt="Profile Picture" class="profile-pic">
     <h4><%= session.getAttribute("studName") %></h4>
     <p><%= session.getAttribute("studID") %></p>
 
@@ -245,7 +245,7 @@
         <button class="notification-btn" id="notificationBtn">
           <img src="image/bell.png" alt="Notifications" />
         </button>
-        <img src="image/Raccoon.gif" alt="User Avatar" class="profile-icon" />
+        <img src="image/amin.jpg" alt="User Avatar" class="profile-icon" />
       </div>
     </div>
 

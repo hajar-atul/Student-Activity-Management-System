@@ -201,7 +201,7 @@
 
     <!-- Sidebar -->
     <div class="sidebar">
-        <img src="image/Raccoon.gif" alt="Profile Picture">
+        <img src="image/amin.jpg" alt="Profile Picture">
         <h2>
             <%= session.getAttribute("studName") %><br>
             <%= session.getAttribute("studID") %>
@@ -230,7 +230,7 @@
             <div class="notification-dropdown" id="notificationDropdown">
                 <p>No new notifications</p>
             </div>
-            <img src="image/Raccoon.gif" alt="Profile" class="profile-icon">
+            <img src="image/amin.jpg" alt="Profile" class="profile-icon">
         </div>
     </div>
 

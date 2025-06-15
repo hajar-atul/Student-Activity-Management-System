@@ -240,7 +240,7 @@
 
   <!-- Sidebar -->
     <div class="sidebar">
-        <img src="image/Raccoon.gif" alt="Profile Picture">
+        <img src="image/amin.jpg" alt="Profile Picture">
         <h2><%= session.getAttribute("studName") %><br><%= session.getAttribute("studID") %></h2>
         <div class="menu">
             <a href="studentDashboardPage.jsp">DASHBOARD</a>
@@ -262,7 +262,7 @@
         <button class="notification-btn" id="notificationBtn">
           <img src="image/bell.png" alt="Notification">
         </button>
-        <img src="image/Raccoon.gif" alt="Profile" class="profile-icon">
+        <img src="image/amin.jpg" alt="Profile" class="profile-icon">
       </div>
     </div>
 
