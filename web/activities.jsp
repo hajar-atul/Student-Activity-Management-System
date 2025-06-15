@@ -12,55 +12,72 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
   <style>
     * {
-      margin: 0;
+     margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
 
-          body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            display: flex;
-            background-color: #f0f0f0;
-        }
-        
-        /* Sidebar */
-        .sidebar {
-            width: 250px;
-            background-color: #008b8b;
-            color: white;
-            padding: 20px;
-            height: 100vh;
-        }
+    body {
+      font-family: 'Poppins', Arial, sans-serif;
+    }
 
-        .sidebar img {
-            border-radius: 50%;
-            width: 150px;
-            height: 150px;
-            display: block;
-            margin: 0 auto;
-        }
+    /* Sidebar */
+    .sidebar {
+      width: 270px;
+      height: 100vh;
+      background-color: #00796B;
+      color: white;
+      position: fixed;
+      padding: 70px 20px 20px 20px;
+      transition: transform 0.3s ease;
+      overflow-y: auto;
+      text-align: center;
+      z-index: 10;
+    }
 
-        .sidebar h2 {
-            text-align: center;
-            font-size: 14px;
-            margin: 10px 0 0;
-        }
+    .sidebar.closed {
+      transform: translateX(-100%);
+    }
 
-        .menu {
-            margin-top: 30px;
-        }
+    .sidebar img.profile-pic {
+      width: 100px;
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 15px;
+      border: 3px solid white;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    }
 
-        .menu a {
-            display: block;
-            padding: 10px;
-            background-color: #0a6d6d;
-            margin-top: 10px;
-            text-decoration: none;
-            color: white;
-            border-radius: 5px;
-            text-align: center;
-        }
+    .sidebar h4,
+    .sidebar p {
+      margin-bottom: 10px;
+    }
+
+    .sidebar ul {
+      list-style: none;
+      padding-left: 0;
+      margin-top: 20px;
+    }
+
+    .sidebar ul li {
+      margin-bottom: 15px;
+    }
+
+    .sidebar ul li a {
+      color: white;
+      text-decoration: none;
+      padding: 10px;
+      display: block;
+      border-radius: 5px;
+      transition: background-color 0.2s ease;
+    }
+
+    .sidebar ul li a:hover,
+    .sidebar ul li a.active {
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+
     /* Toggle Button */
     .toggle-btn {
       position: fixed;
@@ -235,38 +252,38 @@
 </head>
 <body>
 
-  <!-- Toggle Sidebar Button -->
+<!-- Toggle Sidebar Button -->
   <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
 
   <!-- Sidebar -->
-    <div class="sidebar">
-        <img src="image/amin.jpg" alt="Profile Picture">
-        <h2><%= session.getAttribute("studName") %><br><%= session.getAttribute("studID") %></h2>
-        <div class="menu">
-            <a href="studentDashboardPage.jsp">DASHBOARD</a>
-            <a href="ActivitiesServlet">ACTIVITIES</a>
-            <a href="studentClub.jsp">CLUBS</a>
-            <a href="achievements.jsp">ACHIEVEMENTS</a>
-            <a href="settings.jsp">SETTINGS</a>
-        </div>
-    </div>
+  <div class="sidebar" id="sidebar">
+    <img src="image/amin.jpg" alt="Profile Picture" class="profile-pic">
+    <h4><%= session.getAttribute("studName") %></h4>
+    <p><%= session.getAttribute("studID") %></p>
+
+    <ul>
+      <li><a href="studentDashboardPage.jsp">Dashboard</a></li>
+      <li><a href="activities.jsp" class="active">Activities</a></li>
+      <li><a href="studentClub.jsp">Clubs</a></li>
+      <li><a href="achievements.jsp">Achievements</a></li>
+      <li><a href="settings.jsp">Settings</a></li>
+    </ul>
+  </div>
 
   <!-- Main Content -->
-  <div class="main-content" id="mainContent">
-
-    <!-- Header with icons on the right -->
+   <div class="main-content" id="mainContent">
     <div class="header">
       <div class="header-title">ACTIVITIES</div>
       <div class="top-icons">
-        <img src="image/umpsa.png" alt="UMPSA" class="umpsa-icon">
+        <img src="image/umpsa.png" alt="Universiti Malaysia Pahang Logo" class="umpsa-icon" />
         <button class="notification-btn" id="notificationBtn">
-          <img src="image/bell.png" alt="Notification">
+          <img src="image/bell.png" alt="Notifications" />
         </button>
-        <img src="image/amin.jpg" alt="Profile" class="profile-icon">
+        <img src="image/amin.jpg" alt="User Avatar" class="profile-icon" />
       </div>
     </div>
 
-    <!-- Dropdown for notifications -->
+    <!-- Notification Dropdown -->
     <div class="notification-dropdown" id="notificationDropdown">
       <p>No new notifications</p>
     </div>
