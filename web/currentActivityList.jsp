@@ -213,8 +213,8 @@
   <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
     <img src="image/Raccoon.gif" alt="Profile Picture" class="profile-pic">
-    <h4>MUHAMMAD AMINUDDIN BIN HASNAN</h4>
-    <p>2023217854</p>
+    <h4><%= session.getAttribute("studName") %></h4>
+    <p><%= session.getAttribute("studID") %></p>
 
     <ul>
       <li><a href="studentDashboardPage.jsp">Dashboard</a></li>

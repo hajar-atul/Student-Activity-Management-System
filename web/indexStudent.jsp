@@ -192,7 +192,7 @@
         </p>
       <% } %>
 
-      <form action="<%= request.getContextPath() %>/LoginServlet" method="post">
+      <form action="<%= request.getContextPath()%>/LoginServlet" method="post">
 
         <div class="roles">
           <input type="radio" id="admin" name="role" value="admin" required onclick="location.href='indexAdmin.jsp'">
