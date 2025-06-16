@@ -1,7 +1,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="Controller.StudentListServlet.Activity" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title>Student List</title>
     <style>
