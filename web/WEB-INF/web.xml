@@ -35,6 +35,26 @@
         <url-pattern>/RegisterPageServlet</url-pattern>
     </servlet-mapping>
 
+    <!-- ForgotPasswordServlet Mapping -->
+    <servlet>
+        <servlet-name>ForgotPasswordServlet</servlet-name>
+        <servlet-class>Controller.ForgotPasswordServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ForgotPasswordServlet</servlet-name>
+        <url-pattern>/ForgotPasswordServlet</url-pattern>
+    </servlet-mapping>
+
+    <!-- UpdatePasswordServlet Mapping -->
+    <servlet>
+        <servlet-name>UpdatePasswordServlet</servlet-name>
+        <servlet-class>Controller.UpdatePasswordServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UpdatePasswordServlet</servlet-name>
+        <url-pattern>/UpdatePasswordServlet</url-pattern>
+    </servlet-mapping>
+
     <!-- Session Timeout (in minutes) -->
     <session-config>
         <session-timeout>30</session-timeout>

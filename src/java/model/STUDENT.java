@@ -1,6 +1,10 @@
 package model;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -30,51 +34,64 @@ public class STUDENT {
     private static final String DB_USER = "root";
     private static final String DB_PASSWORD = "";
 
-    // Get student by ID
-    public static STUDENT getStudentById(int studID) {
-        STUDENT student = null;
+    // Load JDBC driver
+    static {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
-                String query = "SELECT * FROM student WHERE studID = ?";
-                PreparedStatement stmt = conn.prepareStatement(query);
-                stmt.setInt(1, studID);
-                ResultSet rs = stmt.executeQuery();
-
-                if (rs.next()) {
-                    student = new STUDENT();
-                    student.setStudId(rs.getInt("studID"));
-                    student.setStudName(rs.getString("studName"));
-                    student.setStudEmail(rs.getString("studEmail"));
-                    student.setStudCourse(rs.getString("studCourse"));
-                    student.setStudSemester(rs.getString("studSemester"));
-                    student.setStudNoPhone(rs.getString("studNoPhone"));
-                    student.setStudType(rs.getString("studType"));
-                    student.setStudPassword(rs.getString("studPassword"));
-                }
-            }
-        } catch (Exception e) {
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        return student;
+    }
+
+    // Get database connection
+    private static Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
+    }
+
+    // Get student by ID
+    public static STUDENT getStudentById(int studId) {
+        String query = "SELECT * FROM student WHERE studID = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setInt(1, studId);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                STUDENT student = new STUDENT();
+                student.setStudID(rs.getInt("studID"));
+                student.setStudName(rs.getString("studName"));
+                student.setStudEmail(rs.getString("studEmail"));
+                student.setStudCourse(rs.getString("studCourse"));
+                student.setStudSemester(rs.getString("studSemester"));
+                student.setStudNoPhone(rs.getString("studNoPhone"));
+                student.setStudType(rs.getString("studType"));
+                student.setStudPassword(rs.getString("studPassword"));
+                student.setDob(rs.getString("dob"));
+                student.setMuetStatus(rs.getString("muetStatus"));
+                student.setAdvisor(rs.getString("advisor"));
+                return student;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     // Password validation method
-    public static boolean validatePassword(int studID, String enteredPassword) {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
-                String query = "SELECT studPassword FROM student WHERE studID = ?";
-                PreparedStatement stmt = conn.prepareStatement(query);
-                stmt.setInt(1, studID);
-                ResultSet rs = stmt.executeQuery();
-
-                if (rs.next()) {
-                    String storedPassword = rs.getString("studPassword");
-                    return storedPassword.equals(enteredPassword);
-                }
+    public static boolean validatePassword(int studId, String password) {
+        String query = "SELECT studPassword FROM student WHERE studID = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setInt(1, studId);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                String storedPassword = rs.getString("studPassword");
+                return storedPassword != null && storedPassword.equals(password);
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
@@ -88,42 +105,26 @@ public class STUDENT {
                 return "Password and Confirm Password do not match";
             }
 
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
-                // Check if email or ID already exists
-                String checkQuery = "SELECT * FROM student WHERE studEmail = ? OR studID = ?";
-                PreparedStatement checkStmt = conn.prepareStatement(checkQuery);
-                checkStmt.setString(1, student.getStudEmail());
-                checkStmt.setInt(2, student.getStudId());
-                ResultSet rs = checkStmt.executeQuery();
+            String query = "INSERT INTO student (studID, studName, studEmail, studCourse, studSemester, " +
+                          "studNoPhone, studType, studPassword, dob, muetStatus, advisor) " +
+                          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            
+            try (Connection conn = getConnection();
+                 PreparedStatement pstmt = conn.prepareStatement(query)) {
                 
-                if (rs.next()) {
-                    if (rs.getString("studEmail").equals(student.getStudEmail())) {
-                        return "Email already registered";
-                    } else {
-                        return "Student ID already registered";
-                    }
-                }
-
-                // Insert new student record
-                String insertQuery = "INSERT INTO student (studID, studName, studEmail, studCourse, studSemester, " +
-                                   "studNoPhone, studType, studPassword, dob, muetStatus, advisor) " +
-                                   "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                pstmt.setInt(1, student.getStudID());
+                pstmt.setString(2, student.getStudName());
+                pstmt.setString(3, student.getStudEmail());
+                pstmt.setString(4, student.getStudCourse());
+                pstmt.setString(5, student.getStudSemester());
+                pstmt.setString(6, student.getStudNoPhone());
+                pstmt.setString(7, student.getStudType());
+                pstmt.setString(8, student.getStudPassword());
+                pstmt.setString(9, student.getDob());
+                pstmt.setString(10, student.getMuetStatus());
+                pstmt.setString(11, student.getAdvisor());
                 
-                PreparedStatement insertStmt = conn.prepareStatement(insertQuery);
-                insertStmt.setInt(1, student.getStudId());
-                insertStmt.setString(2, student.getStudName());
-                insertStmt.setString(3, student.getStudEmail());
-                insertStmt.setString(4, student.getStudCourse());
-                insertStmt.setString(5, student.getStudSemester());
-                insertStmt.setString(6, student.getStudNoPhone());
-                insertStmt.setString(7, student.getStudType());
-                insertStmt.setString(8, student.getStudPassword());
-                insertStmt.setString(9, student.getDob());
-                insertStmt.setString(10, student.getMuetStatus());
-                insertStmt.setString(11, student.getAdvisor());
-                
-                int rows = insertStmt.executeUpdate();
+                int rows = pstmt.executeUpdate();
 
                 if (rows > 0) {
                     return "success";
@@ -138,31 +139,29 @@ public class STUDENT {
     }
 
     // Check if student ID exists
-    public static boolean studentExists(int studID) {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
-                String query = "SELECT COUNT(*) FROM student WHERE studID = ?";
-                PreparedStatement stmt = conn.prepareStatement(query);
-                stmt.setInt(1, studID);
-                ResultSet rs = stmt.executeQuery();
-
-                if (rs.next()) {
-                    return rs.getInt(1) > 0;
-                }
+    public static boolean studentExists(int studId) {
+        String query = "SELECT COUNT(*) FROM student WHERE studID = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setInt(1, studId);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
     }
 
     // Setter and Getter for studId
-    public void setStudId(int studID) {
+    public void setStudID(int studID) {
         this.studID = studID;
     }
 
-    public int getStudId() {
+    public int getStudID() {
         return studID;
     }
 
@@ -252,6 +251,23 @@ public class STUDENT {
 
     public void setAdvisor(String advisor) {
         this.advisor = advisor;
+    }
+
+    // Update password
+    public static boolean updatePassword(int studID, String newPassword) {
+        String query = "UPDATE student SET studPassword = ? WHERE studID = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setString(1, newPassword);
+            pstmt.setInt(2, studID);
+            
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
 

@@ -18,7 +18,7 @@ public class RegisterPageServlet extends HttpServlet {
         STUDENT student = new STUDENT();
         
         // Set student properties from form data
-        student.setStudId(Integer.parseInt(request.getParameter("studID")));
+        student.setStudID(Integer.parseInt(request.getParameter("studID")));
         student.setStudName(request.getParameter("studName"));
         student.setStudEmail(request.getParameter("studEmail"));
         student.setStudPassword(request.getParameter("studPassword"));
