@@ -1,15 +1,10 @@
-<%-- 
-    Document   : Clubs
-    Created on : Jun 6, 2025, 3:51:43 PM
-    Author     : wafa
---%>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Club Dashboard</title>
+  <title>Admin Feedback</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
   <style>
     * {
@@ -393,24 +388,108 @@
     </style>
 </head>
 <body>
+<div class="sidebar">
+    <img src="image/logo_mpp.png" alt="Logo" style="width:100px; border-radius: 50%; display:block; margin:0 auto 20px;">
+    <ul>
+        <li><a href="adminDashboardPage.jsp">MANAGE ACTIVITIES</a></li>
+        <li><a href="adminStudentList.jsp">STUDENT LIST</a></li>
+        <li><a href="adminFeedback.jsp" class="active">FEEDBACK</a></li>
+        <li><a href="adminReport.jsp">REPORT</a></li>
+    </ul>
+</div>
 
-    <div class="sidebar">
-        <h3>MUHAMMAD AMINUDDIN BIN HASNAN</h3>
-        <p>2023217854</p>
-
-        <ul>
-            <li><a href="studentDashboardPage.jsp">Dashboard</a></li>
-            <li><a href="activities.jsp">Activities</a></li>
-            <li><a href="studentClub.jsp">Clubs</a></li>
-            <li><a href="achievements.jsp">Achievements</a></li>
-            <li><a href="settings.jsp">Settings</a></li>
-        </ul>
+<div class="main-content">
+    <div class="header">
+        <h2>Feedback</h2>
     </div>
 
-    <div class="main-content">
-        <h2>Achievements Page</h2>
-        <p>This is the section where student achievements will be listed.</p>
+    <div class="feedback-summary">
+        <div class="summary-box">
+            <h3>Total Feedback</h3>
+            <p>125</p>
+        </div>
+        <div class="summary-box">
+            <h3>Resolved</h3>
+            <p>83</p>
+        </div>
+        <div class="summary-box">
+            <h3>Pending</h3>
+            <p>29</p>
+        </div>
+        <div class="summary-box">
+            <h3>New Today</h3>
+            <p>13</p>
+        </div>
     </div>
+
+    <table>
+        <tr>
+            <th>NO</th>
+            <th>NAME</th>
+            <th>Type</th>
+            <th>Summary</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>AHMAD KASSIM</td>
+            <td>Complaint</td>
+            <td>Low management</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>SITI JENAB</td>
+            <td>Complaint</td>
+            <td>Food are not enough for participants</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>LAW ANN CHAY</td>
+            <td>Suggestion</td>
+            <td>Add projector for debate night</td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>DARSHAN</td>
+            <td>Compliment</td>
+            <td>Everything was perfect, the food, the vibe, the people were very friendly.</td>
+        </tr>
+    </table>
+
+    <div class="chart-section">
+        <canvas id="feedbackChart"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('feedbackChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['5 star', '4 star', '3 star', '2 star', '1 star'],
+            datasets: [{
+                label: 'Overall Activities Rating',
+                data: [30, 25, 22, 15, 8],
+                backgroundColor: [
+                    '#4caf50', '#2196f3', '#ffeb3b', '#ff9800', '#f44336'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'right'
+                },
+                title: {
+                    display: true,
+                    text: 'Overall Activities Rating'
+                }
+            }
+        }
+    });
+</script>
 
 </body>
 </html>

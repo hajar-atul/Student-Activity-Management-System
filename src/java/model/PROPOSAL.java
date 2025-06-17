@@ -10,18 +10,18 @@ package model;
  * @author User
  */
 public class PROPOSAL {
-    private int proposalId;
+    private int proposalID;
     private String proposalName;
     private String proposalDetails;
     private String submissionDate;
-    private int clubId;
+    private int clubID;
     
-    public void setProposalId(int proposalId) {
-        this.proposalId = proposalId;
+    public void setProposalId(int proposalID) {
+        this.proposalID = proposalID;
     }
 
     public int getProposalId() {
-        return proposalId;
+        return proposalID;
     }
     
     public void setProposalName(String proposalName) {
@@ -48,11 +48,11 @@ public class PROPOSAL {
         return submissionDate;
     }
     
-    public void setClubId(int clubId) {
-        this.clubId = clubId;
+    public void setClubId(int clubID) {
+        this.clubID = clubID;
     }
 
     public int getlubId() {
-        return clubId;
+        return clubID;
     }
 }

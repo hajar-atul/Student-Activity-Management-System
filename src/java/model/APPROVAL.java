@@ -10,18 +10,18 @@ package model;
  * @author User
  */
 public class APPROVAL {
-    private int approvalId;
+    private int approvalID;
     private String approvalActivity;
     private String approvalBudget;
-    private int proposalId;
-    private int studId;
+    private int proposalID;
+    private int studID;
     
-    public void setApprovalId(int approvalId) {
-        this.approvalId = approvalId;
+    public void setApprovalId(int approvalID) {
+        this.approvalID = approvalID;
     }
 
     public int getApprovalId() {
-        return approvalId;
+        return approvalID;
     }
     
     public void setApprovalActivity(String approvalActivity) {
@@ -40,19 +40,19 @@ public class APPROVAL {
         return approvalBudget;
     }
     
-    public void setProposallId(int proposallId) {
-        this.proposalId = proposalId;
+    public void setProposallId(int proposalID) {
+        this.proposalID = proposalID;
     }
 
     public int getProposalId() {
-        return proposalId;
+        return proposalID;
     }
     
-    public void setStudlId(int studlId) {
-        this.studId = studId;
+    public void setStudlId(int studID) {
+        this.studID = studID;
     }
 
     public int getStudId() {
-        return studId;
+        return studID;
     }
 }

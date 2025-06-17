@@ -10,24 +10,24 @@ package model;
  * @author User
  */
 public class REGISTERATION {
-    private int studId;
-    private int activityId;
+    private int studID;
+    private int activityID;
     private String regDate;
     
-    public void setStudId(int studId) {
-        this.studId = studId;
+    public void setStudId(int studID) {
+        this.studID = studID;
     }
 
     public int getStudId() {
-        return studId;
+        return studID;
     }
     
-    public void setActivityId(int activityId) {
-        this.activityId = activityId;
+    public void setActivityId(int activityID) {
+        this.activityID = activityID;
     }
 
     public int getActivityId() {
-        return activityId;
+        return activityID;
     }
     
     public void setRegDate(String regDate) {

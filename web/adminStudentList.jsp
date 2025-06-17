@@ -1,15 +1,10 @@
-<%-- 
-    Document   : Clubs
-    Created on : Jun 6, 2025, 3:51:43 PM
-    Author     : wafa
---%>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Club Dashboard</title>
+  <title>Admin Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
   <style>
     * {
@@ -390,27 +385,124 @@
         justify-content: center;
       }
     }
-    </style>
+      </style>
 </head>
 <body>
 
-    <div class="sidebar">
-        <h3>MUHAMMAD AMINUDDIN BIN HASNAN</h3>
-        <p>2023217854</p>
+<button class="toggle-btn" onclick="toggleSidebar()">☰</button>
 
-        <ul>
-            <li><a href="studentDashboardPage.jsp">Dashboard</a></li>
-            <li><a href="activities.jsp">Activities</a></li>
-            <li><a href="studentClub.jsp">Clubs</a></li>
-            <li><a href="achievements.jsp">Achievements</a></li>
-            <li><a href="settings.jsp">Settings</a></li>
-        </ul>
-    </div>
+<div class="sidebar" id="sidebar">
+  <img src="image/logo_mpp.png" alt="User Profile Picture" class="profile-pic">
 
-    <div class="main-content">
-        <h2>Achievements Page</h2>
-        <p>This is the section where student achievements will be listed.</p>
+  <ul>
+    <li><a href="adminDashboardPage.jsp" class="active">MANAGE ACTIVITIES</a></li>
+    <li><a href="adminStudentList.jsp">STUDENT LIST</a></li>
+    
+    <li><a href="adminFeedback.jsp">FEEDBACK</a></li>
+    <li><a href="adminReport.jsp">REPORT</a></li>
+  </ul>
+</div>
+
+<div class="main-content" id="mainContent">
+  <div class="header">
+    <div class="header-title">DASHBOARD</div>
+    <div class="top-icons">
+      <img src="image/umpsa.png" alt="UMPSA Logo" class="umpsa-icon" />
+      <button class="notification-btn" id="notificationBtn">
+        <img src="image/bell.png" alt="Notifications" />
+      </button>
+      <img src="image/logo_mpp.png" alt="User Avatar" class="profile-icon" />
     </div>
+  </div>
+    
+    <div class="notification-dropdown" id="notificationDropdown">
+    <p>No new notifications</p>
+  </div>
+    
+    <div class="filters">
+    <div>
+      <label>Filter by Club:</label><br>
+      <select>
+        <option>Select Club</option>
+        <option>IT CLUB</option>
+        <option>ROTU CLUB</option>
+        <option>SOCIETY</option>
+      </select>
+    </div>
+    <div>
+      <label>Filter by Course:</label><br>
+      <select>
+        <option>Select Course</option>
+        <option>CS110</option>
+        <option>CS230</option>
+        <option>BM111</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Student Table -->
+ <div style="padding: 30px; margin-left: 260px;"> <!-- Adjust for sidebar -->
+  <h2 style="color: #006d6d; font-size: 28px; font-weight: bold;">Student Participation</h2>
+
+  <div style="margin-bottom: 20px;">
+    <label for="clubFilter">Filter by Club:</label>
+    <select id="clubFilter">
+      <option>Select Club</option>
+      <option>IT CLUB</option>
+      <option>ROTU CLUB</option>
+      <option>SOCIETY</option>
+    </select>
+
+    <label for="courseFilter" style="margin-left: 20px;">Filter by Course:</label>
+    <select id="courseFilter">
+      <option>Select Course</option>
+      <option>CS110</option>
+      <option>BA242</option>
+      <option>BM119</option>
+    </select>
+  </div>
+
+  <table style="width: 100%; border-collapse: collapse; background-color: #fff; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden;">
+    <thead style="background-color: #1ec9b4; color: white;">
+      <tr>
+        <th style="padding: 12px;">Activity</th>
+        <th style="padding: 12px;">Club</th>
+        <th style="padding: 12px;">Student</th>
+        <th style="padding: 12px;">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="text-align: center;">
+        <td style="padding: 12px;">TECH EXPO</td>
+        <td style="padding: 12px;">IT CLUB</td>
+        <td style="padding: 12px;">25</td>
+        <td style="padding: 12px;"><button style="padding: 8px 14px; background-color: #1ec9b4; color: white; border: none; border-radius: 5px;">View Students</button></td>
+      </tr>
+      <tr style="text-align: center;">
+        <td style="padding: 12px;">ROTU SOLO NIGHT</td>
+        <td style="padding: 12px;">ROTU CLUB</td>
+        <td style="padding: 12px;">30</td>
+        <td style="padding: 12px;"><button style="padding: 8px 14px; background-color: #1ec9b4; color: white; border: none; border-radius: 5px;">View Students</button></td>
+      </tr>
+      <tr style="text-align: center;">
+        <td style="padding: 12px;">DEBATE NIGHT</td>
+        <td style="padding: 12px;">SOCIETY</td>
+        <td style="padding: 12px;">15</td>
+        <td style="padding: 12px;"><button style="padding: 8px 14px; background-color: #1ec9b4; color: white; border: none; border-radius: 5px;">View Students</button></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+<script>
+  function toggleSidebar() {
+    var sidebar = document.getElementById("sidebar");
+    var content = document.getElementById("mainContent");
+    sidebar.classList.toggle("closed");
+    content.classList.toggle("full-width");
+  }
+</script>
 
 </body>
 </html>

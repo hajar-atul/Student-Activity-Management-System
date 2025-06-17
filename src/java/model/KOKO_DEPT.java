@@ -9,18 +9,9 @@ package model;
  *
  * @author User
  */
-public class ADAB_POINT {
-    private int studID;
+public class KOKO_DEPT {
     private int staffID;
-    private int adabPoint;
-    
-    public void setStudId(int studID) {
-        this.studID = studID;
-    }
-
-    public int getStudId() {
-        return studID;
-    }
+    private int giveAdabPoint;
     
     public void setStaffId(int staffID) {
         this.staffID = staffID;
@@ -30,11 +21,11 @@ public class ADAB_POINT {
         return staffID;
     }
     
-    public void setAdabPoint(int adabPoint) {
-        this.adabPoint= adabPoint;
+    public void setGiveAdabPoint (int giveAdabPoint) {
+        this.giveAdabPoint = giveAdabPoint;
     }
 
-    public int getAdabPoint() {
-        return adabPoint;
+    public int getGiveAdabPoint() {
+        return giveAdabPoint;
     }
 }

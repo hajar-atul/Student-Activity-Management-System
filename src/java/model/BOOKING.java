@@ -10,25 +10,25 @@ package model;
  * @author User
  */
 public class BOOKING {
-    private int clubId;
-    private int staffId;
+    private int clubID;
+    private int staffID;
     private String venue;
     private String logistic;
     
-    public void setClubId(int clubId) {
-        this.clubId = clubId;
+    public void setClubId(int clubID) {
+        this.clubID = clubID;
     }
 
     public int getClubId() {
-        return clubId;
+        return clubID;
     }
     
-    public void setStaffId(int staffId) {
-        this.staffId = staffId;
+    public void setStaffId(int staffID) {
+        this.staffID = staffID;
     }
 
     public int getStaffId() {
-        return staffId;
+        return staffID;
     }
     
     public void setVenue(String venue) {

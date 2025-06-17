@@ -11,7 +11,7 @@ package model;
  * @author User
  */
 public class ACTIVITY {
-       private int activityId;
+       private int activityID;
        private String activityName;
        private String activityDesc;
        private String activity_Date;
@@ -20,12 +20,12 @@ public class ACTIVITY {
        private double activityBudget;
        private boolean attendance; 
        
-        public void setActivityId(int activityId) {
-        this.activityId = activityId;
+        public void setActivityId(int activityID) {
+        this.activityID = activityID;
     }
 
     public int getActivityId() {
-        return activityId;
+        return activityID;
     }
     
      public void setActivtyName(String activityName) {
@@ -65,7 +65,7 @@ public class ACTIVITY {
     }
 
     public String getActivityStatus() {
-        return activityDesc;
+        return activityStatus;
     }
     
       public void setActivityBudget(double activityBudget) {

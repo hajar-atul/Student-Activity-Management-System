@@ -1,15 +1,10 @@
-<%-- 
-    Document   : Clubs
-    Created on : Jun 6, 2025, 3:51:43 PM
-    Author     : wafa
---%>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Club Dashboard</title>
+  <title>Admin Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
   <style>
     * {
@@ -390,27 +385,134 @@
         justify-content: center;
       }
     }
-    </style>
+     </style>
 </head>
 <body>
 
-    <div class="sidebar">
-        <h3>MUHAMMAD AMINUDDIN BIN HASNAN</h3>
-        <p>2023217854</p>
+<button class="toggle-btn" onclick="toggleSidebar()">☰</button>
 
-        <ul>
-            <li><a href="studentDashboardPage.jsp">Dashboard</a></li>
-            <li><a href="activities.jsp">Activities</a></li>
-            <li><a href="studentClub.jsp">Clubs</a></li>
-            <li><a href="achievements.jsp">Achievements</a></li>
-            <li><a href="settings.jsp">Settings</a></li>
-        </ul>
-    </div>
+<div class="sidebar" id="sidebar">
+  <img src="image/logo_mpp.png" alt="User Profile Picture" class="profile-pic">
 
-    <div class="main-content">
-        <h2>Achievements Page</h2>
-        <p>This is the section where student achievements will be listed.</p>
+  <ul>
+    <li><a href="adminDashboardPage.jsp" class="active">MANAGE ACTIVITIES</a></li>
+    <li><a href="adminStudentList.jsp">STUDENT LIST</a></li>
+    
+    <li><a href="adminFeedback.jsp">FEEDBACK</a></li>
+    <li><a href="adminReport.jsp">REPORT</a></li>
+  </ul>
+</div>
+
+<div class="main-content" id="mainContent">
+  <div class="header">
+    <div class="header-title">DASHBOARD</div>
+    <div class="top-icons">
+      <img src="image/umpsa.png" alt="UMPSA Logo" class="umpsa-icon" />
+      <button class="notification-btn" id="notificationBtn">
+        <img src="image/bell.png" alt="Notifications" />
+      </button>
+      <img src="image/logo_mpp.png" alt="User Avatar" class="profile-icon" />
     </div>
+  </div>
+    
+    <div class="notification-dropdown" id="notificationDropdown">
+    <p>No new notifications</p>
+  </div>
+    
+      <div class="activity-section">
+    <h2>Proposal Requests</h2>
+
+    <table style="width: 100%; border-collapse: collapse; margin-top: 30px; text-align: center;">
+      <thead style="background-color: #f0f0f0;">
+        <tr>
+          <th style="padding: 12px; border: 1px solid #ccc;">ACTIVITY</th>
+          <th style="padding: 12px; border: 1px solid #ccc;">CLUB</th>
+          <th style="padding: 12px; border: 1px solid #ccc;">DATE</th>
+          <th style="padding: 12px; border: 1px solid #ccc;">ACTION</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding: 12px; border: 1px solid #ccc;">TECH EXPO</td>
+          <td style="padding: 12px; border: 1px solid #ccc;">IT CLUB</td>
+          <td style="padding: 12px; border: 1px solid #ccc;">26 JUNE 2025</td>
+          <td style="padding: 12px; border: 1px solid #ccc;">
+            <button style="background-color: #00BFA6; color: white; border: none; padding: 5px 10px; border-radius: 5px;">View</button>
+            <button style="background-color: #4CAF50; color: white; border: none; padding: 5px 10px; border-radius: 5px;">Approve</button>
+            <button style="background-color: #f44336; color: white; border: none; padding: 5px 10px; border-radius: 5px;">Reject</button>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 12px; border: 1px solid #ccc;">CHARITY RUN</td>
+          <td style="padding: 12px; border: 1px solid #ccc;">EACC CLUB</td>
+          <td style="padding: 12px; border: 1px solid #ccc;">12 JULY 2025</td>
+          <td style="padding: 12px; border: 1px solid #ccc;">
+            <button style="background-color: #00BFA6; color: white; border: none; padding: 5px 10px; border-radius: 5px;">View</button>
+            <button style="background-color: #4CAF50; color: white; border: none; padding: 5px 10px; border-radius: 5px;">Approve</button>
+            <button style="background-color: #f44336; color: white; border: none; padding: 5px 10px; border-radius: 5px;">Reject</button>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 12px; border: 1px solid #ccc;">DEBATE NIGHT</td>
+          <td style="padding: 12px; border: 1px solid #ccc;">SOCIETY</td>
+          <td style="padding: 12px; border: 1px solid #ccc;">15 JULY 2025</td>
+          <td style="padding: 12px; border: 1px solid #ccc;">
+            <button style="background-color: #00BFA6; color: white; border: none; padding: 5px 10px; border-radius: 5px;">View</button>
+            <button style="background-color: #4CAF50; color: white; border: none; padding: 5px 10px; border-radius: 5px;">Approve</button>
+            <button style="background-color: #f44336; color: white; border: none; padding: 5px 10px; border-radius: 5px;">Reject</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 style="margin-top: 50px;">Overview</h2>
+    <div class="summary-container" style="margin-top: 30px;">
+      <div class="summary-card" style="background: #E0F7FA;">
+        <div>
+          <h3 style="font-size: 20px;">👤</h3>
+        </div>
+        <div class="summary-text">
+          <p>17925</p>
+          <h3>Student</h3>
+        </div>
+      </div>
+
+      <div class="summary-card" style="background: #F3E5F5;">
+        <div>
+          <h3 style="font-size: 20px;">🏛️</h3>
+        </div>
+        <div class="summary-text">
+          <p>25</p>
+          <h3>Club</h3>
+        </div>
+      </div>
+
+      <div class="summary-card" style="background: #E0F2F1;">
+        <div>
+          <h3 style="font-size: 20px;">📊</h3>
+        </div>
+        <div class="summary-text">
+          <p>&nbsp;</p>
+          <h3>Statistic</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.getElementById('mainContent');
+    sidebar.classList.toggle('closed');
+    mainContent.classList.toggle('full-width');
+  }
+
+  document.getElementById("notificationBtn").addEventListener("click", function () {
+    const dropdown = document.getElementById("notificationDropdown");
+    dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+  });
+</script>
 
 </body>
 </html>

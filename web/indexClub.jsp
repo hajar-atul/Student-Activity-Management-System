@@ -155,6 +155,16 @@
     .button:hover {
       background-color: #005f5f;
     }
+
+    .error-message {
+      color: red;
+      font-size: 0.9em;
+      margin-bottom: 15px;
+      text-align: center;
+      padding: 10px;
+      background-color: #ffe6e6;
+      border-radius: 5px;
+    }
   </style>
 </head>
 <body>
@@ -177,6 +187,12 @@
     <p style="color:red; font-weight: bold; margin-bottom: 20px;">
       Please select a valid role before submitting.
     </p>
+  <% } %>
+
+  <% if ("club_not_registered".equals(request.getParameter("error"))) { %>
+    <div class="error-message">
+      Club not registered. Please register your club at HEP (Higher Education Department).
+    </div>
   <% } %>
 
   <form action="<%= request.getContextPath() %>/LoginServlet" method="post">
@@ -206,7 +222,7 @@
           <a href="#">Forgot Password?</a>
         </div>
 
-        <button type="submit" class="button" onclick="location.href='clubDashboardPage.jsp'">SIGN IN</button>
+        <button type="submit" class="button">SIGN IN</button>
         <button type="button" class="button" onclick="location.href='registerPage.jsp'">SIGN UP</button>
 
       </form>

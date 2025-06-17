@@ -10,18 +10,17 @@ package model;
  * @author User
  */
 public class PAYMENT {
-    private int paymentId;
+    private int paymentID;
     private String paymentMethod;
     private String paymentDate;
-    private String paymentTime;
     private double payment_total;
     
-    public void setPaymentId(int paymentId) {
-        this.paymentId = paymentId;
+    public void setPaymentId(int paymentID) {
+        this.paymentID = paymentID;
     }
 
     public int getPaymentId() {
-        return paymentId;
+        return paymentID;
     }
     
     public void setPaymentMethod(String paymentMethod) {
@@ -38,14 +37,6 @@ public class PAYMENT {
 
     public String getPaymentDate() {
         return paymentDate;
-    }
-    
-    public void setPaymentTime(String paymentTime) {
-        this.paymentTime = paymentTime;
-    }
-
-    public String getPaymentTime() {
-        return paymentTime;
     }
     
     public void setPaymentTotal(double payment_total) {

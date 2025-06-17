@@ -10,18 +10,18 @@ package model;
  * @author User
  */
 public class REPORT {
-    private int reportId;
+    private int reportID;
     private String reportAbout;
     private String reportCreatedDate;
-    private int clubId;
-    private int activityId;
+    private int clubID;
+    private int activityID;
     
-    public void setReportId(int reportId) {
-        this.reportId = reportId;
+    public void setReportId(int reportID) {
+        this.reportID = reportID;
     }
 
     public int getReportId() {
-        return reportId;
+        return reportID;
     }
     
     public void setReportAbout(String reportAbout) {
@@ -40,19 +40,19 @@ public class REPORT {
         return reportCreatedDate;
     }
     
-    public void setClubId(int clubId) {
-        this.clubId = clubId;
+    public void setClubId(int clubID) {
+        this.clubID = clubID;
     }
 
     public int getClubId() {
-        return clubId;
+        return clubID;
     }
     
-    public void setActivityId(int activityId) {
-        this.activityId = activityId;
+    public void setActivityId(int activityID) {
+        this.activityID = activityID;
     }
 
     public int getActivityId() {
-        return activityId;
+        return activityID;
     }
 }

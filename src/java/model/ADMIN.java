@@ -10,20 +10,20 @@ package model;
  * @author User
  */
 public class ADMIN {
-    private int studId;
+    private int studID;
     private String adminName;
     private String adminEmail;
        
-    public void setStudId(int studId) {
-        this.studId = studId;
+    public void setStudId(int studID) {
+        this.studID = studID;
     }
 
     public int getStudId() {
-        return studId;
+        return studID;
     }
     
     public void setAdminName(String adminName) {
-        this.studId = studId;
+        this.adminName = adminName;
     }
 
     public String getAdminName() {
@@ -31,7 +31,7 @@ public class ADMIN {
     }
     
     public void setAdminEmail(String adminEmail) {
-        this.studId = studId;
+        this.adminEmail = adminEmail;
     }
 
     public String getAdminEmail() {

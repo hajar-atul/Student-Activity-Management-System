@@ -10,20 +10,19 @@ package model;
  * @author User
  */
 public class STAFF {
-    private int staffId;
+    private int staffID;
     private String staffName;
     private String staffEmail;
-    private String staffPosition;
-    private String staffNoPhone;
+    private String staffPhone;
     private String staffDepartment;
     private String staffPassword;
     
-    public void setStaffId(int staffId) {
-        this.staffId = staffId;
+    public void setStaffId(int staffID) {
+        this.staffID = staffID;
     }
 
     public int getStaffId() {
-        return staffId;
+        return staffID;
     }
     
     public void setStaffName(String staffName) {
@@ -42,20 +41,12 @@ public class STAFF {
         return staffEmail;
     }
     
-    public void setStaffPosition(String staffPosition) {
-        this.staffPosition = staffPosition;
+    public void setStaffPhone(String staffPhone) {
+        this.staffPhone = staffPhone;
     }
 
-    public String getStaffPosition() {
-        return staffPosition;
-    }
-    
-    public void setStaffNoPhone(String staffNoPhone) {
-        this.staffNoPhone = staffNoPhone;
-    }
-
-    public String getStaffNoPhone() {
-        return staffNoPhone;
+    public String getStaffPhone() {
+        return staffPhone;
     }
     
     public void setStaffDepartment(String staffDepartment) {
@@ -64,5 +55,12 @@ public class STAFF {
 
     public String getStaffDepartment() {
         return staffDepartment;
+    }
+    public void setStaffPassword(String staffPassword) {
+        this.staffPassword = staffPassword;
+    }
+
+    public String getStaffPassword() {
+        return staffPassword;
     }
 }

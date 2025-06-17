@@ -161,6 +161,16 @@
     .button:hover {
       background-color: #005f5f;
     }
+
+    .error-message {
+        color: #dc3545;
+        font-size: 14px;
+        margin: 10px 0;
+        text-align: center;
+        padding: 10px;
+        background-color: #f8d7da;
+        border-radius: 4px;
+    }
   </style>
 </head>
 <body>
@@ -178,18 +188,14 @@
 
     <div class="login-container">
 
-      <% if ("invalid_role".equals(request.getParameter("error"))) { %>
-        <p style="color:red; font-weight: bold; margin-bottom: 20px;">
-          Please select a valid role before submitting.
-        </p>
-      <% } else if ("not_found".equals(request.getParameter("error"))) { %>
-        <p style="color:red; font-weight: bold; margin-bottom: 20px;">
-          Student ID not found. First time here? <a href="registerPage.jsp">Sign up now</a>
-        </p>
-      <% } else if ("wrong_password".equals(request.getParameter("error"))) { %>
-        <p style="color:red; font-weight: bold; margin-bottom: 20px;">
-          Incorrect password. Please try again.
-        </p>
+      <% if (request.getParameter("error") != null) { %>
+        <div class="error-message">
+          <% if (request.getParameter("error").equals("not_registered")) { %>
+            Could Not find your ID. Please Sign Up first
+          <% } else if (request.getParameter("error").equals("wrong_password")) { %>
+            Wrong password. Please try again
+          <% } %>
+        </div>
       <% } %>
 
       <form action="<%= request.getContextPath()%>/LoginServlet" method="post">

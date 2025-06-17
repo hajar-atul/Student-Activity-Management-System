@@ -10,24 +10,24 @@ package model;
  * @author User
  */
 public class STUDENT_PAYMENT {
-    private int studId;
-    private int paymentId;
+    private int studID;
+    private int paymentID;
     private String transferDate;
     
-    public void setStudId(int studId) {
-        this.studId = studId;
+    public void setStudId(int studID) {
+        this.studID = studID;   
     }
 
     public int getStudId() {
-        return studId;
+        return studID;
     }
     
-    public void setPaymentId(int paymentId) {
-        this.paymentId = paymentId;
+    public void setPaymentId(int paymentID) {
+        this.paymentID = paymentID;
     }
 
     public int getPaymentId() {
-        return paymentId;
+        return paymentID;
     }
     
     public void setTransferDate(String transferDate) {

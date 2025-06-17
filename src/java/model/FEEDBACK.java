@@ -11,19 +11,19 @@ package model;
  * @author User
  */
 public class FEEDBACK {
-    private int feedBackID;
+    private int feedbackID;
     private int feedRating;
     private int studID;
     private String feedComment;
     private String DateSubmit;
 
     // Setter and Getter for feedBackID
-    public void setFeedBackID(int feedBackID) {
-        this.feedBackID = feedBackID;
+    public void setFeedBackID(int feedbackID) {
+        this.feedbackID = feedbackID;
     }
 
     public int getFeedBackID() {
-        return feedBackID;
+        return feedbackID;
     }
 
     // Setter and Getter for feedRating
