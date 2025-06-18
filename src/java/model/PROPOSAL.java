@@ -52,7 +52,7 @@ public class PROPOSAL {
         this.clubID = clubID;
     }
 
-    public int getlubId() {
+    public int getClubId() {
         return clubID;
     }
 }

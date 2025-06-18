@@ -228,7 +228,6 @@ public class STUDENT {
         return studPassword;
     }
 
-    // Additional getters and setters for new fields
     public String getDob() {
         return dob;
     }

@@ -12,10 +12,9 @@ package model;
 public class STUDENT_PAYMENT {
     private int studID;
     private int paymentID;
-    private String transferDate;
     
     public void setStudId(int studID) {
-        this.studID = studID;   
+        this.studID = studID;
     }
 
     public int getStudId() {
@@ -28,13 +27,5 @@ public class STUDENT_PAYMENT {
 
     public int getPaymentId() {
         return paymentID;
-    }
-    
-    public void setTransferDate(String transferDate) {
-        this.transferDate = transferDate;
-    }
-
-    public String getTransferDate() {
-        return transferDate;
     }
 }

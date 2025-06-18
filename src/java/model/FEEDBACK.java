@@ -18,11 +18,11 @@ public class FEEDBACK {
     private String DateSubmit;
 
     // Setter and Getter for feedBackID
-    public void setFeedBackID(int feedbackID) {
+    public void setFeedbackId(int feedbackID) {
         this.feedbackID = feedbackID;
     }
 
-    public int getFeedBackID() {
+    public int getFeedbackId() {
         return feedbackID;
     }
 
@@ -36,7 +36,7 @@ public class FEEDBACK {
     }
 
     // Setter and Getter for studID
-    public void setStudID(int studID) {
+    public void setStudId(int studID) {
         this.studID = studID;
     }
 

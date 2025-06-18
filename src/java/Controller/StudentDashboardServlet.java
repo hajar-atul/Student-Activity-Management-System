@@ -43,9 +43,13 @@ public class StudentDashboardServlet extends HttpServlet {
                 session.setAttribute("studCourse", rs.getString("studCourse"));
                 session.setAttribute("studSemester", rs.getString("studSemester"));
                 session.setAttribute("studNoPhone", rs.getString("studNoPhone"));
-                session.setAttribute("dob", rs.getString("dob")); // Ensure this exists in DB
-                session.setAttribute("muetStatus", rs.getString("muetStatus")); // Ensure this exists in DB
-                session.setAttribute("advisor", rs.getString("advisor")); // Ensure this exists in DB
+                session.setAttribute("dob", rs.getString("dob"));
+                session.setAttribute("muetStatus", rs.getString("muetStatus"));
+                session.setAttribute("advisor", rs.getString("advisor"));
+
+                System.out.println("DOB: " + rs.getString("dob"));
+                System.out.println("MUET: " + rs.getString("muetStatus"));
+                System.out.println("ADVISOR: " + rs.getString("advisor"));
             }
 
             // Forward to dashboard JSP

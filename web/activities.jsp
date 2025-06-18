@@ -8,319 +8,293 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Student Activities</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
-  <style>
-    * {
-     margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <title>Student Activities</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            background-color: #f0f0f0;
+            height: 100vh;
+            overflow: hidden;
+        }
 
-    body {
-      font-family: 'Poppins', Arial, sans-serif;
-    }
+        .sidebar {
+            width: 250px;
+            background-color: #008b8b;
+            color: white;
+            padding: 20px;
+            height: 100vh;
+            overflow-y: auto;
+        }
 
-    /* Sidebar */
-    .sidebar {
-      width: 270px;
-      height: 100vh;
-      background-color: #00796B;
-      color: white;
-      position: fixed;
-      padding: 70px 20px 20px 20px;
-      transition: transform 0.3s ease;
-      overflow-y: auto;
-      text-align: center;
-      z-index: 10;
-    }
+        .sidebar img {
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            display: block;
+            margin: 0 auto;
+        }
 
-    .sidebar.closed {
-      transform: translateX(-100%);
-    }
+        .sidebar h2 {
+            text-align: center;
+            font-size: 14px;
+            margin: 10px 0 0;
+        }
 
-    .sidebar img.profile-pic {
-      width: 100px;
-      aspect-ratio: 1 / 1;
-      border-radius: 50%;
-      object-fit: cover;
-      margin-bottom: 15px;
-      border: 3px solid white;
-      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-    }
+        .menu {
+            margin-top: 30px;
+        }
 
-    .sidebar h4,
-    .sidebar p {
-      margin-bottom: 10px;
-    }
+        .menu a {
+            display: block;
+            padding: 10px;
+            background-color: #0a6d6d;
+            margin-top: 10px;
+            text-decoration: none;
+            color: white;
+            border-radius: 5px;
+            text-align: center;
+        }
 
-    .sidebar ul {
-      list-style: none;
-      padding-left: 0;
-      margin-top: 20px;
-    }
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 250px;
+            right: 0;
+            height: 60px;
+            background-color: #008b8b;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 1000;
+        }
 
-    .sidebar ul li {
-      margin-bottom: 15px;
-    }
+        .search-container {
+            display: flex;
+            align-items: center;
+            margin-left: 30px;
+        }
 
-    .sidebar ul li a {
-      color: white;
-      text-decoration: none;
-      padding: 10px;
-      display: block;
-      border-radius: 5px;
-      transition: background-color 0.2s ease;
-    }
+        .search-container input {
+            padding: 6px 10px;
+            border-radius: 20px;
+            border: none;
+            outline: none;
+            width: 180px;
+        }
 
-    .sidebar ul li a:hover,
-    .sidebar ul li a.active {
-      background-color: rgba(0, 0, 0, 0.2);
-    }
+        .search-btn {
+            background: white;
+            border: none;
+            margin-left: -30px;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 50%;
+            padding: 4px 8px;
+            color: #009B9D;
+        }
 
-    /* Toggle Button */
-    .toggle-btn {
-      position: fixed;
-      left: 10px;
-      top: 10px;
-      z-index: 1000;
-      background-color: #00796B;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      cursor: pointer;
-      border-radius: 5px;
-    }
+        .dashboard-title {
+            font-size: 22px;
+            font-weight: bold;
+            flex-grow: 1;
+            text-align: center;
+            margin-left: 50px;
+        }
 
-    /* Main Content */
-    .main-content {
-      margin-left: 270px;
-      transition: margin-left 0.3s ease;
-    }
+        .top-icons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
 
-    .main-content.full-width {
-      margin-left: 20px;
-    }
+        .top-icons img {
+            width: 24px;
+            height: 24px;
+        }
 
-    /* Header */
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background-color: #0a8079;
-      color: white;
-      padding: 20px 40px;
-      width: 100%;
-    }
+        .top-icons img.umpsa-icon {
+            width: 36px;
+            height: 36px;
+        }
 
-    .header-title {
-      font-size: 28px;
-      font-weight: bold;
-    }
+        .notification-btn img {
+            width: 32px;
+            height: 32px;
+        }
 
-    .top-icons {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
+        .profile-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
 
-    .top-icons img.umpsa-icon {
-      width: 36px;
-      height: 36px;
-    }
+        .notification-dropdown {
+            display: none;
+            position: absolute;
+            top: 50px;
+            right: 50px;
+            background: white;
+            min-width: 250px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            z-index: 2000;
+            padding: 10px 0;
+            border-radius: 8px;
+            color: #333;
+        }
 
-    .notification-btn {
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 0;
-    }
+        .notification-dropdown.show {
+            display: block;
+        }
 
-    .notification-btn img {
-      width: 30px;
-      height: 30px;
-    }
+        .notification-dropdown p {
+            margin: 0;
+            padding: 10px 20px;
+            border-bottom: 1px solid #eee;
+        }
 
-    .profile-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-    }
+        .notification-dropdown p:last-child {
+            border-bottom: none;
+        }
 
-    .notification-dropdown {
-      position: absolute;
-      top: 80px;
-      right: 40px;
-      background-color: white;
-      color: black;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      padding: 10px;
-      width: 200px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-      display: none;
-      z-index: 100;
-    }
+        .notification-btn {
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            position: relative;
+        }
 
-    /* Content Layout */
-    .activity-section {
-      display: flex;
-      flex-wrap: wrap;
-      padding: 20px;
-      gap: 20px;
-    }
+        .content {
+            flex-grow: 1;
+            padding: 80px 20px 20px 20px;
+            margin-left: 250px;
+            height: calc(100vh - 100px);
+            overflow-y: auto;
+        }
 
-    .activity-images {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      grid-auto-rows: 180px;
-      gap: 20px;
-      flex: 1;
-      min-width: 500px;
-    }
+        .activity-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-    .activity-images img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-      transition: transform 0.3s ease;
-    }
+        .activity-buttons {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
 
-    .activity-images img:hover {
-      transform: scale(1.05);
-    }
+        .activity-btn {
+            flex: 1;
+            padding: 15px;
+            background-color: #008b8b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
 
-    /* Action Buttons */
-    .action-buttons {
-      position: fixed;
-      right: 30px;
-      bottom: 30px;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      max-width: 250px;
-      z-index: 5;
-    }
+        .activity-btn:hover {
+            background-color: #006d6d;
+        }
 
-    .action-buttons button {
-      padding: 12px;
-      background-color: #004D40;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
+        .activity-images {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
 
-    .action-buttons button:hover {
-      background-color: #00332c;
-    }
+        .activity-images img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
 
-    @media (max-width: 768px) {
-      .main-content {
-        margin-left: 0;
-      }
-
-      .activity-section {
-        flex-direction: column;
-        align-items: center;
-      }
-
-      .activity-images {
-        grid-template-columns: 1fr;
-      }
-
-      .action-buttons {
-        margin-left: 0;
-        margin-top: 20px;
-      }
-
-      .header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-      }
-
-      .top-icons {
-        align-self: flex-end;
-      }
-    }
-  </style>
+        .activity-images img:hover {
+            transform: scale(1.02);
+        }
+    </style>
 </head>
 <body>
-
-<!-- Toggle Sidebar Button -->
-  <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
-
-  <!-- Sidebar -->
-  <div class="sidebar" id="sidebar">
-    <img src="image/amin.jpg" alt="Profile Picture" class="profile-pic">
-    <h4><%= session.getAttribute("studName") %></h4>
-    <p><%= session.getAttribute("studID") %></p>
-
-    <ul>
-      <li><a href="studentDashboardPage.jsp">Dashboard</a></li>
-      <li><a href="activities.jsp" class="active">Activities</a></li>
-      <li><a href="studentClub.jsp">Clubs</a></li>
-      <li><a href="achievements.jsp">Achievements</a></li>
-      <li><a href="settings.jsp">Settings</a></li>
-    </ul>
-  </div>
-
-  <!-- Main Content -->
-   <div class="main-content" id="mainContent">
-    <div class="header">
-      <div class="header-title">ACTIVITIES</div>
-      <div class="top-icons">
-        <img src="image/umpsa.png" alt="Universiti Malaysia Pahang Logo" class="umpsa-icon" />
-        <button class="notification-btn" id="notificationBtn">
-          <img src="image/bell.png" alt="Notifications" />
-        </button>
-        <img src="image/amin.jpg" alt="User Avatar" class="profile-icon" />
-      </div>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <img src="image/amin.jpg" alt="Profile Picture">
+        <h2>
+            <%= session.getAttribute("studName") %><br>
+            <%= session.getAttribute("studID") %>
+        </h2>
+        <div class="menu">
+            <a href="studentDashboardPage.jsp">DASHBOARD</a>
+            <a href="activities.jsp">ACTIVITIES</a>
+            <a href="studentClub.jsp">CLUBS</a>
+            <a href="achievements.jsp">ACHIEVEMENTS</a>
+            <a href="settings.jsp">SETTINGS</a>
+        </div>
     </div>
 
-    <!-- Notification Dropdown -->
-    <div class="notification-dropdown" id="notificationDropdown">
-      <p>No new notifications</p>
+    <!-- Top Navigation Bar -->
+    <div class="topbar">
+        <div class="search-container">
+            <input type="text" placeholder="Search..." />
+            <button class="search-btn">X</button>
+        </div>
+        <div class="dashboard-title">ACTIVITIES</div>
+        <div class="top-icons">
+            <img src="image/umpsa.png" alt="UMPSA" class="umpsa-icon">
+            <button class="notification-btn" id="notificationBtn">
+                <img src="image/bell.png" alt="Notification">
+            </button>
+            <div class="notification-dropdown" id="notificationDropdown">
+                <p>No new notifications</p>
+            </div>
+            <img src="image/amin.jpg" alt="Profile" class="profile-icon">
+        </div>
     </div>
 
-    <!-- Activities Section -->
-    <div class="activity-section">
-      <div class="activity-images">
-        <img src="image/palap1.jfif" alt="Activity 1">
-        <img src="image/palap6.jfif" alt="Activity 2">
-        <img src="image/palap5.jfif" alt="Activity 3">
-        <img src="image/palap4.jfif" alt="Activity 4">
-        <img src="image/hiking.jfif" alt="Activity 5">
-      </div>
+    <!-- Main Content -->
+    <div class="content">
+        <div class="activity-container">
+            <div class="activity-buttons">
+                <button class="activity-btn" onclick="location.href='currentActivityList.jsp'">Current Activity List</button>
+                <button class="activity-btn" onclick="location.href='availableActivityList.jsp'">Join Activity</button>
+                <button class="activity-btn" onclick="location.href='pastActivityList.jsp'">View Past Activities</button>
+            </div>
 
-      <!-- Action Buttons -->
-      <div class="action-buttons">
-        <button onclick="location.href='currentActivityList.jsp'">Current Activity List</button>
-        <button onclick="location.href='availableActivityList.jsp'">Join Activity</button>
-        <button onclick="location.href='pastActivityList.jsp'">View Past Activities</button>
-      </div>
+            <div class="activity-images">
+                <img src="image/palap1.jfif" alt="Activity 1">
+                <img src="image/palap6.jfif" alt="Activity 2">
+                <img src="image/palap5.jfif" alt="Activity 3">
+                <img src="image/palap4.jfif" alt="Activity 4">
+                <img src="image/hiking.jfif" alt="Activity 5">
+                <img src="image/palap2.jfif" alt="Activity 6">
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- Script -->
-  <script>
-    function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      const main = document.getElementById('mainContent');
-      sidebar.classList.toggle('closed');
-      main.classList.toggle('full-width');
-    }
+    <script>
+        const notificationBtn = document.getElementById('notificationBtn');
+        const notificationDropdown = document.getElementById('notificationDropdown');
 
-    document.getElementById("notificationBtn").addEventListener("click", function () {
-      const dropdown = document.getElementById("notificationDropdown");
-      dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
-    });
-  </script>
+        notificationBtn.addEventListener('click', function(event) {
+            event.stopPropagation();
+            notificationDropdown.classList.toggle('show');
+        });
 
+        window.addEventListener('click', function(event) {
+            if (!notificationDropdown.contains(event.target) && !notificationBtn.contains(event.target)) {
+                notificationDropdown.classList.remove('show');
+            }
+        });
+    </script>
 </body>
 </html>

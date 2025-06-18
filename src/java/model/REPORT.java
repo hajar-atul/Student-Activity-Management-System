@@ -11,9 +11,9 @@ package model;
  */
 public class REPORT {
     private int reportID;
-    private String reportAbout;
-    private String reportCreatedDate;
-    private int clubID;
+    private String reportDetails;
+    private String reportDate;
+    private int clubID;     
     private int activityID;
     
     public void setReportId(int reportID) {
@@ -21,23 +21,23 @@ public class REPORT {
     }
 
     public int getReportId() {
-        return reportID;
+        return reportID;        
     }
     
-    public void setReportAbout(String reportAbout) {
-        this.reportAbout = reportAbout;
+    public void setReportDetails(String reportDetails) {
+        this.reportDetails = reportDetails;
     }
 
-    public String getReportAbout() {
-        return reportAbout;
+    public String getReportDetails() {
+        return reportDetails;
     }
     
-    public void setReportCreatedDate(String reportCreatedDate) {
-        this.reportCreatedDate = reportCreatedDate;
+    public void setReportDate(String reportDate) {
+        this.reportDate = reportDate;
     }
 
-    public String getReportCreatedDate() {
-        return reportCreatedDate;
+    public String getReportDate() {
+        return reportDate;
     }
     
     public void setClubId(int clubID) {

@@ -197,6 +197,111 @@ public class CLUB {
         return null;
     }
 
+    // Get clubs by student ID
+    public static List<CLUB> getClubsByStudentId(int studID) {
+        List<CLUB> clubs = new ArrayList<>();
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
+                String query = "SELECT c.* FROM club c " +
+                             "INNER JOIN student_club sc ON c.clubID = sc.clubID " +
+                             "WHERE sc.studID = ?";
+                PreparedStatement stmt = conn.prepareStatement(query);
+                stmt.setInt(1, studID);
+                ResultSet rs = stmt.executeQuery();
+
+                while (rs.next()) {
+                    CLUB club = new CLUB();
+                    club.setClubId(rs.getInt("clubID"));
+                    club.setClubName(rs.getString("clubName"));
+                    club.setClubContact(rs.getString("clubContact"));
+                    club.setClubDesc(rs.getString("clubDesc"));
+                    club.setClubStatus(rs.getString("clubStatus"));
+                    club.setClubEstablishedDate(rs.getString("clubEstablishedDate"));
+                    clubs.add(club);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return clubs;
+    }
+
+    // Check if student is already a member of any club
+    public static boolean isStudentInAnyClub(int studID) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
+                String query = "SELECT COUNT(*) FROM student_club WHERE studID = ?";
+                PreparedStatement stmt = conn.prepareStatement(query);
+                stmt.setInt(1, studID);
+                ResultSet rs = stmt.executeQuery();
+                
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // Add student to club with one-club restriction
+    public static String addStudentToClub(int studID, int clubID) {
+        try {
+            // First check if student is already in any club
+            if (isStudentInAnyClub(studID)) {
+                return "Student is already a member of a club";
+            }
+
+            // Check if club exists and is active
+            CLUB club = getClubById(clubID);
+            if (club == null) {
+                return "Club does not exist";
+            }
+            if (!"active".equalsIgnoreCase(club.getClubStatus())) {
+                return "Club is not active";
+            }
+
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
+                String query = "INSERT INTO student_club (studID, clubID) VALUES (?, ?)";
+                PreparedStatement stmt = conn.prepareStatement(query);
+                stmt.setInt(1, studID);
+                stmt.setInt(2, clubID);
+                
+                int result = stmt.executeUpdate();
+                if (result > 0) {
+                    return "success";
+                } else {
+                    return "Failed to add student to club";
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Error: " + e.getMessage();
+        }
+    }
+
+    // Remove student from club
+    public static boolean removeStudentFromClub(int studID, int clubID) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
+                String query = "DELETE FROM student_club WHERE studID = ? AND clubID = ?";
+                PreparedStatement stmt = conn.prepareStatement(query);
+                stmt.setInt(1, studID);
+                stmt.setInt(2, clubID);
+                
+                return stmt.executeUpdate() > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public void setClubId(int clubID) {
         this.clubID = clubID;
     }
