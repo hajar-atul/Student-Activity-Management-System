@@ -238,20 +238,14 @@
           <input type="text" name="advisor" placeholder="Enter your advisor's name" required>
         </div>
 
-        <div class="form-group">
-          <label>User <span class="required">*</span></label>
-          <select name="studType" required>
-            <option value="" disabled selected>Select Role</option>
-            <option value="admin">Admin</option>
-            <option value="student">Student</option>
-          </select>
-        </div>
-      </div>
+        <!-- Remove the role selection dropdown and add hidden input for studType -->
+        <input type="hidden" name="studType" value="student">
 
-      <div class="submit-section">
-        <button type="submit">SIGN UP</button>
-        <div class="signin-link">
-          Already have an account? <a href="index.jsp">Sign In</a>
+        <div class="submit-section">
+          <button type="submit">SIGN UP</button>
+          <div class="signin-link">
+            Already have an account? <a href="index.jsp">Sign In</a>
+          </div>
         </div>
       </div>
     </form>

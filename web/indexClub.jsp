@@ -182,11 +182,19 @@
 
 <div class="login-container">
 
-  <%-- Show error message if role is invalid or not selected --%>
-  <% if ("invalid_role".equals(request.getParameter("error"))) { %>
-    <p style="color:red; font-weight: bold; margin-bottom: 20px;">
-      Please select a valid role before submitting.
-    </p>
+  <%-- Show error messages --%>
+  <% if ("missing_credentials".equals(request.getParameter("error"))) { %>
+    <div class="error-message">
+      Please enter both Club ID and Password.
+    </div>
+  <% } else if ("invalid_credentials".equals(request.getParameter("error"))) { %>
+    <div class="error-message">
+      Invalid Club ID or Password. Please try again.
+    </div>
+  <% } else if ("invalid_club_id".equals(request.getParameter("error"))) { %>
+    <div class="error-message">
+      Please enter a valid Club ID (numbers only).
+    </div>
   <% } %>
 
   <% if ("club_not_registered".equals(request.getParameter("error"))) { %>

@@ -20,6 +20,7 @@ public class CLUB {
     private String clubDesc;
     private String clubStatus;
     private String clubEstablishedDate;
+    private String clubPassword;
     private int studID;
     
     // Database connection details
@@ -46,6 +47,7 @@ public class CLUB {
                     club.setClubDesc(rs.getString("clubDesc"));
                     club.setClubStatus(rs.getString("clubStatus"));
                     club.setClubEstablishedDate(rs.getString("clubEstablishedDate"));
+                    club.setClubPassword(rs.getString("clubPassword"));
                 }
             }
         } catch (Exception e) {
@@ -72,6 +74,7 @@ public class CLUB {
                     club.setClubDesc(rs.getString("clubDesc"));
                     club.setClubStatus(rs.getString("clubStatus"));
                     club.setClubEstablishedDate(rs.getString("clubEstablishedDate"));
+                    club.setClubPassword(rs.getString("clubPassword"));
                     clubs.add(club);
                 }
             }
@@ -86,14 +89,15 @@ public class CLUB {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
-                String query = "INSERT INTO club (clubName, clubContact, clubDesc, clubStatus, clubEstablishedDate) " +
-                             "VALUES (?, ?, ?, ?, ?)";
+                String query = "INSERT INTO club (clubName, clubContact, clubDesc, clubStatus, clubEstablishedDate, clubPassword) " +
+                             "VALUES (?, ?, ?, ?, ?, ?)";
                 PreparedStatement stmt = conn.prepareStatement(query);
                 stmt.setString(1, this.clubName);
                 stmt.setString(2, this.clubContact);
                 stmt.setString(3, this.clubDesc);
                 stmt.setString(4, this.clubStatus);
                 stmt.setString(5, this.clubEstablishedDate);
+                stmt.setString(6, this.clubPassword);
                 
                 return stmt.executeUpdate() > 0;
             }
@@ -109,14 +113,15 @@ public class CLUB {
             Class.forName("com.mysql.cj.jdbc.Driver");
             try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
                 String query = "UPDATE club SET clubName=?, clubContact=?, clubDesc=?, " +
-                             "clubStatus=?, clubEstablishedDate=? WHERE clubID=?";
+                             "clubStatus=?, clubEstablishedDate=?, clubPassword=? WHERE clubID=?";
                 PreparedStatement stmt = conn.prepareStatement(query);
                 stmt.setString(1, this.clubName);
                 stmt.setString(2, this.clubContact);
                 stmt.setString(3, this.clubDesc);
                 stmt.setString(4, this.clubStatus);
                 stmt.setString(5, this.clubEstablishedDate);
-                stmt.setInt(6, this.clubID);
+                stmt.setString(6, this.clubPassword);
+                stmt.setInt(7, this.clubID);
                 
                 return stmt.executeUpdate() > 0;
             }
@@ -160,6 +165,7 @@ public class CLUB {
                     club.setClubDesc(rs.getString("clubDesc"));
                     club.setClubStatus(rs.getString("clubStatus"));
                     club.setClubEstablishedDate(rs.getString("clubEstablishedDate"));
+                    club.setClubPassword(rs.getString("clubPassword"));
                     clubs.add(club);
                 }
             }
@@ -174,7 +180,7 @@ public class CLUB {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
-                String query = "SELECT * FROM club WHERE clubID = ? AND clubPassword = ?";
+                String query = "SELECT * FROM club WHERE clubID = ? AND clubPassword = ? AND clubStatus = 'active'";
                 PreparedStatement stmt = conn.prepareStatement(query);
                 stmt.setInt(1, clubID);
                 stmt.setString(2, password);
@@ -188,6 +194,7 @@ public class CLUB {
                     club.setClubDesc(rs.getString("clubDesc"));
                     club.setClubStatus(rs.getString("clubStatus"));
                     club.setClubEstablishedDate(rs.getString("clubEstablishedDate"));
+                    club.setClubPassword(rs.getString("clubPassword"));
                     return club;
                 }
             }
@@ -349,7 +356,16 @@ public class CLUB {
     public String getClubEstablisedDate() {
         return clubEstablishedDate;
     }
-     public void setStudId(int studID) {
+    
+    public void setClubPassword(String clubPassword) {
+        this.clubPassword = clubPassword;
+    }
+
+    public String getClubPassword() {
+        return clubPassword;
+    }
+    
+    public void setStudId(int studID) {
         this.studID = studID;
     }
 

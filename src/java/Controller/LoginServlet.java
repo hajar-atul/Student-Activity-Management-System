@@ -12,29 +12,44 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
 
         response.setContentType("text/html;charset=UTF-8");
-        String userID = request.getParameter("studID");
-        String password = request.getParameter("password");
         String role = request.getParameter("role");
 
         try {
             if ("club".equals(role)) {
-                // Club authentication
-                CLUB club = CLUB.authenticateClub(Integer.parseInt(userID), password);
+                // Get club credentials from form
+                String clubID = request.getParameter("email"); // Using 'email' field for clubID
+                String clubPassword = request.getParameter("password");
                 
-                if (club != null) {
-                    // Club authentication successful
-                    HttpSession session = request.getSession();
-                    session.setAttribute("club", club);
-                    session.setAttribute("user", userID);
-                    session.setAttribute("role", "club");
-                    session.setAttribute("name", club.getClubName());
+                if (clubID == null || clubPassword == null || clubID.trim().isEmpty() || clubPassword.trim().isEmpty()) {
+                    response.sendRedirect("indexClub.jsp?error=missing_credentials");
+                    return;
+                }
+
+                try {
+                    // Club authentication
+                    CLUB club = CLUB.authenticateClub(Integer.parseInt(clubID), clubPassword);
                     
-                    response.sendRedirect("clubDashboardPage.jsp");
-                } else {
-                    // Club not found or invalid credentials
-                    response.sendRedirect("indexClub.jsp?error=club_not_registered");
+                    if (club != null) {
+                        // Club authentication successful
+                        HttpSession session = request.getSession();
+                        session.setAttribute("club", club);
+                        session.setAttribute("clubID", clubID);
+                        session.setAttribute("role", "club");
+                        session.setAttribute("clubName", club.getClubName());
+                        
+                        response.sendRedirect("clubDashboardPage.jsp");
+                    } else {
+                        // Club not found or invalid credentials
+                        response.sendRedirect("indexClub.jsp?error=invalid_credentials");
+                    }
+                } catch (NumberFormatException e) {
+                    response.sendRedirect("indexClub.jsp?error=invalid_club_id");
                 }
             } else {
+                // Student authentication logic remains unchanged
+                String userID = request.getParameter("studID");
+                String password = request.getParameter("password");
+
                 // Check if student exists first
                 int studID = Integer.parseInt(userID);
                 if (!STUDENT.studentExists(studID)) {
@@ -96,6 +111,6 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     public String getServletInfo() {
-        return "Login Servlet - Verifies login by Student ID and redirects based on role.";
+        return "Login Servlet - Verifies login by Student ID or Club ID and redirects based on role.";
     }
 }

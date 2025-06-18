@@ -398,11 +398,10 @@
 
 <div class="sidebar" id="sidebar">
   <img src="image/Raccoon.gif" alt="User Profile Picture" class="profile-pic">
-  <h3>Basketball Club</h3>
+  <h3><%= session.getAttribute("clubName") %></h3>
   <ul>
     <li><a href="clubDashboardPage.jsp" class="active">Dashboard</a></li>
     <li><a href="clubActivitiesPage.jsp">Activities</a></li>
-    
     <li><a href="clubAchievements.jsp">Achievements</a></li>
     <li><a href="clubSettings.jsp">Settings</a></li>
   </ul>
