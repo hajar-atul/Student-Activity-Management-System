@@ -18,7 +18,6 @@ public class ACTIVITY {
        private String activityVenue;
        private String activityStatus;
        private double activityBudget;
-       private boolean attendance; 
        
         public void setActivityId(int activityID) {
         this.activityID = activityID;
@@ -74,13 +73,5 @@ public class ACTIVITY {
 
     public double getActivityBudget() {
         return activityBudget;
-    }
-    
-      public void setAttendance(boolean attendance) {
-        this.attendance = attendance;
-    }
-
-    public boolean getAttendance() {
-        return attendance;
     }
 }
