@@ -268,5 +268,20 @@ public class STUDENT {
         }
         return false;
     }
+
+    // Update email and type for a student
+    public static boolean updateEmailAndType(int studID, String newEmail, String newType) {
+        String sql = "UPDATE student SET studEmail = ?, studType = ? WHERE studID = ?";
+        try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, newEmail);
+            pstmt.setString(2, newType);
+            pstmt.setInt(3, studID);
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
 

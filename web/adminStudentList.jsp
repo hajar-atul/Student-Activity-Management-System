@@ -395,8 +395,8 @@
   <img src="image/logo_mpp.png" alt="User Profile Picture" class="profile-pic">
 
   <ul>
-    <li><a href="adminDashboardPage.jsp" class="active">MANAGE ACTIVITIES</a></li>
-    <li><a href="adminStudentList.jsp">STUDENT LIST</a></li>
+    <li><a href="adminDashboardPage.jsp">MANAGE ACTIVITIES</a></li>
+    <li><a href="adminStudentList.jsp" class="active">STUDENT LIST</a></li>
     
     <li><a href="adminFeedback.jsp">FEEDBACK</a></li>
     <li><a href="adminReport.jsp">REPORT</a></li>
