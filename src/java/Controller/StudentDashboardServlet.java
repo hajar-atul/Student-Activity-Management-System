@@ -1,50 +1,74 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Controller;
 
-/**
- *
- * @author USER
- */
-
 import java.io.IOException;
-import javax.servlet.ServletException;
+import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
+import java.sql.*;
 
 @WebServlet("/StudentDashboardServlet")
 public class StudentDashboardServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Sample user data (This would typically come from a database)
-        String studentId = "2023278754";
-        String name = "MUHAMMAD AMINUDDIN BIN HASNAN";
-        String dob = "14/02/2003";
-        String programme = "BHM";
-        String mobileNumber = "0165404975";
-        String email = "aminuddinhasnan14@gmail.com";
-        int muetStatus = 6;
-        String advisor = "DR ANIQ PAWRIS BIN SAMSUDIN";
 
-        // Set attributes to be accessed in JSP
-        request.setAttribute("studentId", studentId);
-        request.setAttribute("name", name);
-        request.setAttribute("dob", dob);
-        request.setAttribute("programme", programme);
-        request.setAttribute("mobileNumber", mobileNumber);
-        request.setAttribute("email", email);
-        request.setAttribute("muetStatus", muetStatus);
-        request.setAttribute("advisor", advisor);
+        HttpSession session = request.getSession();
+        String studID = (String) session.getAttribute("studID");
 
-        // Forward to JSP
-        request.getRequestDispatcher("StudentDashboardPage.jsp").forward(request, response);
+        if (studID == null) {
+            response.sendRedirect("indexStudent.jsp"); // Redirect if not logged in
+            return;
+        }
+
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            // Database connection
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/student", "root", "");
+
+            // SQL Query
+            String sql = "SELECT * FROM student WHERE studID = ?";
+            ps = con.prepareStatement(sql);
+            ps.setString(1, studID);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                // Set session attributes
+                session.setAttribute("studName", rs.getString("studName"));
+                session.setAttribute("studEmail", rs.getString("studEmail"));
+                session.setAttribute("studCourse", rs.getString("studCourse"));
+                session.setAttribute("studSemester", rs.getString("studSemester"));
+                session.setAttribute("studNoPhone", rs.getString("studNoPhone"));
+                session.setAttribute("dob", rs.getString("dob"));
+                session.setAttribute("muetStatus", rs.getString("muetStatus"));
+                session.setAttribute("advisor", rs.getString("advisor"));
+
+                System.out.println("DOB: " + rs.getString("dob"));
+                System.out.println("MUET: " + rs.getString("muetStatus"));
+                System.out.println("ADVISOR: " + rs.getString("advisor"));
+            }
+
+            // Forward to dashboard JSP
+            RequestDispatcher dispatcher = request.getRequestDispatcher("studentDashboardPage.jsp");
+            dispatcher.forward(request, response);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendRedirect("errorStudent.jsp");
+        } finally {
+            // Clean up
+            try { if (rs != null) rs.close(); } catch (Exception e) {}
+            try { if (ps != null) ps.close(); } catch (Exception e) {}
+            try { if (con != null) con.close(); } catch (Exception e) {}
+        }
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doGet(request, response);
     }
 }
-
