@@ -366,7 +366,7 @@
         <img src="image/palap4.jfif" alt="Activity 5">
         <h4>War-cry Competition</h4>
         <button class="toggle-desc" onclick="toggleDesc(this)">See more</button>
-        <p class="activity-desc">Jr, Ir and Sr cadet officer present their war dance for the prize.</p>
+        <p class="activity-desc">Jr, Ir and Sr cadet officer present their war dance for the prize</p>
       </div>
       <div class="activity-card">
         <img src="image/activity6.jpg" alt="Activity 6">
