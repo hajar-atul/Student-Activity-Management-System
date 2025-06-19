@@ -1,4 +1,3 @@
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -7,397 +6,235 @@
   <title>Admin Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Poppins', Arial, sans-serif;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Poppins', Arial, sans-serif; background: #f6f6f6; }
     .sidebar {
       width: 270px;
       height: 100vh;
-      background-color: #00796B;
+      background-color: #238B87;
       color: white;
       position: fixed;
-      padding: 70px 20px 20px 20px;
+      padding: 30px 20px 20px 20px;
       overflow-y: auto;
       z-index: 10;
       text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
-
-    .sidebar.closed {
-      transform: translateX(-100%);
-    }
-
     .sidebar img.profile-pic {
-      width: 100px;
+      width: 170px;
       aspect-ratio: 1 / 1;
       border-radius: 50%;
       object-fit: cover;
-      margin-bottom: 15px;
-      border: 3px solid white;
-    }
-
-    .sidebar h3 {
       margin-bottom: 10px;
+      border: 3px solid white;
+      background: #fff;
     }
-
+    .sidebar .mpp-title {
+      font-weight: bold;
+      font-size: 18px;
+      margin-bottom: 30px;
+      line-height: 1.2;
+      letter-spacing: 1px;
+    }
     .sidebar ul {
       list-style: none;
       padding-left: 0;
       margin-top: 20px;
+      width: 100%;
     }
-
     .sidebar ul li {
       margin-bottom: 15px;
     }
-
     .sidebar ul li a {
       color: white;
       text-decoration: none;
-      padding: 10px;
+      padding: 12px 0;
       display: block;
       border-radius: 5px;
+      font-size: 16px;
       transition: background-color 0.2s ease;
+      width: 100%;
     }
-
-    .sidebar ul li a:hover,
-    .sidebar ul li a.active {
-      background-color: rgba(0, 0, 0, 0.2);
+    .sidebar ul li a.active, .sidebar ul li a:hover {
+      background-color: #1a7e7c;
+      font-weight: bold;
     }
-
     .toggle-btn {
       position: fixed;
-      left: 10px;
-      top: 10px;
+      left: 20px;
+      top: 20px;
       z-index: 1000;
-      background-color: #00796B;
+      background-color: #219a98;
       color: white;
       border: none;
       padding: 10px 15px;
       cursor: pointer;
       border-radius: 5px;
+      font-size: 22px;
+      display: none;
     }
-
     .main-content {
       margin-left: 270px;
       transition: margin-left 0.3s ease;
+      min-height: 100vh;
     }
-
-    .main-content.full-width {
-      margin-left: 20px;
-    }
-
     .header {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      background-color: #0a8079;
-      color: white;
-      padding: 20px 40px;
-    }
-
-    .header-title {
-      font-size: 28px;
-      font-weight: bold;
-    }
-
-    .top-icons {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .top-icons img.umpsa-icon {
-      width: 36px;
-      height: 36px;
-    }
-
-    .notification-btn {
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 0;
-    }
-
-    .notification-btn img {
-      width: 30px;
-      height: 30px;
-    }
-
-    .profile-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-    }
-
-    .notification-dropdown {
-      position: absolute;
-      top: 80px;
-      right: 40px;
-      background-color: white;
-      color: black;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      padding: 10px;
-      width: 200px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-      display: none;
-      z-index: 100;
-    }
-
-    .activity-section {
-      padding: 40px;
-    }
-    
-    .activity-section:hover {
-      padding: none;
-    }
-
-    .activity-section h2 {
-      text-align: center;
-      font-size: 32px;
-      font-weight: bold;
-    }
-
-    .summary-container {
-      display: flex;
-      justify-content: space-around;
-      margin-bottom: 30px;
-      flex-wrap: wrap;
+      background-color: #238B87;
+      color: #333;
+      padding: 18px 40px 18px 40px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      position: sticky;
+      top: 0;
+      z-index: 5;
       gap: 20px;
     }
-
-    .summary-card {
-      background: #D0F0EF;
-      padding: 20px;
-      border-radius: 12px;
-      width: 30%;
+    .header .search-container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+    }
+    .header .search-container input {
+      width: 350px;
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      outline: none;
+    }
+    .header .top-icons {
       display: flex;
       align-items: center;
-      gap: 15px;
+      gap: 18px;
     }
-
-    .summary-card:nth-child(2) {
-      background: #E8E6F1;
+    .header .top-icons img {
+      width: 45px;
+      height: 45px;
+      object-fit: contain;
+      background: transparent;
     }
-
-    .summary-icon img {
-      height: 60px;
-      width: 60px;
+    .header .top-icons .profile-icon {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      border: none;
+      background: transparent;
     }
-
-    .summary-text h3 {
-      margin: 0;
-      font-size: 20px;
+    .activity-section {
+      padding: 40px 40px 0 40px;
     }
-
-    .summary-text p {
+    .activity-section h2 {
       font-size: 26px;
       font-weight: bold;
-      margin: 5px 0 0;
+      margin-bottom: 18px;
+      text-align: left;
     }
-
-    .rejected-activities-box {
-      background-color: #f9f9f9;
+    .proposal-table {
+      width: 96%;
+      font-size: 18px;
+      margin-bottom: 50px;
+      margin-left: auto;
+      margin-right: auto;
+      background: #fff;
       border-radius: 12px;
-      padding: 30px;
-      margin: 60px 40px 40px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-
-    .rejected-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-
-    .rejected-header h2 {
-      font-size: 24px;
-      font-weight: bold;
-      margin: 0;
-    }
-
-    .view-all-btn {
-      background-color: #00796B;
-      color: white;
-      padding: 8px 14px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    .view-all-btn:hover {
-      background-color: #005f56;
-    }
-
-    .rejected-cards-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-
-    .activity-card {
-      width: 220px;
-      background-color: white;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       overflow: hidden;
-      display: flex;
-      flex-direction: column;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
-
-    .activity-card img {
-      width: 100%;
-      height: 120px;
-      object-fit: cover;
+    .proposal-table th, .proposal-table td {
+      padding: 20px 16px;
+      border: 1px solid #e0e0e0;
+      text-align: center;
+      font-size: 18px;
     }
-
-    .activity-info {
-      padding: 15px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      height: 130px;
-    }
-
-    .activity-info h4 {
-      font-size: 16px;
-      margin-bottom: 5px;
-    }
-
-    .activity-info p {
-      font-size: 12px;
-      margin: 2px 0;
-    }
-
-    .card-actions {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 8px;
-    }
-
-    .rejected-label {
-      background-color: #ff9295;
-      color: red;
+    .proposal-table th {
+      background: #f7f7f7;
       font-weight: bold;
-      font-size: 11px;
-      padding: 4px 7px;
-      border-radius: 4px;
     }
-
-    .appeal-btn {
-      background-color: #007bff;
-      color: white;
+    .proposal-table td .action-btn {
+      margin: 0 2px;
+      padding: 6px 16px;
       border: none;
-      padding: 5px 10px;
-      font-size: 12px;
-      border-radius: 4px;
+      border-radius: 5px;
+      color: #fff;
+      font-size: 15px;
       cursor: pointer;
+      font-weight: 500;
+      transition: background 0.2s;
     }
-
-    .appeal-btn:hover {
-      background-color: #0056b3;
+    .proposal-table td .view-btn { background: #00bfa6; }
+    .proposal-table td .approve-btn { background: #4caf50; }
+    .proposal-table td .reject-btn { background: #f44336; }
+    .proposal-table td .view-btn:hover { background: #009e88; }
+    .proposal-table td .approve-btn:hover { background: #388e3c; }
+    .proposal-table td .reject-btn:hover { background: #c62828; }
+    .overview-section {
+      margin-top: 40px;
     }
-
-    /* Modal */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.4);
-      justify-content: center;
+    .overview-title {
+      font-size: 26px;
+      font-weight: bold;
+      margin-bottom: 24px;
+    }
+    .overview-cards {
+      display: flex;
+      gap: 40px;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+    }
+    .overview-card {
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      padding: 38px 56px;
+      display: flex;
       align-items: center;
-      z-index: 9999;
+      gap: 24px;
+      min-width: 270px;
+      min-height: 120px;
+      font-size: 22px;
     }
-
-    .modal-content {
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      width: 90%;
-      max-width: 400px;
+    .overview-card .icon {
+      font-size: 70px;
+      color: #219a98;
+      width: 70px;
+      text-align: center;
     }
-
-    .modal-content h3 {
-      margin-bottom: 20px;
+    .overview-card .info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
     }
-
-    .modal-content textarea {
-      width: 100%;
-      height: 100px;
-      margin-bottom: 15px;
-      padding: 10px;
-      resize: none;
+    .overview-card .info .number {
+      font-size: 36px;
+      font-weight: bold;
+      color: #222;
     }
-
-    .modal-buttons {
-      text-align: right;
+    .overview-card .info .label {
+      font-size: 20px;
+      color: #555;
+      margin-top: 2px;
     }
-
-    .modal-buttons button {
-      padding: 8px 14px;
-      margin-left: 10px;
-      border-radius: 6px;
-      border: none;
-      cursor: pointer;
+    @media (max-width: 900px) {
+      .main-content { margin-left: 0; }
+      .sidebar { position: static; width: 100%; height: auto; }
+      .toggle-btn { display: block; }
+      .overview-cards { flex-direction: column; gap: 18px; }
+      .activity-section { padding: 20px 10px 0 10px; }
     }
-
-    .btn-cancel {
-      background-color: #ccc;
-    }
-
-    .btn-submit {
-      background-color: #00796B;
-      color: white;
-    }
-
-    @media (max-width: 768px) {
-      .main-content {
-        margin-left: 0 !important;
-      }
-
-      .sidebar {
-        width: 100%;
-        height: auto;
-        position: static;
-      }
-
-      .toggle-btn {
-        position: absolute;
-        left: 10px;
-        top: 10px;
-      }
-
-      .summary-card {
-        width: 100%;
-      }
-
-      .rejected-cards-container {
-        justify-content: center;
-      }
-    }
-     </style>
+  </style>
 </head>
 <body>
 
 <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
 
 <div class="sidebar" id="sidebar">
-  <img src="image/logo_mpp.png" alt="User Profile Picture" class="profile-pic">
-
+  <img src="image/mppUMPSA.jpg" alt="MPP Logo" class="profile-pic">
   <ul>
     <li><a href="adminDashboardPage.jsp" class="active">MANAGE ACTIVITIES</a></li>
     <li><a href="adminStudentList.jsp">STUDENT LIST</a></li>
-    
     <li><a href="adminFeedback.jsp">FEEDBACK</a></li>
     <li><a href="adminReport.jsp">REPORT</a></li>
   </ul>
@@ -405,95 +242,89 @@
 
 <div class="main-content" id="mainContent">
   <div class="header">
-    <div class="header-title">DASHBOARD</div>
+    <button class="toggle-btn" onclick="toggleSidebar()" style="display:block;">☰</button>
+    <div class="search-container">
+      <input type="text" placeholder="Search...">
+    </div>
     <div class="top-icons">
-      <img src="image/umpsa.png" alt="UMPSA Logo" class="umpsa-icon" />
-      <button class="notification-btn" id="notificationBtn">
-        <img src="image/bell.png" alt="Notifications" />
+      <img src="image/umpsa.png" alt="Logo UMP" style="width:45px;height:45px;">
+      <button class="notification-btn" id="notificationBtn" style="background:none; border:none; cursor:pointer; padding:0;">
+        <img src="image/bell.png" alt="Notifications">
       </button>
-      <img src="image/logo_mpp.png" alt="User Avatar" class="profile-icon" />
+      <img src="image/mppUMPSA.jpg" alt="Profile" class="profile-icon">
     </div>
   </div>
-    
-    <div class="notification-dropdown" id="notificationDropdown">
+  <div class="notification-dropdown" id="notificationDropdown" style="display:none; position:absolute; top:80px; right:60px; background-color:white; color:black; border:1px solid #ccc; border-radius:8px; padding:10px; width:200px; box-shadow:0 2px 8px rgba(0,0,0,0.15); z-index:100;">
     <p>No new notifications</p>
   </div>
-    
-      <div class="activity-section">
-    <h2>Proposal Requests</h2>
 
-    <table style="width: 100%; border-collapse: collapse; margin-top: 30px; text-align: center;">
-      <thead style="background-color: #f0f0f0;">
+  <div class="activity-section">
+    <h2>Proposal Requests</h2>
+    <table class="proposal-table">
+      <thead>
         <tr>
-          <th style="padding: 12px; border: 1px solid #ccc;">ACTIVITY</th>
-          <th style="padding: 12px; border: 1px solid #ccc;">CLUB</th>
-          <th style="padding: 12px; border: 1px solid #ccc;">DATE</th>
-          <th style="padding: 12px; border: 1px solid #ccc;">ACTION</th>
+          <th>ACTIVITY</th>
+          <th>CLUB</th>
+          <th>DATE</th>
+          <th>ACTION</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td style="padding: 12px; border: 1px solid #ccc;">TECH EXPO</td>
-          <td style="padding: 12px; border: 1px solid #ccc;">IT CLUB</td>
-          <td style="padding: 12px; border: 1px solid #ccc;">26 JUNE 2025</td>
-          <td style="padding: 12px; border: 1px solid #ccc;">
-            <button style="background-color: #00BFA6; color: white; border: none; padding: 5px 10px; border-radius: 5px;">View</button>
-            <button style="background-color: #4CAF50; color: white; border: none; padding: 5px 10px; border-radius: 5px;">Approve</button>
-            <button style="background-color: #f44336; color: white; border: none; padding: 5px 10px; border-radius: 5px;">Reject</button>
+          <td>TECH EXPO</td>
+          <td>IT CLUB</td>
+          <td>26 JUNE 2025</td>
+          <td>
+            <button class="action-btn view-btn">View</button>
+            <button class="action-btn approve-btn">Approve</button>
+            <button class="action-btn reject-btn">Reject</button>
           </td>
         </tr>
         <tr>
-          <td style="padding: 12px; border: 1px solid #ccc;">CHARITY RUN</td>
-          <td style="padding: 12px; border: 1px solid #ccc;">EACC CLUB</td>
-          <td style="padding: 12px; border: 1px solid #ccc;">12 JULY 2025</td>
-          <td style="padding: 12px; border: 1px solid #ccc;">
-            <button style="background-color: #00BFA6; color: white; border: none; padding: 5px 10px; border-radius: 5px;">View</button>
-            <button style="background-color: #4CAF50; color: white; border: none; padding: 5px 10px; border-radius: 5px;">Approve</button>
-            <button style="background-color: #f44336; color: white; border: none; padding: 5px 10px; border-radius: 5px;">Reject</button>
+          <td>CHARITY RUN</td>
+          <td>EACC CLUB</td>
+          <td>12 JULY 2025</td>
+          <td>
+            <button class="action-btn view-btn">View</button>
+            <button class="action-btn approve-btn">Approve</button>
+            <button class="action-btn reject-btn">Reject</button>
           </td>
         </tr>
         <tr>
-          <td style="padding: 12px; border: 1px solid #ccc;">DEBATE NIGHT</td>
-          <td style="padding: 12px; border: 1px solid #ccc;">SOCIETY</td>
-          <td style="padding: 12px; border: 1px solid #ccc;">15 JULY 2025</td>
-          <td style="padding: 12px; border: 1px solid #ccc;">
-            <button style="background-color: #00BFA6; color: white; border: none; padding: 5px 10px; border-radius: 5px;">View</button>
-            <button style="background-color: #4CAF50; color: white; border: none; padding: 5px 10px; border-radius: 5px;">Approve</button>
-            <button style="background-color: #f44336; color: white; border: none; padding: 5px 10px; border-radius: 5px;">Reject</button>
+          <td>DEBATE NIGHT</td>
+          <td>SOCIETY</td>
+          <td>15 JULY 2025</td>
+          <td>
+            <button class="action-btn view-btn">View</button>
+            <button class="action-btn approve-btn">Approve</button>
+            <button class="action-btn reject-btn">Reject</button>
           </td>
         </tr>
       </tbody>
     </table>
 
-    <h2 style="margin-top: 50px;">Overview</h2>
-    <div class="summary-container" style="margin-top: 30px;">
-      <div class="summary-card" style="background: #E0F7FA;">
-        <div>
-          <h3 style="font-size: 20px;">👤</h3>
+    <div class="overview-section">
+      <div class="overview-title">Overview</div>
+      <div class="overview-cards">
+        <div class="overview-card">
+          <div class="icon">👤</div>
+          <div class="info">
+            <div class="number">17925</div>
+            <div class="label">Student</div>
+          </div>
         </div>
-        <div class="summary-text">
-          <p>17925</p>
-          <h3>Student</h3>
+        <div class="overview-card">
+          <div class="icon">🏛️</div>
+          <div class="info">
+            <div class="number">25</div>
+            <div class="label">Club</div>
+          </div>
         </div>
-      </div>
-
-      <div class="summary-card" style="background: #F3E5F5;">
-        <div>
-          <h3 style="font-size: 20px;">🏛️</h3>
-        </div>
-        <div class="summary-text">
-          <p>25</p>
-          <h3>Club</h3>
-        </div>
-      </div>
-
-      <div class="summary-card" style="background: #E0F2F1;">
-        <div>
-          <h3 style="font-size: 20px;">📊</h3>
-        </div>
-        <div class="summary-text">
-          <p>&nbsp;</p>
-          <h3>Statistic</h3>
+        <div class="overview-card" style="flex-direction: row; align-items: center;">
+          <div class="icon" style="display: flex; align-items: center;"><img src="image/statistic.png" alt="Statistic" style="width:60px;height:60px;"></div>
+          <div style="margin-left: 24px; display: flex; align-items: center; height: 60px;">
+            <span style="font-size: 24px; color: #444; line-height: 60px;">Statistic</span>
+          </div>
         </div>
       </div>
     </div>
@@ -507,7 +338,6 @@
     sidebar.classList.toggle('closed');
     mainContent.classList.toggle('full-width');
   }
-
   document.getElementById("notificationBtn").addEventListener("click", function () {
     const dropdown = document.getElementById("notificationDropdown");
     dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";

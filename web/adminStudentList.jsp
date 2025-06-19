@@ -1,403 +1,273 @@
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Admin Dashboard</title>
+  <title>Student List</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Poppins', Arial, sans-serif;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Poppins', Arial, sans-serif; background: #f6f6f6; }
     .sidebar {
       width: 270px;
       height: 100vh;
-      background-color: #00796B;
+      background-color: #238B87;
       color: white;
       position: fixed;
-      padding: 70px 20px 20px 20px;
+      padding: 40px 20px 20px 20px;
       overflow-y: auto;
       z-index: 10;
       text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
-
-    .sidebar.closed {
-      transform: translateX(-100%);
-    }
-
     .sidebar img.profile-pic {
-      width: 100px;
+      width: 170px;
       aspect-ratio: 1 / 1;
       border-radius: 50%;
       object-fit: cover;
-      margin-bottom: 15px;
+      margin-bottom: 30px;
       border: 3px solid white;
+      background: #fff;
     }
-
-    .sidebar h3 {
-      margin-bottom: 10px;
-    }
-
     .sidebar ul {
       list-style: none;
       padding-left: 0;
       margin-top: 20px;
+      width: 100%;
     }
-
     .sidebar ul li {
       margin-bottom: 15px;
     }
-
     .sidebar ul li a {
       color: white;
       text-decoration: none;
-      padding: 10px;
+      padding: 12px 0;
       display: block;
       border-radius: 5px;
+      font-size: 16px;
       transition: background-color 0.2s ease;
+      width: 100%;
+      text-align: center;
     }
-
-    .sidebar ul li a:hover,
-    .sidebar ul li a.active {
-      background-color: rgba(0, 0, 0, 0.2);
+    .sidebar ul li a.active, .sidebar ul li a:hover {
+      background-color: #1a7e7c;
+      font-weight: bold;
     }
-
-    .toggle-btn {
-      position: fixed;
-      left: 10px;
-      top: 10px;
-      z-index: 1000;
-      background-color: #00796B;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      cursor: pointer;
-      border-radius: 5px;
-    }
-
     .main-content {
       margin-left: 270px;
-      transition: margin-left 0.3s ease;
+      min-height: 100vh;
+      background: #f6f6f6;
     }
-
-    .main-content.full-width {
-      margin-left: 20px;
-    }
-
     .header {
       display: flex;
+      align-items: center;
+      background-color: #238B87;
+      color: #fff;
+      padding: 18px 40px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      gap: 20px;
       justify-content: space-between;
-      align-items: center;
-      background-color: #0a8079;
-      color: white;
-      padding: 20px 40px;
     }
-
     .header-title {
-      font-size: 28px;
-      font-weight: bold;
-    }
-
-    .top-icons {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .top-icons img.umpsa-icon {
-      width: 36px;
-      height: 36px;
-    }
-
-    .notification-btn {
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 0;
-    }
-
-    .notification-btn img {
-      width: 30px;
-      height: 30px;
-    }
-
-    .profile-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-    }
-
-    .notification-dropdown {
-      position: absolute;
-      top: 80px;
-      right: 40px;
-      background-color: white;
-      color: black;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      padding: 10px;
-      width: 200px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-      display: none;
-      z-index: 100;
-    }
-
-    .activity-section {
-      padding: 40px;
-    }
-    
-    .activity-section:hover {
-      padding: none;
-    }
-
-    .activity-section h2 {
-      text-align: center;
       font-size: 32px;
       font-weight: bold;
+      letter-spacing: 1px;
     }
-
-    .summary-container {
-      display: flex;
-      justify-content: space-around;
-      margin-bottom: 30px;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-
-    .summary-card {
-      background: #D0F0EF;
-      padding: 20px;
-      border-radius: 12px;
-      width: 30%;
+    .header .top-icons {
       display: flex;
       align-items: center;
-      gap: 15px;
+      gap: 18px;
+      position: relative;
     }
-
-    .summary-card:nth-child(2) {
-      background: #E8E6F1;
+    .header .top-icons img {
+      width: 45px;
+      height: 45px;
+      object-fit: contain;
+      background: transparent;
     }
-
-    .summary-icon img {
-      height: 60px;
-      width: 60px;
-    }
-
-    .summary-text h3 {
-      margin: 0;
-      font-size: 20px;
-    }
-
-    .summary-text p {
-      font-size: 26px;
-      font-weight: bold;
-      margin: 5px 0 0;
-    }
-
-    .rejected-activities-box {
-      background-color: #f9f9f9;
-      border-radius: 12px;
-      padding: 30px;
-      margin: 60px 40px 40px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-
-    .rejected-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-
-    .rejected-header h2 {
-      font-size: 24px;
-      font-weight: bold;
-      margin: 0;
-    }
-
-    .view-all-btn {
-      background-color: #00796B;
-      color: white;
-      padding: 8px 14px;
+    .header .top-icons .profile-icon {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
       border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 14px;
+      background: transparent;
     }
-
-    .view-all-btn:hover {
-      background-color: #005f56;
-    }
-
-    .rejected-cards-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-
-    .activity-card {
-      width: 220px;
-      background-color: white;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .activity-card img {
-      width: 100%;
-      height: 120px;
-      object-fit: cover;
-    }
-
-    .activity-info {
-      padding: 15px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      height: 130px;
-    }
-
-    .activity-info h4 {
-      font-size: 16px;
-      margin-bottom: 5px;
-    }
-
-    .activity-info p {
-      font-size: 12px;
-      margin: 2px 0;
-    }
-
-    .card-actions {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 8px;
-    }
-
-    .rejected-label {
-      background-color: #ff9295;
-      color: red;
-      font-weight: bold;
-      font-size: 11px;
-      padding: 4px 7px;
-      border-radius: 4px;
-    }
-
-    .appeal-btn {
-      background-color: #007bff;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      font-size: 12px;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    .appeal-btn:hover {
-      background-color: #0056b3;
-    }
-
-    /* Modal */
-    .modal {
+    .notification-dropdown {
       display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.4);
+      position: absolute;
+      top: 60px;
+      right: 60px;
+      background-color: #fff;
+      color: #222;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 14px 18px;
+      width: 240px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      z-index: 100;
+      font-size: 16px;
+    }
+    .dashboard-cards {
+      display: flex;
+      gap: 40px;
+      margin: 40px 0 30px 0;
       justify-content: center;
+      align-items: stretch;
+    }
+    .dashboard-card {
+      background: #fff;
+      border: 3px solid #222;
+      border-radius: 18px;
+      padding: 28px 38px;
+      display: flex;
+      flex-direction: column;
       align-items: center;
-      z-index: 9999;
+      min-width: 0;
+      min-height: 170px;
+      justify-content: center;
+      max-width: 340px;
+      box-sizing: border-box;
     }
-
-    .modal-content {
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      width: 90%;
-      max-width: 400px;
+    .dashboard-card.no-border {
+      border: none !important;
+      background: transparent;
+      box-shadow: none !important;
+      padding: 0;
+      min-width: 0;
+      max-width: 240px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-
-    .modal-content h3 {
-      margin-bottom: 20px;
-    }
-
-    .modal-content textarea {
-      width: 100%;
-      height: 100px;
-      margin-bottom: 15px;
-      padding: 10px;
-      resize: none;
-    }
-
-    .modal-buttons {
-      text-align: right;
-    }
-
-    .modal-buttons button {
-      padding: 8px 14px;
-      margin-left: 10px;
-      border-radius: 6px;
+    .dashboard-card img {
+      width: 240px;
+      height: 170px;
+      max-width: 100%;
+      max-height: 170px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 10px;
       border: none;
+    }
+    .dashboard-card:first-child img {
+      border: none !important;
+      background: transparent !important;
+      box-shadow: none !important;
+    }
+    .dashboard-card .icon {
+      font-size: 54px;
+      margin-bottom: 10px;
+    }
+    .dashboard-card .card-title {
+      font-size: 20px;
+      font-weight: 500;
+      margin-bottom: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .dashboard-card .card-desc {
+      font-size: 16px;
+      color: #333;
+    }
+    .filters {
+      display: flex;
+      gap: 40px;
+      margin-bottom: 30px;
+      margin-left: 80px;
+    }
+    .filters label {
+      font-weight: bold;
+      font-size: 16px;
+      margin-bottom: 6px;
+      display: block;
+    }
+    .filters select {
+      width: 200px;
+      padding: 8px 12px;
+      border-radius: 5px;
+      border: 2px solid #222;
+      font-size: 16px;
+      margin-top: 4px;
+    }
+    .student-table-container {
+      margin: 0 10px 40px 10px;
+    }
+    .student-table {
+      width: 85%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: #fff;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      border: 3px solid #222;
+      margin: 0 auto;
+    }
+    .student-table th, .student-table td {
+      padding: 12px 6px;
+      border: 2px solid #222;
+      text-align: center;
+      font-size: 17px;
+    }
+    .student-table th {
+      background: #ededed;
+      font-weight: bold;
+      font-size: 19px;
+      letter-spacing: 1px;
+    }
+    .student-table td .view-btn {
+      background: #1ec9b4;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 22px;
+      font-size: 18px;
+      font-weight: 500;
       cursor: pointer;
+      transition: background 0.2s;
     }
-
-    .btn-cancel {
-      background-color: #ccc;
+    .student-table td .view-btn:hover {
+      background: #159e8a;
     }
-
-    .btn-submit {
-      background-color: #00796B;
-      color: white;
+    @media (max-width: 1100px) {
+      .dashboard-cards { flex-direction: column; gap: 18px; }
+      .filters { flex-direction: column; gap: 18px; }
     }
-
-    @media (max-width: 768px) {
-      .main-content {
-        margin-left: 0 !important;
-      }
-
-      .sidebar {
-        width: 100%;
-        height: auto;
-        position: static;
-      }
-
-      .toggle-btn {
-        position: absolute;
-        left: 10px;
-        top: 10px;
-      }
-
-      .summary-card {
-        width: 100%;
-      }
-
-      .rejected-cards-container {
-        justify-content: center;
-      }
+    .dashboard-card.flex-row {
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 24px;
     }
-      </style>
+    .dashboard-card.flex-row img {
+      width: 130px;
+      height: 130px;
+      object-fit: contain;
+      margin-bottom: 0;
+      margin-right: 0;
+    }
+    .dashboard-card.flex-row .card-title {
+      font-size: 20px;
+      font-weight: 500;
+      margin-bottom: 0;
+      text-align: left;
+      line-height: 1.2;
+    }
+  </style>
 </head>
 <body>
 
-<button class="toggle-btn" onclick="toggleSidebar()">☰</button>
-
 <div class="sidebar" id="sidebar">
-  <img src="image/logo_mpp.png" alt="User Profile Picture" class="profile-pic">
-
+  <img src="image/mppUMPSA.jpg" alt="MPP Logo" class="profile-pic">
   <ul>
     <li><a href="adminDashboardPage.jsp">MANAGE ACTIVITIES</a></li>
     <li><a href="adminStudentList.jsp" class="active">STUDENT LIST</a></li>
-    
     <li><a href="adminFeedback.jsp">FEEDBACK</a></li>
     <li><a href="adminReport.jsp">REPORT</a></li>
   </ul>
@@ -405,33 +275,47 @@
 
 <div class="main-content" id="mainContent">
   <div class="header">
-    <div class="header-title">DASHBOARD</div>
+    <div class="header-title">STUDENT LIST</div>
     <div class="top-icons">
-      <img src="image/umpsa.png" alt="UMPSA Logo" class="umpsa-icon" />
-      <button class="notification-btn" id="notificationBtn">
-        <img src="image/bell.png" alt="Notifications" />
-      </button>
-      <img src="image/logo_mpp.png" alt="User Avatar" class="profile-icon" />
+      <img src="image/umpsa.png" alt="UMPSA Logo">
+      <img src="image/bell.png" alt="Notifications" id="notificationBtn" style="cursor:pointer;">
+      <img src="image/mppUMPSA.jpg" alt="MPP Logo" class="profile-icon">
+      <div class="notification-dropdown" id="notificationDropdown">
+        <strong>Notifications</strong>
+        <ul style="margin:10px 0 0 0; padding:0 0 0 18px;">
+          <li>No new notifications</li>
+        </ul>
+      </div>
     </div>
   </div>
-    
-    <div class="notification-dropdown" id="notificationDropdown">
-    <p>No new notifications</p>
+
+  <div class="dashboard-cards">
+    <div class="dashboard-card no-border">
+      <img src="image/Graduation.jpg" alt="Students">
+    </div>
+    <div class="dashboard-card flex-row">
+      <img src="image/pieChart.png" alt="Faculty-wise Participation">
+      <div class="card-title">Faculty-wise Participation</div>
+    </div>
+    <div class="dashboard-card flex-row">
+      <img src="image/ratingChart.png" alt="Activity Popularity">
+      <div class="card-title">Activity Popularity</div>
+    </div>
   </div>
-    
-    <div class="filters">
+
+  <div class="filters">
     <div>
-      <label>Filter by Club:</label><br>
-      <select>
-        <option>Select Club</option>
+      <label for="clubFilter">Filter by Club :</label>
+      <select id="clubFilter">
+        <option>Select club</option>
         <option>IT CLUB</option>
         <option>ROTU CLUB</option>
         <option>SOCIETY</option>
       </select>
     </div>
     <div>
-      <label>Filter by Course:</label><br>
-      <select>
+      <label for="courseFilter">Filter by Course :</label>
+      <select id="courseFilter">
         <option>Select Course</option>
         <option>CS110</option>
         <option>CS230</option>
@@ -440,68 +324,65 @@
     </div>
   </div>
 
-  <!-- Student Table -->
- <div style="padding: 30px; margin-left: 260px;"> <!-- Adjust for sidebar -->
-  <h2 style="color: #006d6d; font-size: 28px; font-weight: bold;">Student Participation</h2>
-
-  <div style="margin-bottom: 20px;">
-    <label for="clubFilter">Filter by Club:</label>
-    <select id="clubFilter">
-      <option>Select Club</option>
-      <option>IT CLUB</option>
-      <option>ROTU CLUB</option>
-      <option>SOCIETY</option>
-    </select>
-
-    <label for="courseFilter" style="margin-left: 20px;">Filter by Course:</label>
-    <select id="courseFilter">
-      <option>Select Course</option>
-      <option>CS110</option>
-      <option>BA242</option>
-      <option>BM119</option>
-    </select>
+  <div class="student-table-container">
+    <table class="student-table">
+      <thead>
+        <tr>
+          <th>ACTIVITY</th>
+          <th>CLUB</th>
+          <th>STUDENT</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>TECH EXPO</td>
+          <td>IT CLUB</td>
+          <td>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+              <span style="font-size: 22px; font-weight: bold;">25</span>
+              <button class="view-btn">View Students</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>ROTU SOLO NIGHT</td>
+          <td>ROTU CLUB</td>
+          <td>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+              <span style="font-size: 22px; font-weight: bold;">30</span>
+              <button class="view-btn">View Students</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>DEBATE NIGHT</td>
+          <td>SOCIETY</td>
+          <td>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+              <span style="font-size: 22px; font-weight: bold;">15</span>
+              <button class="view-btn">View Students</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
-
-  <table style="width: 100%; border-collapse: collapse; background-color: #fff; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden;">
-    <thead style="background-color: #1ec9b4; color: white;">
-      <tr>
-        <th style="padding: 12px;">Activity</th>
-        <th style="padding: 12px;">Club</th>
-        <th style="padding: 12px;">Student</th>
-        <th style="padding: 12px;">Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr style="text-align: center;">
-        <td style="padding: 12px;">TECH EXPO</td>
-        <td style="padding: 12px;">IT CLUB</td>
-        <td style="padding: 12px;">25</td>
-        <td style="padding: 12px;"><button style="padding: 8px 14px; background-color: #1ec9b4; color: white; border: none; border-radius: 5px;">View Students</button></td>
-      </tr>
-      <tr style="text-align: center;">
-        <td style="padding: 12px;">ROTU SOLO NIGHT</td>
-        <td style="padding: 12px;">ROTU CLUB</td>
-        <td style="padding: 12px;">30</td>
-        <td style="padding: 12px;"><button style="padding: 8px 14px; background-color: #1ec9b4; color: white; border: none; border-radius: 5px;">View Students</button></td>
-      </tr>
-      <tr style="text-align: center;">
-        <td style="padding: 12px;">DEBATE NIGHT</td>
-        <td style="padding: 12px;">SOCIETY</td>
-        <td style="padding: 12px;">15</td>
-        <td style="padding: 12px;"><button style="padding: 8px 14px; background-color: #1ec9b4; color: white; border: none; border-radius: 5px;">View Students</button></td>
-      </tr>
-    </tbody>
-  </table>
 </div>
 
-
 <script>
-  function toggleSidebar() {
-    var sidebar = document.getElementById("sidebar");
-    var content = document.getElementById("mainContent");
-    sidebar.classList.toggle("closed");
-    content.classList.toggle("full-width");
-  }
+  document.addEventListener('DOMContentLoaded', function() {
+    var bell = document.getElementById('notificationBtn');
+    var dropdown = document.getElementById('notificationDropdown');
+    bell.addEventListener('click', function(e) {
+      e.stopPropagation();
+      dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    });
+    document.addEventListener('click', function(e) {
+      if (dropdown.style.display === 'block') {
+        dropdown.style.display = 'none';
+      }
+    });
+  });
 </script>
 
 </body>

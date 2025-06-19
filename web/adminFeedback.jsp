@@ -1,4 +1,3 @@
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -7,389 +6,239 @@
   <title>Admin Feedback</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Poppins', Arial, sans-serif;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Poppins', Arial, sans-serif; background: #f6f6f6; }
     .sidebar {
       width: 270px;
       height: 100vh;
-      background-color: #00796B;
+      background-color: #238B87;
       color: white;
       position: fixed;
-      padding: 70px 20px 20px 20px;
+      padding: 40px 20px 20px 20px;
       overflow-y: auto;
       z-index: 10;
       text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
-
-    .sidebar.closed {
-      transform: translateX(-100%);
-    }
-
     .sidebar img.profile-pic {
-      width: 100px;
+      width: 170px;
       aspect-ratio: 1 / 1;
       border-radius: 50%;
       object-fit: cover;
-      margin-bottom: 15px;
+      margin-bottom: 30px;
       border: 3px solid white;
+      background: #fff;
     }
-
-    .sidebar h3 {
-      margin-bottom: 10px;
-    }
-
     .sidebar ul {
       list-style: none;
       padding-left: 0;
       margin-top: 20px;
+      width: 100%;
     }
-
     .sidebar ul li {
       margin-bottom: 15px;
     }
-
     .sidebar ul li a {
       color: white;
       text-decoration: none;
-      padding: 10px;
+      padding: 12px 0;
       display: block;
       border-radius: 5px;
+      font-size: 16px;
       transition: background-color 0.2s ease;
+      width: 100%;
+      text-align: center;
     }
-
-    .sidebar ul li a:hover,
-    .sidebar ul li a.active {
-      background-color: rgba(0, 0, 0, 0.2);
+    .sidebar ul li a.active, .sidebar ul li a:hover {
+      background-color: #1a7e7c;
+      font-weight: bold;
     }
-
-    .toggle-btn {
-      position: fixed;
-      left: 10px;
-      top: 10px;
-      z-index: 1000;
-      background-color: #00796B;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      cursor: pointer;
-      border-radius: 5px;
-    }
-
     .main-content {
       margin-left: 270px;
-      transition: margin-left 0.3s ease;
+      min-height: 100vh;
+      background: #f6f6f6;
+      padding-bottom: 40px;
     }
-
-    .main-content.full-width {
-      margin-left: 20px;
-    }
-
     .header {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      background-color: #0a8079;
-      color: white;
-      padding: 20px 40px;
+      background-color: #238B87;
+      color: #fff;
+      padding: 18px 40px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      gap: 20px;
+      justify-content: flex-start;
     }
-
     .header-title {
-      font-size: 28px;
+      font-size: 36px;
       font-weight: bold;
-    }
-
-    .top-icons {
+      letter-spacing: 1px;
       display: flex;
       align-items: center;
-      gap: 15px;
+      gap: 16px;
     }
-
-    .top-icons img.umpsa-icon {
-      width: 36px;
-      height: 36px;
+    .header-title img {
+      width: 44px;
+      height: 44px;
+      object-fit: contain;
     }
-
-    .notification-btn {
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 0;
+    .header .top-icons {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-left: auto;
+      position: relative;
     }
-
-    .notification-btn img {
-      width: 30px;
-      height: 30px;
+    .header .top-icons img {
+      width: 45px;
+      height: 45px;
+      object-fit: contain;
+      background: transparent;
     }
-
-    .profile-icon {
-      width: 40px;
-      height: 40px;
+    .header .top-icons .profile-icon {
+      width: 45px;
+      height: 45px;
       border-radius: 50%;
+      border: none;
+      background: transparent;
     }
-
     .notification-dropdown {
+      display: none;
       position: absolute;
-      top: 80px;
-      right: 40px;
-      background-color: white;
-      color: black;
+      top: 60px;
+      right: 60px;
+      background-color: #fff;
+      color: #222;
       border: 1px solid #ccc;
       border-radius: 8px;
-      padding: 10px;
-      width: 200px;
+      padding: 14px 18px;
+      width: 240px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-      display: none;
       z-index: 100;
-    }
-
-    .activity-section {
-      padding: 40px;
-    }
-    
-    .activity-section:hover {
-      padding: none;
-    }
-
-    .activity-section h2 {
-      text-align: center;
-      font-size: 32px;
-      font-weight: bold;
-    }
-
-    .summary-container {
-      display: flex;
-      justify-content: space-around;
-      margin-bottom: 30px;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-
-    .summary-card {
-      background: #D0F0EF;
-      padding: 20px;
-      border-radius: 12px;
-      width: 30%;
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .summary-card:nth-child(2) {
-      background: #E8E6F1;
-    }
-
-    .summary-icon img {
-      height: 60px;
-      width: 60px;
-    }
-
-    .summary-text h3 {
-      margin: 0;
-      font-size: 20px;
-    }
-
-    .summary-text p {
-      font-size: 26px;
-      font-weight: bold;
-      margin: 5px 0 0;
-    }
-
-    .rejected-activities-box {
-      background-color: #f9f9f9;
-      border-radius: 12px;
-      padding: 30px;
-      margin: 60px 40px 40px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-
-    .rejected-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-
-    .rejected-header h2 {
-      font-size: 24px;
-      font-weight: bold;
-      margin: 0;
-    }
-
-    .view-all-btn {
-      background-color: #00796B;
-      color: white;
-      padding: 8px 14px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    .view-all-btn:hover {
-      background-color: #005f56;
-    }
-
-    .rejected-cards-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-
-    .activity-card {
-      width: 220px;
-      background-color: white;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .activity-card img {
-      width: 100%;
-      height: 120px;
-      object-fit: cover;
-    }
-
-    .activity-info {
-      padding: 15px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      height: 130px;
-    }
-
-    .activity-info h4 {
       font-size: 16px;
-      margin-bottom: 5px;
     }
-
-    .activity-info p {
-      font-size: 12px;
-      margin: 2px 0;
-    }
-
-    .card-actions {
+    .feedback-summary-row {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 8px;
+      gap: 40px;
+      margin: 40px 0 30px 0;
+      justify-content: flex-start;
+      align-items: stretch;
+      background: #fafdff;
+      border-radius: 16px;
+      padding: 24px 32px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
     }
-
-    .rejected-label {
-      background-color: #ff9295;
-      color: red;
+    .summary-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      min-width: 120px;
+      max-width: 180px;
+      gap: 8px;
+    }
+    .summary-box .summary-icon {
+      font-size: 32px;
+      margin-bottom: 4px;
+    }
+    .summary-box .summary-label {
+      font-size: 18px;
+      color: #222;
+      font-weight: 500;
+      margin-bottom: 2px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .summary-box .summary-value {
+      font-size: 28px;
       font-weight: bold;
-      font-size: 11px;
-      padding: 4px 7px;
-      border-radius: 4px;
+      color: #222;
     }
-
-    .appeal-btn {
-      background-color: #007bff;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      font-size: 12px;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    .appeal-btn:hover {
-      background-color: #0056b3;
-    }
-
-    /* Modal */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.4);
+    .feedback-table-section {
+      display: flex;
+      flex-direction: row;
+      gap: 46px;
       justify-content: center;
-      align-items: center;
-      z-index: 9999;
+      align-items: flex-start;
+      margin-top: 38px;
+      margin-left: 0;
     }
-
-    .modal-content {
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      width: 90%;
-      max-width: 400px;
+    .feedback-table-container {
+      flex: 2;
+      min-width: 470px;
+      max-width: 800px;
     }
-
-    .modal-content h3 {
-      margin-bottom: 20px;
-    }
-
-    .modal-content textarea {
+    .feedback-table {
       width: 100%;
-      height: 100px;
-      margin-bottom: 15px;
-      padding: 10px;
-      resize: none;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: #fff;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      border: 3px solid #222;
+      margin: 0 auto;
     }
-
-    .modal-buttons {
-      text-align: right;
+    .feedback-table th, .feedback-table td {
+      padding: 20px 20px;
+      border: 2px solid #222;
+      text-align: center;
+      font-size: 19px;
     }
-
-    .modal-buttons button {
-      padding: 8px 14px;
-      margin-left: 10px;
-      border-radius: 6px;
-      border: none;
-      cursor: pointer;
+    .feedback-table th {
+      background: #ededed;
+      font-weight: bold;
+      font-size: 22px;
+      letter-spacing: 1px;
     }
-
-    .btn-cancel {
-      background-color: #ccc;
+    .feedback-table td {
+      font-size: 19px;
     }
-
-    .btn-submit {
-      background-color: #00796B;
-      color: white;
+    .feedback-chart-section {
+      flex: 1;
+      min-width: 310px;
+      max-width: 400px;
+      background: #fff;
+      border-radius: 16px;
+      border: 3px solid #222;
+      padding: 26px 26px 26px 26px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-sizing: border-box;
     }
-
-    @media (max-width: 768px) {
-      .main-content {
-        margin-left: 0 !important;
-      }
-
-      .sidebar {
-        width: 100%;
-        height: auto;
-        position: static;
-      }
-
-      .toggle-btn {
-        position: absolute;
-        left: 10px;
-        top: 10px;
-      }
-
-      .summary-card {
-        width: 100%;
-      }
-
-      .rejected-cards-container {
-        justify-content: center;
-      }
+    .feedback-chart-section h3 {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #222;
     }
-    </style>
+    #feedbackChart {
+      width: 180px !important;
+      height: 180px !important;
+      max-width: 100%;
+      margin: 0 auto;
+      display: block;
+    }
+    @media (max-width: 1100px) {
+      .feedback-summary-row { flex-direction: column; gap: 18px; }
+      .feedback-table-section { flex-direction: column; gap: 18px; }
+      .feedback-chart-section { max-width: 100%; min-width: 0; }
+    }
+  </style>
 </head>
 <body>
 <div class="sidebar">
-    <img src="image/logo_mpp.png" alt="Logo" style="width:100px; border-radius: 50%; display:block; margin:0 auto 20px;">
+    <img src="image/mppUMPSA.jpg" alt="Logo" class="profile-pic">
     <ul>
         <li><a href="adminDashboardPage.jsp">MANAGE ACTIVITIES</a></li>
         <li><a href="adminStudentList.jsp">STUDENT LIST</a></li>
@@ -400,63 +249,89 @@
 
 <div class="main-content">
     <div class="header">
-        <h2>Feedback</h2>
+      <div class="header-title">
+        <img src="image/Feedback.png" alt="Feedback Icon">
+        Feedback
+      </div>
+      <div class="top-icons">
+        <img src="image/umpsa.png" alt="UMPSA Logo">
+        <img src="image/bell.png" alt="Notifications" id="notificationBtn" style="cursor:pointer;">
+        <img src="image/mppUMPSA.jpg" alt="MPP Logo" class="profile-icon">
+        <div class="notification-dropdown" id="notificationDropdown">
+          <strong>Notifications</strong>
+          <ul style="margin:10px 0 0 0; padding:0 0 0 18px;">
+            <li>No new notifications</li>
+          </ul>
+        </div>
+      </div>
     </div>
 
-    <div class="feedback-summary">
-        <div class="summary-box">
-            <h3>Total Feedback</h3>
-            <p>125</p>
-        </div>
-        <div class="summary-box">
-            <h3>Resolved</h3>
-            <p>83</p>
-        </div>
-        <div class="summary-box">
-            <h3>Pending</h3>
-            <p>29</p>
-        </div>
-        <div class="summary-box">
-            <h3>New Today</h3>
-            <p>13</p>
-        </div>
+    <div class="feedback-summary-row">
+      <div class="summary-box">
+        <span class="summary-icon">&#128172;</span>
+        <span class="summary-label">Total Feedback</span>
+        <span class="summary-value">125</span>
+      </div>
+      <div class="summary-box">
+        <span class="summary-icon">&#128202;</span>
+        <span class="summary-label">Resolved</span>
+        <span class="summary-value">83</span>
+      </div>
+      <div class="summary-box">
+        <span class="summary-icon">&#9203;</span>
+        <span class="summary-label">Pending</span>
+        <span class="summary-value">29</span>
+      </div>
+      <div class="summary-box">
+        <span class="summary-icon">&#128172;</span>
+        <span class="summary-label">New Today</span>
+        <span class="summary-value">13</span>
+      </div>
     </div>
 
-    <table>
-        <tr>
-            <th>NO</th>
-            <th>NAME</th>
-            <th>Type</th>
-            <th>Summary</th>
-        </tr>
-        <tr>
-            <td>1</td>
-            <td>AHMAD KASSIM</td>
-            <td>Complaint</td>
-            <td>Low management</td>
-        </tr>
-        <tr>
-            <td>2</td>
-            <td>SITI JENAB</td>
-            <td>Complaint</td>
-            <td>Food are not enough for participants</td>
-        </tr>
-        <tr>
-            <td>3</td>
-            <td>LAW ANN CHAY</td>
-            <td>Suggestion</td>
-            <td>Add projector for debate night</td>
-        </tr>
-        <tr>
-            <td>4</td>
-            <td>DARSHAN</td>
-            <td>Compliment</td>
-            <td>Everything was perfect, the food, the vibe, the people were very friendly.</td>
-        </tr>
-    </table>
-
-    <div class="chart-section">
+    <div class="feedback-table-section">
+      <div class="feedback-table-container">
+        <table class="feedback-table">
+          <thead>
+            <tr>
+              <th>NO</th>
+              <th>NAME</th>
+              <th>Type</th>
+              <th>Summary</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1.</td>
+              <td>AHMAD KASSIM</td>
+              <td>Complaint</td>
+              <td>Low management</td>
+            </tr>
+            <tr>
+              <td>2.</td>
+              <td>SITI JENAB</td>
+              <td>Complaint</td>
+              <td>Food are not enough for participants</td>
+            </tr>
+            <tr>
+              <td>3.</td>
+              <td>LAW ANN CHAY</td>
+              <td>Suggestion</td>
+              <td>Add projector for debate night</td>
+            </tr>
+            <tr>
+              <td>4.</td>
+              <td>DARSHAN</td>
+              <td>Compliment</td>
+              <td>Everything was perfect, the food, the vibe, the people were very friendly.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="feedback-chart-section">
+        <h3>Overall Activities Rating</h3>
         <canvas id="feedbackChart"></canvas>
+      </div>
     </div>
 </div>
 
@@ -483,12 +358,27 @@
                     position: 'right'
                 },
                 title: {
-                    display: true,
-                    text: 'Overall Activities Rating'
+                    display: false
                 }
             }
         }
     });
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var bell = document.getElementById('notificationBtn');
+  var dropdown = document.getElementById('notificationDropdown');
+  bell.addEventListener('click', function(e) {
+    e.stopPropagation();
+    dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+  });
+  document.addEventListener('click', function(e) {
+    if (dropdown.style.display === 'block') {
+      dropdown.style.display = 'none';
+    }
+  });
+});
 </script>
 
 </body>
