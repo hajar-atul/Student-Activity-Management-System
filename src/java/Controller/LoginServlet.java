@@ -6,6 +6,7 @@ import javax.servlet.http.*;
 import model.STUDENT;
 import model.CLUB;
 import model.ADMIN;
+import model.STAFF;
 
 public class LoginServlet extends HttpServlet {
 
@@ -18,7 +19,7 @@ public class LoginServlet extends HttpServlet {
         try {
             if ("admin".equals(role)) {
                 // Admin login using studID and password
-                String adminID = request.getParameter("email"); // This is actually studID
+                String adminID = request.getParameter("studID"); // This is actually studID
                 String password = request.getParameter("password");
                 if (adminID == null || password == null || adminID.trim().isEmpty() || password.trim().isEmpty()) {
                     response.sendRedirect("indexAdmin.jsp?error=missing_credentials");
@@ -40,9 +41,14 @@ public class LoginServlet extends HttpServlet {
                     ADMIN admin = ADMIN.getAdminByStudID(studID);
                     HttpSession session = request.getSession();
                     session.setAttribute("admin", admin);
-                    session.setAttribute("adminID", adminID);
+                    session.setAttribute("studID", adminID);
                     session.setAttribute("role", "admin");
                     session.setAttribute("adminName", admin.getStudentInfo().getStudName());
+                    session.setAttribute("studName", admin.getStudentInfo().getStudName());
+                    session.setAttribute("studEmail", admin.getStudentInfo().getStudEmail());
+                    session.setAttribute("studCourse", admin.getStudentInfo().getStudCourse());
+                    session.setAttribute("studSemester", admin.getStudentInfo().getStudSemester());
+                    session.setAttribute("studNoPhone", admin.getStudentInfo().getStudNoPhone());
                     response.sendRedirect("adminDashboardPage.jsp");
                 } catch (NumberFormatException e) {
                     response.sendRedirect("indexAdmin.jsp?error=invalid_admin_id");
@@ -70,6 +76,37 @@ public class LoginServlet extends HttpServlet {
                 } catch (NumberFormatException e) {
                     response.sendRedirect("indexClub.jsp?error=invalid_club_id");
                 }
+            } else if ("staff".equals(role)) {
+                // Staff login logic
+                String staffIDStr = request.getParameter("email");
+                String password = request.getParameter("password");
+                if (staffIDStr == null || password == null || staffIDStr.trim().isEmpty() || password.trim().isEmpty()) {
+                    response.sendRedirect("indexStaff.jsp?error=missing_credentials");
+                    return;
+                }
+                try {
+                    int staffID = Integer.parseInt(staffIDStr);
+                    STAFF staff = STAFF.getStaffById(staffID);
+                    if (staff == null) {
+                        response.sendRedirect("indexStaff.jsp?error=not_registered");
+                        return;
+                    }
+                    if (STAFF.validatePassword(staffID, password)) {
+                        HttpSession session = request.getSession();
+                        session.setAttribute("staff", staff);
+                        session.setAttribute("staffID", staffIDStr);
+                        session.setAttribute("role", "staff");
+                        session.setAttribute("staffName", staff.getStaffName());
+                        session.setAttribute("staffEmail", staff.getStaffEmail());
+                        session.setAttribute("staffPhone", staff.getStaffPhone());
+                        session.setAttribute("staffDepartment", staff.getStaffDepartment());
+                        response.sendRedirect("staffDashboardPage.jsp");
+                    } else {
+                        response.sendRedirect("indexStaff.jsp?error=wrong_password");
+                    }
+                } catch (NumberFormatException e) {
+                    response.sendRedirect("indexStaff.jsp?error=invalid_staff_id");
+                }
             } else {
                 // Student authentication logic remains unchanged
                 String userID = request.getParameter("studID");
@@ -94,13 +131,11 @@ public class LoginServlet extends HttpServlet {
                     session.setAttribute("studNoPhone", student.getStudNoPhone());
                     switch (student.getStudType()) {
                         case "student":
+                        case "admin":
                             response.sendRedirect("studentDashboardPage.jsp");
                             break;
                         case "staff":
                             response.sendRedirect("staffDashboardPage.jsp");
-                            break;
-                        case "admin":
-                            response.sendRedirect("adminDashboard.jsp");
                             break;
                         default:
                             response.sendRedirect("index.jsp?error=Invalid+role");

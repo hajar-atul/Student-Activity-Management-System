@@ -37,7 +37,7 @@ public class ADMIN {
 
     // Check if a student is an admin
     public static boolean isAdmin(int studID) {
-        String sql = "SELECT 1 FROM admin WHERE studID = ?";
+        String sql = "SELECT* FROM admin WHERE studID = ?";
         try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, studID);
@@ -68,6 +68,7 @@ public class ADMIN {
                 student.setStudSemester(rs.getString("studSemester"));
                 student.setStudNoPhone(rs.getString("studNoPhone"));
                 student.setStudType(rs.getString("studType"));
+                student.setStudPassword(rs.getString("studPassword"));
                 student.setDob(rs.getString("dob"));
                 student.setMuetStatus(rs.getString("muetStatus"));
                 student.setAdvisor(rs.getString("advisor"));

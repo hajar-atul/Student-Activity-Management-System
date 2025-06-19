@@ -196,7 +196,7 @@
         </div>
 
         <label>Admin ID:</label>
-        <input type="text" name="email" required>
+        <input type="text" name="studID" required>
 
         <label>Password:</label>
         <input type="password" name="password" required>
@@ -206,7 +206,6 @@
         </div>
 
         <button type="submit" class="button">SIGN IN</button>
-        <button type="button" class="button" onclick="location.href='registerPage.jsp'">SIGN UP</button>
 
       </form>
     </div>

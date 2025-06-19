@@ -209,13 +209,14 @@
     <div class="sidebar">
         <img src="image/staff.jpg" alt="Profile Picture">
         <h2>
-            <%= session.getAttribute("studName") %><br>
-            <%= session.getAttribute("studID") %>
+            <%= session.getAttribute("staffName") %><br>
+            <%= session.getAttribute("staffID") %>
         </h2>
         <div class="menu">
             <a href="staffDashboardPage.jsp">HOME</a>
             <a href="staffBooking.jsp">BOOKING</a>
             <a href="staffAdabPoint.jsp">ADAB POINT</a>
+            <a href="addClub.jsp">Club Registration</a>
         </div>
     </div>
         

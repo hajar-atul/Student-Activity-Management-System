@@ -229,7 +229,7 @@
         </div>
 
         <button type="submit" class="button">SIGN IN</button>
-        <button type="button" class="button" onclick="location.href='registerPage.jsp'">SIGN UP</button>
+        <button type="button" class="button">SIGN UP</button>
 
       </form>
     </div>

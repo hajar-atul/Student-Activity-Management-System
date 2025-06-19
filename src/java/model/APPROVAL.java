@@ -49,7 +49,7 @@ public class APPROVAL {
     }
     
     public void setStudlId(int studID) {
-        this.studID = studID;
+        this.studID = studID;   
     }
 
     public int getStudId() {

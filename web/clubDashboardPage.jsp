@@ -171,40 +171,91 @@
 
     .summary-container {
       display: flex;
-      justify-content: space-around;
+      flex-direction: column;
+      align-items: flex-start;
       margin-bottom: 30px;
-      flex-wrap: wrap;
       gap: 20px;
     }
-
+    .dashboard-btn {
+      background: #0a8079;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 18px;
+      font-size: 15px;
+      font-family: 'Poppins', Arial, sans-serif;
+      font-weight: 500;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      outline: none;
+      margin-bottom: 0;
+    }
+    .dashboard-btn:hover {
+      background: #00796B;
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.13);
+    }
+    .summary-cards-row {
+      display: flex;
+      gap: 32px;
+      width: 100%;
+      justify-content: flex-start;
+    }
     .summary-card {
       background: #D0F0EF;
-      padding: 20px;
-      border-radius: 12px;
-      width: 30%;
+      padding: 32px 32px 24px 32px;
+      border-radius: 18px;
+      width: 210px;
+      min-width: 180px;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 15px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      cursor: pointer;
+      transition: transform 0.18s, box-shadow 0.18s, background 0.18s;
+      border: none;
+      outline: none;
+      text-align: center;
+      user-select: none;
     }
-
-    .summary-card:nth-child(2) {
+    .summary-card.create-activity {
+      background: #fffbe7;
+    }
+    .summary-card.resource {
       background: #E8E6F1;
     }
-
-    .summary-icon img {
-      height: 60px;
-      width: 60px;
+    .summary-card:hover {
+      transform: translateY(-6px) scale(1.04);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.13);
+      background: #b2f7ef;
     }
-
+    .summary-card.create-activity:hover {
+      background: #fff3b0;
+    }
+    .summary-card.resource:hover {
+      background: #d6d3f7;
+    }
+    .summary-icon {
+      margin-bottom: 12px;
+    }
+    .summary-icon img, .summary-icon svg {
+      height: 48px;
+      width: 48px;
+      display: block;
+      margin: 0 auto;
+    }
     .summary-text h3 {
       margin: 0;
-      font-size: 20px;
-    }
-
-    .summary-text p {
-      font-size: 26px;
+      font-size: 1.25em;
       font-weight: bold;
-      margin: 5px 0 0;
+      color: #222;
+    }
+    .summary-text p {
+      font-size: 1.3em;
+      font-weight: bold;
+      margin: 10px 0 0 0;
+      color: #222;
     }
 
     .rejected-activities-box {
@@ -425,13 +476,25 @@
 
   <div class="activity-section">
     <div class="summary-container">
-      <div class="summary-card">
-        <div class="summary-icon"><img src="image/venue_icon.png" alt="Venue"></div>
-        <div class="summary-text"><h3>Venue Booking</h3><p>2</p></div>
-      </div>
-      <div class="summary-card">
-        <div class="summary-icon"><img src="image/resource_icon.png" alt="Resource"></div>
-        <div class="summary-text"><h3>Resource Request</h3><p>5</p></div>
+      <div class="summary-cards-row">
+        <div class="summary-card create-activity" onclick="location.href='createActivity.jsp'">
+          <div class="summary-icon">
+            <img src="image/create_icon.png" alt="Create Activity" />
+          </div>
+          <div class="summary-text"><h3>Create Activity</h3></div>
+        </div>
+        <div class="summary-card" onclick="location.href='venueBooking.jsp'">
+          <div class="summary-icon">
+            <img src="image/venue_icon.png" alt="Venue" />
+          </div>
+          <div class="summary-text"><h3>Venue Booking</h3><p>2</p></div>
+        </div>
+        <div class="summary-card resource" onclick="location.href='resourceReq.jsp'">
+          <div class="summary-icon">
+            <img src="image/resource_icon.png" alt="Resource" />
+          </div>
+          <div class="summary-text"><h3>Resource Request</h3><p>5</p></div>
+        </div>
       </div>
     </div>
 
@@ -449,7 +512,7 @@
             <p>Date: June 5, 2025</p>
             <p>Venue: UMPSA Indoor Court</p>
             <div class="card-actions">
-              <span class="rejected-label">Rejected</span>
+              <span class="rejected-label">Remove</span>
               <button class="appeal-btn" onclick="openModal()">Appeal</button>
             </div>
           </div>
@@ -462,7 +525,7 @@
             <p>Date: May 30, 2025</p>
             <p>Venue: Main Hall</p>
             <div class="card-actions">
-              <span class="rejected-label">Rejected</span>
+              <span class="rejected-label">Remove</span>
               <button class="appeal-btn" onclick="openModal()">Appeal</button>
             </div>
           </div>

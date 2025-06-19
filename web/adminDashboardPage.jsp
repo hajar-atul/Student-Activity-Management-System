@@ -236,6 +236,7 @@
     <li><a href="adminDashboardPage.jsp" class="active">MANAGE ACTIVITIES</a></li>
     <li><a href="adminStudentList.jsp">STUDENT LIST</a></li>
     <li><a href="adminFeedback.jsp">FEEDBACK</a></li>
+    <li><a href="addAdmin.jsp">ADD ADMIN</a></li>
     <li><a href="adminReport.jsp">REPORT</a></li>
   </ul>
 </div>

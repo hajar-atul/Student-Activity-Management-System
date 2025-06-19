@@ -84,27 +84,34 @@ public class CLUB {
         return clubs;
     }
 
-    // Save new club
-    public boolean save() {
+    // Save new club and return generated clubID
+    public int saveAndReturnId() {
+        int generatedId = -1;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
                 String query = "INSERT INTO club (clubName, clubContact, clubDesc, clubStatus, clubEstablishedDate, clubPassword) " +
-                             "VALUES (?, ?, ?, ?, ?, ?)";
-                PreparedStatement stmt = conn.prepareStatement(query);
+                             "VALUES (?, ?, ?, 'active', ?, ?)";
+                PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
                 stmt.setString(1, this.clubName);
                 stmt.setString(2, this.clubContact);
                 stmt.setString(3, this.clubDesc);
-                stmt.setString(4, this.clubStatus);
-                stmt.setString(5, this.clubEstablishedDate);
-                stmt.setString(6, this.clubPassword);
-                
-                return stmt.executeUpdate() > 0;
+                stmt.setString(4, this.clubEstablishedDate);
+                stmt.setString(5, this.clubPassword);
+                int affectedRows = stmt.executeUpdate();
+                if (affectedRows > 0) {
+                    try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                        if (generatedKeys.next()) {
+                            generatedId = generatedKeys.getInt(1);
+                            this.clubID = generatedId;
+                        }
+                    }
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
         }
+        return generatedId;
     }
 
     // Update existing club
