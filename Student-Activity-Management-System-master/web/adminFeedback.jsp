@@ -92,6 +92,7 @@
       align-items: center;
       gap: 18px;
       margin-left: auto;
+      position: relative;
     }
     .header .top-icons img {
       width: 45px;
@@ -105,6 +106,21 @@
       border-radius: 50%;
       border: none;
       background: transparent;
+    }
+    .notification-dropdown {
+      display: none;
+      position: absolute;
+      top: 60px;
+      right: 60px;
+      background-color: #fff;
+      color: #222;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 14px 18px;
+      width: 240px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      z-index: 100;
+      font-size: 16px;
     }
     .feedback-summary-row {
       display: flex;
@@ -239,8 +255,14 @@
       </div>
       <div class="top-icons">
         <img src="image/umpsa.png" alt="UMPSA Logo">
-        <img src="image/bell.png" alt="Notifications">
+        <img src="image/bell.png" alt="Notifications" id="notificationBtn" style="cursor:pointer;">
         <img src="image/mppUMPSA.jpg" alt="MPP Logo" class="profile-icon">
+        <div class="notification-dropdown" id="notificationDropdown">
+          <strong>Notifications</strong>
+          <ul style="margin:10px 0 0 0; padding:0 0 0 18px;">
+            <li>No new notifications</li>
+          </ul>
+        </div>
       </div>
     </div>
 
@@ -341,6 +363,22 @@
             }
         }
     });
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var bell = document.getElementById('notificationBtn');
+  var dropdown = document.getElementById('notificationDropdown');
+  bell.addEventListener('click', function(e) {
+    e.stopPropagation();
+    dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+  });
+  document.addEventListener('click', function(e) {
+    if (dropdown.style.display === 'block') {
+      dropdown.style.display = 'none';
+    }
+  });
+});
 </script>
 
 </body>
