@@ -297,7 +297,6 @@
             <tr>
               <th>NO</th>
               <th>NAME</th>
-              <th>Type</th>
               <th>Summary</th>
             </tr>
           </thead>
@@ -305,25 +304,21 @@
             <tr>
               <td>1.</td>
               <td>AHMAD KASSIM</td>
-              <td>Complaint</td>
               <td>Low management</td>
             </tr>
             <tr>
               <td>2.</td>
               <td>SITI JENAB</td>
-              <td>Complaint</td>
               <td>Food are not enough for participants</td>
             </tr>
             <tr>
               <td>3.</td>
               <td>LAW ANN CHAY</td>
-              <td>Suggestion</td>
               <td>Add projector for debate night</td>
             </tr>
             <tr>
               <td>4.</td>
               <td>DARSHAN</td>
-              <td>Compliment</td>
               <td>Everything was perfect, the food, the vibe, the people were very friendly.</td>
             </tr>
           </tbody>
