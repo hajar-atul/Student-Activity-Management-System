@@ -5,9 +5,9 @@ import java.sql.SQLException;
 public class DBTest {
 
     // Change "testdb" to your actual database name
-    private static final String URL = "jdbc:mysql://localhost:3306/student?zeroDateTimeBehavior=convertToNull";
-    private static final String USER = "root"; // default XAMPP user
-    private static final String PASSWORD = ""; // default XAMPP password is empty
+    private static final String URL = "jdbc:mysql://localhost:3306/student";
+    private static final String USER = "root"; 
+    private static final String PASSWORD = ""; 
 
     public static void main(String[] args) {
         System.out.println("Attempting to connect to the database...");
