@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,6 +29,8 @@
       left: 0;
       top: 0;
       z-index: 1001;
+      display: flex;
+      flex-direction: column;
       transition: transform 0.3s ease;
     }
 
@@ -79,6 +81,30 @@
       color: white;
       border-radius: 5px;
       text-align: center;
+    }
+
+    .logout-container {
+      margin-top: auto;
+      padding-top: 20px;
+    }
+
+    .logout-container .LOGOUT-btn {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background-color: #d82215d2;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: bold;
+      transition: background-color 0.2s;
+      cursor: pointer;
+    }
+
+    .logout-container .LOGOUT-btn:hover {
+      background-color: #b71c1c;
     }
 
     .topbar {
@@ -295,9 +321,11 @@
     <a href="achievements.jsp">ACHIEVEMENTS</a>
     <a href="settings.jsp">SETTINGS</a>
   </div>
-  <div style="position: absolute; bottom: 20px; width: 80%; left: 10%;">
+
+  <!-- ✅ Logout button fixed at the bottom -->
+  <div class="logout-container">
     <form action="index.jsp">
-      <button type="submit" class="activity-btn" style="background-color: #f44336;">Logout</button>
+      <button type="submit" class="LOGOUT-btn">Logout</button>
     </form>
   </div>
 </div>
