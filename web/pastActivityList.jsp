@@ -5,12 +5,12 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Student Activity List</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <title>Past Activities</title>
+  <link href="https://fonts.googleapis.com/css2?family=Arial&display=swap" rel="stylesheet" />
   <style>
     * {
       margin: 0;
@@ -18,105 +18,127 @@
       box-sizing: border-box;
     }
 
-    body {
-      font-family: 'Poppins', Arial, sans-serif;
+    html, body {
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
     }
 
-    /* Sidebar */
     .sidebar {
-      width: 270px;
-      height: 100vh;
-      background-color: #00796B;
+      width: 250px;
+      background-color: #008b8b;
       color: white;
+      padding: 20px;
+      height: 100vh;
       position: fixed;
-      padding: 70px 20px 20px 20px;
+      left: 0;
+      top: 0;
+      z-index: 1001;
+      display: flex;
+      flex-direction: column;
       transition: transform 0.3s ease;
-      overflow-y: auto;
-      text-align: center;
-      z-index: 10;
     }
 
     .sidebar.closed {
       transform: translateX(-100%);
     }
 
-    .sidebar img.profile-pic {
-      width: 100px;
-      aspect-ratio: 1 / 1;
-      border-radius: 50%;
-      object-fit: cover;
-      margin-bottom: 15px;
-      border: 3px solid white;
-      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-    }
-
-    .sidebar h4,
-    .sidebar p {
-      margin-bottom: 10px;
-    }
-
-    .sidebar ul {
-      list-style: none;
-      padding-left: 0;
-      margin-top: 20px;
-    }
-
-    .sidebar ul li {
-      margin-bottom: 15px;
-    }
-
-    .sidebar ul li a {
-      color: white;
-      text-decoration: none;
-      padding: 10px;
-      display: block;
-      border-radius: 5px;
-      transition: background-color 0.2s ease;
-    }
-
-    .sidebar ul li a:hover,
-    .sidebar ul li a.active {
-      background-color: rgba(0, 0, 0, 0.2);
-    }
-
-    /* Toggle Button */
     .toggle-btn {
       position: fixed;
-      left: 10px;
-      top: 10px;
-      z-index: 1000;
-      background-color: #00796B;
+      top: 20px;
+      left: 20px;
+      background-color: #008b8b;
       color: white;
       border: none;
-      padding: 10px 15px;
+      padding: 8px 12px;
+      border-radius: 4px;
       cursor: pointer;
-      border-radius: 5px;
+      z-index: 1002;
     }
 
-    /* Main Content */
-    .main-content {
-      margin-left: 270px;
+      .sidebar img.profile-pic {
+       width: 100px;
+       aspect-ratio: 1 / 1;
+       border-radius: 50%;
+       object-fit: cover;
+       margin: 0 auto 15px;
+       border: 3px solid white;
+       box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+
+    .sidebar h2 {
+      text-align: center;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    .menu {
+      margin-top: 30px;
+    }
+
+    .menu a {
+      display: block;
+      padding: 10px;
+      background-color: #0a6d6d;
+      margin-top: 10px;
+      text-decoration: none;
+      color: white;
+      border-radius: 5px;
+      text-align: center;
+    }
+
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 80px;
+      background-color: #008b8b;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 30px;
+      z-index: 1000;
+    }
+
+    .search-container {
+      display: flex;
+      align-items: center;
+      margin-left: 250px;
       transition: margin-left 0.3s ease;
     }
 
-    .main-content.full-width {
-      margin-left: 20px;
+    .sidebar.closed ~ .topbar .search-container {
+      margin-left: 70px;
     }
 
-    /* Header */
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background-color: #0a8079;
-      color: white;
-      padding: 20px 40px;
-      width: 100%;
+    .search-container input {
+      padding: 8px 12px;
+      border-radius: 20px;
+      border: none;
+      outline: none;
+      width: 200px;
     }
 
-    .header-title {
-      font-size: 28px;
+    .search-btn {
+      background: white;
+      border: none;
+      margin-left: -30px;
+      cursor: pointer;
       font-weight: bold;
+      border-radius: 50%;
+      padding: 4px 8px;
+      color: #009B9D;
+    }
+
+    .dashboard-title {
+      font-size: 26px;
+      font-weight: bold;
+      text-align: center;
+      flex-grow: 1;
+      margin-left: 60px;
     }
 
     .top-icons {
@@ -125,303 +147,233 @@
       gap: 15px;
     }
 
-    .top-icons img.umpsa-icon {
+    .top-icons img {
       width: 36px;
       height: 36px;
-    }
-
-    .notification-btn {
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 0;
-    }
-
-    .notification-btn img {
-      width: 30px;
-      height: 30px;
-    }
-
-    .profile-icon {
-      width: 40px;
-      height: 40px;
       border-radius: 50%;
+      cursor: pointer;
     }
 
-    .notification-dropdown {
-      position: absolute;
-      top: 80px;
-      right: 40px;
-      background-color: white;
-      color: black;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      padding: 10px;
-      width: 200px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-      display: none;
-      z-index: 100;
+    .content {
+      margin-left: 250px;
+      padding: 100px 30px 50px;
+      transition: margin-left 0.3s ease;
     }
 
-    /* Activity Section */
-    .activity-section {
-      padding: 40px;
+    .sidebar.closed ~ .content {
+      margin-left: 0;
     }
 
-    .activity-section h2 {
-      text-align: center;
-      font-size: 32px;
-      font-weight: bold;
-    }
-
-    .summary-container {
+    .stats {
       display: flex;
-      justify-content: space-around;
-      margin-bottom: 30px;
-      flex-wrap: wrap;
       gap: 20px;
+      margin-bottom: 40px;
     }
 
-    .summary-card {
-      background: #D0F0EF;
+    .stat-box {
+      background-color: #d8f6f5;
       padding: 20px;
-      border-radius: 12px;
-      width: 25%;
+      border-radius: 10px;
+      flex: 1;
       display: flex;
       align-items: center;
-      gap: 15px;
+      font-size: 14px;
+      font-weight: bold;
     }
 
-    .summary-card:nth-child(3) {
-      background: #E8E6F1;
+    .stat-box:nth-child(3) {
+      background-color: #ece8f9;
     }
 
-    .summary-icon img {
-      height: 60px;
-      width: 60px;
-      object-fit: contain;
+    .stat-box img {
+      height: 32px;
+      margin-right: 10px;
     }
 
-    .summary-text h3 {
-      margin: 0;
-      font-size: 16px;
+    .stat-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.4;
     }
 
-    .summary-text p {
+    .stat-text span {
       font-size: 24px;
       font-weight: bold;
-      margin: 5px 0 0;
     }
 
-    /* Table Section */
-    .table-wrapper {
-      border: 1px solid #ccc;
+    .activity-table {
+      width: 100%;
+      background-color: white;
       border-radius: 8px;
-      overflow-x: auto;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
 
-    .table-wrapper .title-bar {
-      padding: 12px 20px;
-      font-weight: bold;
-      border-bottom: 3px solid #009688;
-      background-color: #f5f5f5;
-      text-align: left;
-    }
-
-    table {
+    .activity-table table {
       width: 100%;
       border-collapse: collapse;
+    }
+
+    .activity-table th,
+    .activity-table td {
+      padding: 15px;
       text-align: left;
+      border-bottom: 1px solid #ddd;
+      font-size: 14px;
     }
 
-    th, td {
-      padding: 12px 20px;
-      border-bottom: 1px solid #ccc;
-    }
-
-    tbody tr:hover {
+    .activity-table th {
       background-color: #f9f9f9;
+      font-weight: bold;
     }
 
-    button {
-      background: #00796B;
+    .activity-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .activity-table button {
+      background-color: #008b8b;
       color: white;
+      padding: 8px 16px;
       border: none;
       border-radius: 20px;
-      padding: 5px 15px;
+      font-size: 14px;
       cursor: pointer;
-      transition: 0.2s ease;
     }
 
-    button:hover {
-      opacity: 0.9;
-      transform: scale(1.02);
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      .main-content {
-        margin-left: 0 !important;
-      }
-
-      .sidebar {
-        width: 100%;
-        height: auto;
-        position: static;
-        transform: none !important;
-      }
-
-      .toggle-btn {
-        position: absolute;
-        left: 10px;
-        top: 10px;
-      }
-
-      .activity-section {
-        padding: 20px;
-      }
-
-      .summary-card {
-        width: 100%;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-      }
+    .back-btn {
+      display: inline-block;
+      margin-top: 40px;
+      padding: 12px 24px;
+      background-color: #008b8b;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
 
-  <!-- Toggle Sidebar Button -->
-  <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
-
-  <!-- Sidebar -->
-  <div class="sidebar" id="sidebar">
-    <img src="image/amin.jpg" alt="User Profile Picture" class="profile-pic">
-    <h4><%= session.getAttribute("studName") %></h4>
-    <p><%= session.getAttribute("studID") %></p>
-
-    <ul>
-      <li><a href="studentDashboardPage.jsp">Dashboard</a></li>
-      <li><a href="activities.jsp" class="active">Activities</a></li>
-      <li><a href="studentClub.jsp">Clubs</a></li>
-      <li><a href="achievements.jsp">Achievements</a></li>
-      <li><a href="settings.jsp">Settings</a></li>
-    </ul>
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+  <img src="image/amin.jpg" alt="Profile" class="profile-pic" />
+  <h2>
+    <%= session.getAttribute("studName") %><br>
+    <%= session.getAttribute("studID") %>
+  </h2>
+  <div class="menu">
+    <a href="studentDashboardPage.jsp">DASHBOARD</a>
+    <a href="activities.jsp">ACTIVITIES</a>
+    <a href="studentClub.jsp">CLUBS</a>
+    <a href="achievements.jsp">ACHIEVEMENTS</a>
+    <a href="settings.jsp">SETTINGS</a>
   </div>
+</div>
 
-  <!-- Main Content -->
-  <div class="main-content" id="mainContent">
-    <div class="header">
-      <div class="header-title">Activities</div>
-      <div class="top-icons">
-        <img src="image/umpsa.png" alt="Universiti Malaysia Pahang Logo" class="umpsa-icon" />
-        <button class="notification-btn" id="notificationBtn">
-          <img src="image/bell.png" alt="Notifications" />
-        </button>
-        <img src="image/amin.jpg" alt="User Avatar" class="profile-icon" />
+<!-- Toggle Button -->
+<button class="toggle-btn" id="toggleBtn">☰</button>
+
+<!-- Topbar -->
+<div class="topbar">
+  <div class="search-container">
+    <input type="text" placeholder="Search..." />
+    <button class="search-btn">X</button>
+  </div>
+  <div class="dashboard-title">ACTIVITIES</div>
+  <div class="top-icons">
+    <img src="image/umpsa.png" alt="UMPSA">
+    <img src="image/bell.png" alt="Notification">
+    <img src="image/amin.jpg" alt="Profile">
+  </div>
+</div>
+
+<!-- Content -->
+<div class="content">
+  <div class="stats">
+    <div class="stat-box">
+      <img src="image/activity_icon.png" alt="Activities">
+      <div class="stat-text">
+        TOTAL ACTIVITIES JOINED
+        <span>8</span>
       </div>
     </div>
-
-    <!-- Notification Dropdown -->
-    <div class="notification-dropdown" id="notificationDropdown">
-      <p>No new notifications</p>
-    </div>
-
-    <div class="activity-section">
-      <!-- Summary Cards -->
-      <div class="summary-container">
-        <div class="summary-card">
-          <div class="summary-icon">
-            <img src="image/activity_icon.png" alt="Activities Icon">
-          </div>
-          <div class="summary-text">
-            <h3>TOTAL ACTIVITIES JOINED</h3>
-            <p>8</p>
-          </div>
-        </div>
-        <div class="summary-card">
-          <div class="summary-icon">
-            <img src="image/club_icon.png" alt="Clubs Icon">
-          </div>
-          <div class="summary-text">
-            <h3>CLUBS PARTICIPATED</h3>
-            <p>3</p>
-          </div>
-        </div>
-        <div class="summary-card">
-          <div class="summary-icon">
-            <img src="image/trophy.jpg" alt="Achievements Icon">
-          </div>
-          <div class="summary-text">
-            <h3>ACHIEVEMENTS</h3>
-            <p>0</p>
-          </div>
-        </div>
+    <div class="stat-box">
+      <img src="image/club_icon.png" alt="Clubs">
+      <div class="stat-text">
+        CLUBS PARTICIPATED
+        <span>3</span>
       </div>
-
-      <!-- Table -->
-      <div class="table-wrapper">
-        <div class="title-bar">My Activities</div>
-        <table>
-          <thead>
-            <tr style="background-color: #f0f0f0;">
-              <th>ACTIVITY</th>
-              <th>DATE</th>
-              <th>STATUS</th>
-              <th>ROLE</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>HACKATHON FACULTY</td>
-              <td>12 Apr 2025</td>
-              <td>Attended</td>
-              <td>Participant</td>
-              <td><button onclick="location.href='feedback.jsp'">Feedback →</button></td>
-            </tr>
-            <tr>
-              <td>BADMINTON LEAGUE</td>
-              <td>8 Apr 2025</td>
-              <td>Attended</td>
-              <td>Participant</td>
-              <td><button onclick="location.href='feedback.jsp'">Feedback →</button></td>
-            </tr>
-            <tr>
-              <td>ACADEMIC CONFERENCE</td>
-              <td>23 March 2025</td>
-              <td>Attended</td>
-              <td>Participant</td>
-              <td><button onclick="location.href='feedback.jsp'">Feedback →</button></td>
-            </tr>
-            <tr>
-              <td>VISIT TO ORPHANAGE</td>
-              <td>22 Feb 2025</td>
-              <td>Attended</td>
-              <td>Participant</td>
-              <td><button onclick="location.href='feedback.jsp'">Feedback →</button></td>
-            </tr>
-          </tbody>
-        </table>
+    </div>
+    <div class="stat-box">
+      <img src="image/trophy.jpg" alt="Achievements">
+      <div class="stat-text">
+        ACHIEVEMENTS
+        <span>0</span>
       </div>
     </div>
   </div>
 
-  <!-- Script -->
-  <script>
-    function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      const main = document.getElementById('mainContent');
-      sidebar.classList.toggle('closed');
-      main.classList.toggle('full-width');
-    }
+  <div class="activity-table">
+    <table>
+      <thead>
+        <tr>
+          <th>ACTIVITY</th>
+          <th>DATE</th>
+          <th>STATUS</th>
+          <th>ROLE</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>HACKATHON FACULTY</td>
+          <td>12 Apr 2025</td>
+          <td>Attended</td>
+          <td>Participant</td>
+          <td><button onclick="location.href='feedback.jsp'">Feedback →</button></td>
+        </tr>
+        <tr>
+          <td>BADMINTON LEAGUE</td>
+          <td>8 Apr 2025</td>
+          <td>Attended</td>
+          <td>Participant</td>
+          <td><button onclick="location.href='feedback.jsp'">Feedback →</button></td>
+        </tr>
+        <tr>
+          <td>ACADEMIC CONFERENCE</td>
+          <td>23 March 2025</td>
+          <td>Attended</td>
+          <td>Participant</td>
+          <td><button onclick="location.href='feedback.jsp'">Feedback →</button></td>
+        </tr>
+        <tr>
+          <td>VISIT TO ORPHANAGE</td>
+          <td>22 Feb 2025</td>
+          <td>Attended</td>
+          <td>Participant</td>
+          <td><button onclick="location.href='feedback.jsp'">Feedback →</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-    document.getElementById("notificationBtn").addEventListener("click", function () {
-      const dropdown = document.getElementById("notificationDropdown");
-      dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
-    });
-  </script>
+  <a href="activities.jsp" class="back-btn">← Back</a>
+</div>
+
+<!-- Script -->
+<script>
+  const sidebar = document.getElementById('sidebar');
+  const toggleBtn = document.getElementById('toggleBtn');
+  const content = document.querySelector('.content');
+  const searchContainer = document.querySelector('.search-container');
+
+  toggleBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('closed');
+    content.classList.toggle('sidebar-closed');
+    searchContainer.classList.toggle('sidebar-closed');
+  });
+</script>
 
 </body>
 </html>
