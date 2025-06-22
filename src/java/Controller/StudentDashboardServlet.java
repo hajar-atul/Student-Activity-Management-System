@@ -46,7 +46,7 @@ public class StudentDashboardServlet extends HttpServlet {
                 session.setAttribute("dob", rs.getString("dob"));
                 session.setAttribute("muetStatus", rs.getString("muetStatus"));
                 session.setAttribute("advisor", rs.getString("advisor"));
-
+                
                 System.out.println("DOB: " + rs.getString("dob"));
                 System.out.println("MUET: " + rs.getString("muetStatus"));
                 System.out.println("ADVISOR: " + rs.getString("advisor"));

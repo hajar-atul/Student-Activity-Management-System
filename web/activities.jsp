@@ -397,10 +397,10 @@
         <p class="activity-desc">Jr, Ir and Sr cadet officer present their war dance for the prize</p>
       </div>
       <div class="activity-card">
-        <img src="image/activity6.jpg" alt="Activity 6">
-        <h4>Innovation Challenge</h4>
+        <img src="image/karnivalSukan.jpg" alt="Activity 6">
+        <h4>Karnival Sukan</h4>
         <button class="toggle-desc" onclick="toggleDesc(this)">See more</button>
-        <p class="activity-desc">Pitch creative ideas to solve real-world problems.</p>
+        <p class="activity-desc">Students can show their skills and compete with each other in a good way.</p>
       </div>
     </div>
   </div>
