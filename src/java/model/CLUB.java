@@ -379,7 +379,7 @@ public class CLUB {
         this.clubEstablishedDate = clubEstablishedDate;
     }
 
-    public String getClubEstablisedDate() {
+    public String getClubEstablishedDate() {
         return clubEstablishedDate;
     }
     
