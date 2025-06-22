@@ -1,4 +1,61 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.sql.*, java.util.*, java.util.Arrays, model.FEEDBACK, model.STUDENT, java.text.SimpleDateFormat, java.util.Date" %>
+<%
+    Connection conn = null;
+    Statement stmt = null;
+    ResultSet rs = null;
+
+    List<FEEDBACK> feedbackList = new ArrayList<FEEDBACK>();
+    Map<Integer, String> studentNames = new HashMap<Integer, String>();
+    int[] ratingCounts = new int[5]; // index 0 for 1-star, 1 for 2-star, etc.
+    int totalFeedbacks = 0;
+    int newTodayCount = 0;
+    String ratingCountsJs = "[0, 0, 0, 0, 0]";
+
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    String todayDate = sdf.format(new Date());
+
+    try {
+        Class.forName("com.mysql.jdbc.Driver");
+        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/student", "root", "");
+        stmt = conn.createStatement();
+
+        String sql = "SELECT f.feedbackID, f.feedRating, f.studID, f.feedComment, f.DateSubmit, s.studName " +
+                     "FROM feedback f JOIN student s ON f.studID = s.studID";
+        rs = stmt.executeQuery(sql);
+
+        while (rs.next()) {
+            FEEDBACK feedback = new FEEDBACK();
+            feedback.setFeedbackId(rs.getInt("feedbackID"));
+            feedback.setFeedRating(rs.getInt("feedRating"));
+            feedback.setStudId(rs.getInt("studID"));
+            feedback.setFeedComment(rs.getString("feedComment"));
+            feedback.setDateSubmit(rs.getString("DateSubmit"));
+            feedbackList.add(feedback);
+
+            studentNames.put(rs.getInt("studID"), rs.getString("studName"));
+            
+            int rating = rs.getInt("feedRating");
+            if (rating >= 1 && rating <= 5) {
+                ratingCounts[rating - 1]++;
+            }
+
+            String feedbackDateStr = rs.getString("DateSubmit");
+            if (feedbackDateStr != null && feedbackDateStr.startsWith(todayDate)) {
+                newTodayCount++;
+            }
+        }
+        totalFeedbacks = feedbackList.size();
+        ratingCountsJs = Arrays.toString(ratingCounts);
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    } finally {
+        try { if (rs != null) rs.close(); } catch (Exception e) {}
+        try { if (stmt != null) stmt.close(); } catch (Exception e) {}
+        try { if (conn != null) conn.close(); } catch (Exception e) {}
+    }
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -126,7 +183,7 @@
       display: flex;
       gap: 40px;
       margin: 40px 0 30px 0;
-      justify-content: flex-start;
+      justify-content: center;
       align-items: stretch;
       background: #fafdff;
       border-radius: 16px;
@@ -271,22 +328,12 @@
       <div class="summary-box">
         <span class="summary-icon">&#128172;</span>
         <span class="summary-label">Total Feedback</span>
-        <span class="summary-value">125</span>
-      </div>
-      <div class="summary-box">
-        <span class="summary-icon">&#128202;</span>
-        <span class="summary-label">Resolved</span>
-        <span class="summary-value">83</span>
-      </div>
-      <div class="summary-box">
-        <span class="summary-icon">&#9203;</span>
-        <span class="summary-label">Pending</span>
-        <span class="summary-value">29</span>
+        <span class="summary-value"><%= totalFeedbacks %></span>
       </div>
       <div class="summary-box">
         <span class="summary-icon">&#128172;</span>
         <span class="summary-label">New Today</span>
-        <span class="summary-value">13</span>
+        <span class="summary-value"><%= newTodayCount %></span>
       </div>
     </div>
 
@@ -301,48 +348,47 @@
             </tr>
           </thead>
           <tbody>
+            <% if (feedbackList.isEmpty()) { %>
+              <tr>
+                <td colspan="3">No feedback available.</td>
+              </tr>
+            <% } else {
+                int rowNum = 1;
+                for (FEEDBACK feedback : feedbackList) {
+            %>
             <tr>
-              <td>1.</td>
-              <td>AHMAD KASSIM</td>
-              <td>Low management</td>
+              <td><%= rowNum++ %>.</td>
+              <td><%= studentNames.get(feedback.getStudID()) %></td>
+              <td><%= feedback.getFeedComment() %></td>
             </tr>
-            <tr>
-              <td>2.</td>
-              <td>SITI JENAB</td>
-              <td>Food are not enough for participants</td>
-            </tr>
-            <tr>
-              <td>3.</td>
-              <td>LAW ANN CHAY</td>
-              <td>Add projector for debate night</td>
-            </tr>
-            <tr>
-              <td>4.</td>
-              <td>DARSHAN</td>
-              <td>Everything was perfect, the food, the vibe, the people were very friendly.</td>
-            </tr>
+            <%
+                }
+            }
+            %>
           </tbody>
         </table>
       </div>
       <div class="feedback-chart-section">
         <h3>Overall Activities Rating</h3>
-        <canvas id="feedbackChart"></canvas>
+        <canvas id="feedbackChart" data-ratings="<%= ratingCountsJs %>"></canvas>
       </div>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    const ctx = document.getElementById('feedbackChart').getContext('2d');
+    const chartCanvas = document.getElementById('feedbackChart');
+    const ratingsData = JSON.parse(chartCanvas.getAttribute('data-ratings'));
+    const ctx = chartCanvas.getContext('2d');
     new Chart(ctx, {
         type: 'pie',
         data: {
-            labels: ['5 star', '4 star', '3 star', '2 star', '1 star'],
+            labels: ['1 star', '2 star', '3 star', '4 star', '5 star'],
             datasets: [{
                 label: 'Overall Activities Rating',
-                data: [30, 25, 22, 15, 8],
+                data: ratingsData,
                 backgroundColor: [
-                    '#4caf50', '#2196f3', '#ffeb3b', '#ff9800', '#f44336'
+                    '#f44336', '#ff9800', '#ffeb3b', '#2196f3', '#4caf50'
                 ],
                 borderWidth: 1
             }]

@@ -84,6 +84,25 @@ public class CLUB {
         return clubs;
     }
 
+    // Get total number of clubs
+    public static int getTotalClubs() {
+        int totalClubs = 0;
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
+                String query = "SELECT COUNT(*) FROM club";
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(query);
+                if (rs.next()) {
+                    totalClubs = rs.getInt(1);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return totalClubs;
+    }
+
     // Save new club and return generated clubID
     public int saveAndReturnId() {
         int generatedId = -1;

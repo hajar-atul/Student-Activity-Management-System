@@ -5,6 +5,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -164,6 +167,40 @@ public class STUDENT {
             e.printStackTrace();
         }
         return false;
+    }
+
+    // Get total number of students
+    public static int getTotalStudents() {
+        String query = "SELECT COUNT(*) FROM student";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    // Get all unique courses
+    public static List<String> getAllCourses() {
+        List<String> courses = new ArrayList<>();
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
+                String query = "SELECT DISTINCT studCourse FROM student WHERE studCourse IS NOT NULL AND studCourse != '' ORDER BY studCourse";
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(query);
+                while (rs.next()) {
+                    courses.add(rs.getString("studCourse"));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return courses;
     }
 
     // Setter and Getter for studId

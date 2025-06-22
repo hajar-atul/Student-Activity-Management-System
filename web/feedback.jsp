@@ -5,12 +5,11 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Feedback - Activity</title>
+  <title>Student Activity List</title>
   <link href="https://fonts.googleapis.com/css2?family=Arial&display=swap" rel="stylesheet">
   <style>
     * {
@@ -221,81 +220,92 @@
     }
 
     .content {
-      margin-left: 250px;
-      height: calc(100vh - 80px);
-      transition: margin-left 0.3s ease;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
-      padding: 100px 30px 20px 30px;
-      box-sizing: border-box;
-    }
+  padding-top: 100px;
+  margin-left: 250px;
+  height: calc(100vh - 100px);
+  overflow: hidden; /* ❌ Scroll off! */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 
     .sidebar.closed ~ .content {
       margin-left: 0;
     }
 
-    .feedback-form {
-      max-width: 500px;
-      width: 100%;
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* Feedback Section */
+    .feedback-container {
+  background-color: #ffffff;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+    .feedback-container h1 {
+      padding: 40px;
     }
 
-    .feedback-form h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      color: #333;
-    }
+    .feedback-box {
+  background-color: #f0f0f0;
+  padding: 20px;
+  border-radius: 20px;
+  width: 60%;
+  max-width: 700px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
 
-    .form-group {
-      margin-bottom: 20px;
-    }
 
-    .form-group label {
+    .feedback-box label {
       display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
-      color: #333;
+      font-size: 18px;
+      margin-bottom: 10px;
     }
 
-    .form-group textarea {
+    .feedback-box textarea {
       width: 100%;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      resize: vertical;
-      min-height: 100px;
+      height: 150px;
+      padding: 15px;
+      font-size: 16px;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      resize: none;
       font-family: Arial, sans-serif;
     }
 
-    .form-group select {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
+    .feedback-box .buttons {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
     }
 
-    .submit-btn {
-      width: 100%;
-      padding: 12px;
+    .feedback-box button {
+      padding: 10px 25px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .feedback-box button.submit {
       background-color: #00796B;
       color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-      font-weight: bold;
     }
 
-    .submit-btn:hover {
-      background-color: #005a4f;
+    .feedback-box button.view {
+      background-color: #ccc;
+      color: #333;
     }
 
+    /* Back Button */
     .back-btn {
       background-color: #008b8b;
       color: white;
@@ -311,6 +321,7 @@
       background-color: #006d6d;
     }
 
+    /* Responsive */
     @media (max-width: 768px) {
       .content {
         margin-left: 0;
@@ -319,37 +330,6 @@
   </style>
 </head>
 <body>
-
-<%
-  // Get activityId from query string
-  String activityId = request.getParameter("activityId");
-  String activityName = "Activity";
-  
-  if (activityId != null && !activityId.isEmpty()) {
-    try {
-      // Fetch activity name from database
-      Class.forName("com.mysql.cj.jdbc.Driver");
-      String jdbcUrl = "jdbc:mysql://localhost:3306/student?useSSL=false&serverTimezone=UTC";
-      String dbUser = "root";
-      String dbPassword = "";
-      
-      try (java.sql.Connection conn = java.sql.DriverManager.getConnection(jdbcUrl, dbUser, dbPassword)) {
-        String query = "SELECT activityName FROM activity WHERE activityID = ?";
-        java.sql.PreparedStatement pstmt = conn.prepareStatement(query);
-        pstmt.setString(1, activityId);
-        java.sql.ResultSet rs = pstmt.executeQuery();
-        
-        if (rs.next()) {
-          activityName = rs.getString("activityName");
-        }
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
-  request.setAttribute("activityName", activityName);
-  request.setAttribute("activityId", activityId);
-%>
 
   <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
@@ -382,10 +362,10 @@
       <input type="text" placeholder="Search..." />
       <button class="search-btn">X</button>
     </div>
-    <div class="dashboard-title">FEEDBACK</div>
+    <div class="dashboard-title">ACTIVITIES</div>
     <div class="top-icons">
       <img src="image/umpsa.png" class="umpsa-icon" alt="UMPSA">
-      <button class="notification-btn" id="notificationBtn">
+      <button class="notification-btn" id="notificationBtn" aria-label="Toggle Notifications">
         <img src="image/bell.png" alt="Notification">
       </button>
       <div class="notification-dropdown" id="notificationDropdown">
@@ -400,37 +380,27 @@
   </div>
 
   <!-- Content -->
-  <div class="content" id="content">
-    <div class="feedback-form">
-      <h2>Feedback for ${activityName}</h2>
-      <form action="FeedbackServlet" method="post">
-        <input type="hidden" name="activityId" value="${activityId}">
-        
-        <div class="form-group">
-          <label for="feedbackType">Feedback Type:</label>
-          <select id="feedbackType" name="feedbackType" required>
-            <option value="">Select feedback type</option>
-            <option value="Compliment">Compliment</option>
-            <option value="Suggestion">Suggestion</option>
-            <option value="Complaint">Complaint</option>
-          </select>
-        </div>
-        
-        <div class="form-group">
-          <label for="feedbackComment">Your Feedback:</label>
-          <textarea id="feedbackComment" name="feedbackComment" placeholder="Please share your experience and feedback about this activity..." required></textarea>
-        </div>
-        
-        <button type="submit" class="submit-btn">Submit Feedback</button>
-      </form>
+<div class="content" id="content">
+  <div class="feedback-container">
+    <div class="feedback-box">
+      <h1 style="text-align: center;">FEEDBACK</h1>
+      <label for="comments">Comments:</label>
+      <textarea id="comments" placeholder="Your Feedback..." style="height: 100px;"></textarea>
+      <div class="buttons">
+        <button class="submit">Submit Feedback</button>
+        <button class="view">View Response</button>
+      </div>
     </div>
 
-    <!-- Back button -->
-    <div style="align-self: flex-start;">
+    <!-- Back button kiri bawah -->
+    <div style="align-self: flex-start; margin-top: 20px; margin-left: 10px;">
       <button class="back-btn" onclick="location.href='pastActivityList.jsp'">← Back</button>
     </div>
   </div>
+</div>
 
+
+  <!-- Script -->
   <script>
     const sidebar = document.getElementById('sidebar');
     const toggleBtn = document.getElementById('toggleBtn');

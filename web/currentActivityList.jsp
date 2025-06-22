@@ -5,7 +5,6 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -365,40 +364,30 @@
           </tr>
         </thead>
         <tbody>
-          <c:forEach var="activity" items="${currentActivities}">
-            <tr>
-              <td>${activity.activityName}</td>
-              <td>
-                <c:set var="dateStr" value="${activity.activityDate}" />
-                <c:choose>
-                  <c:when test="${not empty dateStr}">
-                    <c:set var="dateParts" value="${dateStr.split('-')}" />
-                    <c:if test="${dateParts.length == 3}">
-                      ${dateParts[2]} 
-                      <c:choose>
-                        <c:when test="${dateParts[1] == '01'}">Jan</c:when>
-                        <c:when test="${dateParts[1] == '02'}">Feb</c:when>
-                        <c:when test="${dateParts[1] == '03'}">Mar</c:when>
-                        <c:when test="${dateParts[1] == '04'}">Apr</c:when>
-                        <c:when test="${dateParts[1] == '05'}">May</c:when>
-                        <c:when test="${dateParts[1] == '06'}">Jun</c:when>
-                        <c:when test="${dateParts[1] == '07'}">Jul</c:when>
-                        <c:when test="${dateParts[1] == '08'}">Aug</c:when>
-                        <c:when test="${dateParts[1] == '09'}">Sep</c:when>
-                        <c:when test="${dateParts[1] == '10'}">Oct</c:when>
-                        <c:when test="${dateParts[1] == '11'}">Nov</c:when>
-                        <c:when test="${dateParts[1] == '12'}">Dec</c:when>
-                      </c:choose>
-                      ${dateParts[0]}
-                    </c:if>
-                  </c:when>
-                  <c:otherwise>${activity.activityDate}</c:otherwise>
-                </c:choose>
-              </td>
-              <td>${activity.activityStatus}</td>
-              <td>Participant</td>
-            </tr>
-          </c:forEach>
+          <tr>
+            <td>Flood Rescue Volunteer</td>
+            <td>12 Jan 2026</td>
+            <td>Upcoming</td>
+            <td>Participant</td>
+          </tr>
+          <tr>
+            <td>Basketball Clinic</td>
+            <td>8 Sep 2025</td>
+            <td>Upcoming</td>
+            <td>Participant</td>
+          </tr>
+          <tr>
+            <td>Elder Care Visit</td>
+            <td>23 March 2025</td>
+            <td>Upcoming</td>
+            <td>Participant</td>
+          </tr>
+          <tr>
+            <td>Biodiversity Seminar</td>
+            <td>22 May 2026</td>
+            <td>Upcoming</td>
+            <td>Participant</td>
+          </tr>
         </tbody>
       </table>
     </div>

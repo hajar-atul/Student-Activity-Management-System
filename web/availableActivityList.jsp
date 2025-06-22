@@ -5,7 +5,6 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -364,39 +363,36 @@
       <h1>AVAILABLE ACTIVITIES</h1>
     </div>
     <div class="activity-list" style="padding: 10px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; justify-items: center;">
-      <c:forEach var="activity" items="${availableActivities}">
-        <div class="activity-card">
-          <h3>${activity.activityName}</h3>
-          <p>
-            <c:set var="dateStr" value="${activity.activityDate}" />
-            <c:choose>
-              <c:when test="${not empty dateStr}">
-                <c:set var="dateParts" value="${dateStr.split('-')}" />
-                <c:if test="${dateParts.length == 3}">
-                  ${dateParts[2]} 
-                  <c:choose>
-                    <c:when test="${dateParts[1] == '01'}">Jan</c:when>
-                    <c:when test="${dateParts[1] == '02'}">Feb</c:when>
-                    <c:when test="${dateParts[1] == '03'}">Mar</c:when>
-                    <c:when test="${dateParts[1] == '04'}">Apr</c:when>
-                    <c:when test="${dateParts[1] == '05'}">May</c:when>
-                    <c:when test="${dateParts[1] == '06'}">Jun</c:when>
-                    <c:when test="${dateParts[1] == '07'}">Jul</c:when>
-                    <c:when test="${dateParts[1] == '08'}">Aug</c:when>
-                    <c:when test="${dateParts[1] == '09'}">Sep</c:when>
-                    <c:when test="${dateParts[1] == '10'}">Oct</c:when>
-                    <c:when test="${dateParts[1] == '11'}">Nov</c:when>
-                    <c:when test="${dateParts[1] == '12'}">Dec</c:when>
-                  </c:choose>
-                  ${dateParts[0]}
-                </c:if>
-              </c:when>
-              <c:otherwise>${activity.activityDate}</c:otherwise>
-            </c:choose>
-          </p>
-          <button onclick="location.href='qrPaymentTypePage.jsp?activityId=${activity.activityID}'">Register</button>
-        </div>
-      </c:forEach>
+      <div class="activity-card">
+        <h3>KERETAPI SARONG</h3>
+        <p>12 Sept 2025</p>
+        <button>Register</button>
+      </div>
+      <div class="activity-card">
+        <h3>IT Workshop</h3>
+        <p>15 Sept 2025</p>
+        <button onclick="location.href='qrPaymentTypePage.jsp'">Register</button>
+      </div>
+      <div class="activity-card">
+        <h3>LEADERSHIP CAMP</h3>
+        <p>20 Sept 2025</p>
+        <button>Register</button>
+      </div>
+      <div class="activity-card">
+        <h3>ENTREPRENEUR TALK</h3>
+        <p>25 Sept 2025</p>
+        <button>Register</button>
+      </div>
+      <div class="activity-card">
+        <h3>FINDING NATURE</h3>
+        <p>30 Sept 2025</p>
+        <button>Register</button>
+      </div>
+      <div class="activity-card">
+        <h3>CULTURAL NIGHT</h3>
+        <p>2 OCT 2025</p>
+        <button>Register</button>
+      </div>
     </div>
   </div>
 

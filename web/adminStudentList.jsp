@@ -1,4 +1,32 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.util.List, model.ACTIVITY, model.CLUB, model.REGISTERATION, model.STUDENT" %>
+<%
+    List<CLUB> clubList = CLUB.getAllClubs();
+    String selectedClubIdStr = request.getParameter("clubID");
+    Integer selectedClubId = null;
+    if (selectedClubIdStr != null && !selectedClubIdStr.isEmpty()) {
+        selectedClubId = Integer.parseInt(selectedClubIdStr);
+    }
+    List<ACTIVITY> activityList = (selectedClubId != null)
+        ? ACTIVITY.getActivitiesByClubId(selectedClubId)
+        : ACTIVITY.getAllActivities();
+    // Prepare data for the pie chart
+    StringBuilder activityLabels = new StringBuilder();
+    StringBuilder activityCounts = new StringBuilder();
+    int totalMembers = 0;
+    for (ACTIVITY activity : activityList) {
+        int count = REGISTERATION.getStudentCountForActivity(activity.getActivityID());
+        if (activityLabels.length() > 0) {
+            activityLabels.append(", ");
+            activityCounts.append(", ");
+        }
+        activityLabels.append("\"").append(activity.getActivityName()).append("\"");
+        activityCounts.append(count);
+        totalMembers += count;
+    }
+    String jsLabels = activityLabels.length() > 0 ? "[" + activityLabels.toString() + "]" : "[]";
+    String jsCounts = activityCounts.length() > 0 ? "[" + activityCounts.toString() + "]" : "[]";
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -259,6 +287,13 @@
       text-align: left;
       line-height: 1.2;
     }
+    .dashboard-card canvas {
+      width: 130px !important;
+      height: 130px !important;
+      max-width: 100%;
+      margin: 0 10px 0 0;
+      display: block;
+    }
   </style>
 </head>
 <body>
@@ -295,35 +330,22 @@
       <img src="image/Graduation.jpg" alt="Students">
     </div>
     <div class="dashboard-card flex-row">
-      <img src="image/pieChart.png" alt="Faculty-wise Participation">
-      <div class="card-title">Faculty-wise Participation</div>
-    </div>
-    <div class="dashboard-card flex-row">
-      <img src="image/ratingChart.png" alt="Activity Popularity">
-      <div class="card-title">Activity Popularity</div>
+      <canvas id="activityPopularityChart" width="130" height="130"></canvas>
+      <div class="card-title">Activity<br>Popularity</div>
     </div>
   </div>
 
-  <div class="filters">
-    <div>
-      <label for="clubFilter">Filter by Club :</label>
-      <select id="clubFilter">
-        <option>Select club</option>
-        <option>IT CLUB</option>
-        <option>ROTU CLUB</option>
-        <option>SOCIETY</option>
-      </select>
-    </div>
-    <div>
-      <label for="courseFilter">Filter by Course :</label>
-      <select id="courseFilter">
-        <option>Select Course</option>
-        <option>CS110</option>
-        <option>CS230</option>
-        <option>BM111</option>
-      </select>
-    </div>
-  </div>
+  <form method="get" id="clubFilterForm" style="margin: 30px 0 20px 80px;">
+    <label for="clubFilter">Filter by Club :</label>
+    <select id="clubFilter" name="clubID" onchange="document.getElementById('clubFilterForm').submit()">
+      <option value="">Select club</option>
+      <% for (CLUB club : clubList) { %>
+        <option value="<%= club.getClubId() %>" <%= (selectedClubId != null && club.getClubId() == selectedClubId) ? "selected" : "" %>>
+          <%= club.getClubName() %>
+        </option>
+      <% } %>
+    </select>
+  </form>
 
   <div class="student-table-container">
     <table class="student-table">
@@ -335,40 +357,72 @@
         </tr>
       </thead>
       <tbody>
+        <% if (activityList.isEmpty()) { %>
         <tr>
-          <td>TECH EXPO</td>
-          <td>IT CLUB</td>
+            <td colspan="3">No activities found.</td>
+        </tr>
+        <% } else {
+            for (ACTIVITY activity : activityList) {
+                CLUB club = CLUB.getClubById(activity.getClubID());
+                String clubName = (club != null) ? club.getClubName() : "N/A";
+                int studentCount = REGISTERATION.getStudentCountForActivity(activity.getActivityID());
+        %>
+        <tr>
+          <td><%= activity.getActivityName() %></td>
+          <td><%= clubName %></td>
           <td>
             <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
-              <span style="font-size: 22px; font-weight: bold;">25</span>
-              <button class="view-btn">View Students</button>
+              <span style="font-size: 22px; font-weight: bold;"><%= studentCount %></span>
+              <a href="studentList.jsp?activityId=<%= activity.getActivityID() %>" class="view-btn" style="text-decoration: none; color: white;">View Students</a>
             </div>
           </td>
         </tr>
-        <tr>
-          <td>ROTU SOLO NIGHT</td>
-          <td>ROTU CLUB</td>
-          <td>
-            <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
-              <span style="font-size: 22px; font-weight: bold;">30</span>
-              <button class="view-btn">View Students</button>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td>DEBATE NIGHT</td>
-          <td>SOCIETY</td>
-          <td>
-            <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
-              <span style="font-size: 22px; font-weight: bold;">15</span>
-              <button class="view-btn">View Students</button>
-            </div>
-          </td>
-        </tr>
+        <%
+            }
+        }
+        %>
       </tbody>
     </table>
   </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const activityLabels = JSON.parse('<%= jsLabels %>');
+  const activityCounts = JSON.parse('<%= jsCounts %>');
+  const ctx = document.getElementById('activityPopularityChart').getContext('2d');
+  const total = activityCounts.reduce((a, b) => a + b, 0);
+
+  new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: activityLabels,
+      datasets: [{
+        data: activityCounts,
+        backgroundColor: [
+          '#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f', '#edc949', '#af7aa1', '#ff9da7', '#9c755f', '#bab0ab'
+        ],
+      }]
+    },
+    options: {
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              const count = context.parsed;
+              const percent = total > 0 ? ((count / total) * 100).toFixed(1) : 0;
+              return `${context.label}: ${count} member(s) (${percent}%)`;
+            }
+          }
+        },
+        legend: {
+          display: true,
+          position: 'right'
+        }
+      }
+    }
+  });
+</script>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {

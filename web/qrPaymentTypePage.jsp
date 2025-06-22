@@ -5,7 +5,6 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -364,42 +363,10 @@
   <!-- Content -->
   <div class="content" id="content" style="display: flex; flex-direction: column; justify-content: space-between; align-items: center; height: calc(100vh - 80px); margin-left: 250px; padding: 100px 30px 20px 30px; overflow: hidden; box-sizing: border-box;">
 
-  <%
-    // Get activityId from query string
-    String activityId = request.getParameter("activityId");
-    String activityName = "Activity";
-    
-    if (activityId != null && !activityId.isEmpty()) {
-      try {
-        // Fetch activity name from database
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        String jdbcUrl = "jdbc:mysql://localhost:3306/student?useSSL=false&serverTimezone=UTC";
-        String dbUser = "root";
-        String dbPassword = "";
-        
-        try (java.sql.Connection conn = java.sql.DriverManager.getConnection(jdbcUrl, dbUser, dbPassword)) {
-          String query = "SELECT activityName FROM activity WHERE activityID = ?";
-          java.sql.PreparedStatement pstmt = conn.prepareStatement(query);
-          pstmt.setString(1, activityId);
-          java.sql.ResultSet rs = pstmt.executeQuery();
-          
-          if (rs.next()) {
-            activityName = rs.getString("activityName");
-          }
-        }
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-    }
-    request.setAttribute("activityName", activityName);
-    request.setAttribute("activityId", activityId);
-  %>
-
   <div style="text-align: center;">
-    <h1 style="margin-bottom: 10px;">${activityName}</h1>
+    <h1 style="margin-bottom: 10px;">IT WORKSHOP</h1>
     <img src="image/qr_zahwa.jfif" alt="QR Code" style="width: 200px; margin-bottom: 10px;">
-    <form id="receiptForm" action="RegisterServlet" method="post" enctype="multipart/form-data" style="max-width: 300px; text-align: left;">
-      <input type="hidden" name="activityId" value="${activityId}">
+    <form id="receiptForm" enctype="multipart/form-data" style="max-width: 300px; text-align: left;">
       <label for="paymentType">Payment Method:</label>
       <input type="text" id="paymentType" name="paymentType" value="QR payment" readonly style="width: 100%; margin-bottom: 10px; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background-color: #eee;">
 
@@ -445,6 +412,16 @@
     window.addEventListener('click', function () {
       notificationDropdown.classList.remove('show');
       profileDropdown.classList.remove('show');
+    });
+
+    document.getElementById('receiptForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const fileInput = document.getElementById('receipt');
+      if (fileInput.files.length === 0) {
+        alert("Please select a receipt file.");
+        return;
+      }
+      alert('Receipt submitted successfully!');
     });
   </script>
 
