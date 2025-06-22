@@ -1,10 +1,16 @@
+<%-- 
+    Document   : availableActivityList
+    Created on : Jun 9, 2025, 3:20:56 PM
+    Author     : wafa
+--%>
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Activity Page</title>
-  <link href="https://fonts.googleapis.com/css2?family=Arial&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <title>Student Activity List</title>
+  <link href="https://fonts.googleapis.com/css2?family=Arial&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -81,6 +87,30 @@
       color: white;
       border-radius: 5px;
       text-align: center;
+    }
+
+    .logout-container {
+      margin-top: auto;
+      padding-top: 20px;
+    }
+
+    .logout-container .LOGOUT-btn {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background-color: #d82215d2;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: bold;
+      transition: background-color 0.2s;
+      cursor: pointer;
+    }
+
+    .logout-container .LOGOUT-btn:hover {
+      background-color: #b71c1c;
     }
 
     .topbar {
@@ -189,121 +219,151 @@
       background-color: #f0f0f0;
     }
 
-  .content {
-    padding: 100px 30px 20px 30px;
-    margin-left: 250px;
-    height: calc(100vh - 100px);
-    overflow-y: auto;
-    transition: margin-left 0.3s ease;
-  }
+    .content {
+      padding: 100px 30px 20px 30px;
+      margin-left: 250px;
+      height: calc(100vh - 100px);
+      overflow-y: auto;
+      transition: margin-left 0.3s ease;
+    }
 
-  .sidebar.closed ~ .content {
-    margin-left: 0;
-  }
+    .sidebar.closed ~ .content {
+      margin-left: 0;
+    }
+    
+    /* Table Section */
+    .activity-header h1 {
+        text-align: center;
+        padding: 40px;
+    }
 
-  .activity-section {
-    max-width: 1000px;
-    margin: 0 auto;
-  }
+    .activity-list {
+        gap: 20px;
+        padding: 30px;
+        justify-content: center;
+        display: flex;
+        flex-wrap: wrap;
+    }
 
-  .activities-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-    margin-top: 30px;
-  }
+    .activity-card {
+        background-color: #fff;
+        padding: 20px;
+        border: 2px solid #000;
+        border-radius: 20px;
+        width: 250px;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
 
-  .activity-card {
-    border: 2px solid black;
-    border-radius: 15px;
-    padding: 20px;
-    width: 200px;
-    text-align: center;
-    background-color: white;
-  }
+    .activity-card h3 {
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
 
-  .activity-card h3 {
-    font-size: 16px;
-    margin-bottom: 10px;
-  }
+    .activity-card p {
+        font-size: 14px;
+        margin-bottom: 15px;
+    }
 
-  .activity-card p {
-    font-size: 14px;
-    margin-bottom: 15px;
-  }
+    .activity-card button {
+        padding: 10px 20px;
+        border: none;
+        background-color: #d3d3d3;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
 
-  .activity-card button {
-    padding: 8px 16px;
-    background-color: #d3d3d3;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-  }
+    .activity-card button:hover {
+        background-color: #bbb;
+    }
 
-  .back-btn {
-    display: inline-block;
-    margin: 40px auto 0;
-    padding: 12px 24px;
-    background-color: #008b8b;
-    color: white;
-    text-decoration: none;
-    border-radius: 8px;
-    font-weight: bold;
-    text-align: center;
-  }
+    /* Back Button */
+    .back-btn {
+      background-color: #008b8b;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-bottom: 20px;
+      font-size: 16px;
+    }
+
+    .back-btn:hover {
+      background-color: #006d6d;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .content {
+        margin-left: 0;
+      }
+    }
+
   </style>
 </head>
 <body>
 
-<!-- Sidebar -->
-<div class="sidebar" id="sidebar">
-  <img src="image/amin.jpg" alt="Profile" class="profile-pic" />
-  <h2>
-    <%= session.getAttribute("studName") %><br>
-    <%= session.getAttribute("studID") %>
-  </h2>
-  <div class="menu">
-    <a href="studentDashboardPage.jsp">DASHBOARD</a>
-    <a href="activities.jsp">ACTIVITIES</a>
-    <a href="studentClub.jsp">CLUBS</a>
-    <a href="achievements.jsp">ACHIEVEMENTS</a>
-    <a href="settings.jsp">SETTINGS</a>
-  </div>
-</div>
-
-<!-- Toggle Button -->
-<button class="toggle-btn" id="toggleBtn">☰</button>
-
-<!-- Topbar -->
-<div class="topbar">
-  <div class="search-container">
-    <input type="text" placeholder="Search..." />
-    <button class="search-btn">X</button>
-  </div>
-  <div class="dashboard-title">ACTIVITIES</div>
-  <div class="top-icons">
-    <img src="image/umpsa.png" class="umpsa-icon" alt="UMPSA">
-    <button class="notification-btn" id="notificationBtn">
-      <img src="image/bell.png" alt="Notification">
-    </button>
-    <div class="notification-dropdown" id="notificationDropdown">
-      <p>No new notifications</p>
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <img src="image/amin.jpg" alt="Profile" class="profile-pic" />
+    <h2>
+      <%= session.getAttribute("studName") %><br>
+      <%= session.getAttribute("studID") %>
+    </h2>
+    <div class="menu">
+      <a href="studentDashboardPage.jsp">DASHBOARD</a>
+      <a href="activities.jsp">ACTIVITIES</a>
+      <a href="studentClub.jsp">CLUBS</a>
+      <a href="achievements.jsp">ACHIEVEMENTS</a>
+      <a href="settings.jsp">SETTINGS</a>
     </div>
-    <img src="image/amin.jpg" alt="Profile" class="profile-icon" id="profileBtn">
-    <div class="profile-dropdown" id="profileDropdown">
-      <a href="profile.jsp">My Profile</a>
-      <a href="logout.jsp">Logout</a>
+
+    <!-- Logout button fixed at the bottom -->
+    <div class="logout-container">
+      <form action="index.jsp">
+        <button type="submit" class="LOGOUT-btn">Logout</button>
+      </form>
     </div>
   </div>
-</div>
 
-<!-- Content Area -->
-<div class="content">
-  <div class="activity-section">
-    <h2 style="text-align:center; font-size: 28px;">AVAILABLE ACTIVITIES</h2>
+  <!-- Toggle Button -->
+  <button class="toggle-btn" id="toggleBtn">☰</button>
 
-    <div class="activities-container">
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="search-container">
+      <input type="text" placeholder="Search..." />
+      <button class="search-btn">X</button>
+    </div>
+    <div class="dashboard-title">ACTIVITIES</div>
+    <div class="top-icons">
+      <img src="image/umpsa.png" class="umpsa-icon" alt="UMPSA">
+      <button class="notification-btn" id="notificationBtn">
+        <img src="image/bell.png" alt="Notification">
+      </button>
+      <div class="notification-dropdown" id="notificationDropdown">
+        <p>No new notifications</p>
+      </div>
+      <img src="image/amin.jpg" alt="Profile" class="profile-icon" id="profileBtn">
+      <div class="profile-dropdown" id="profileDropdown">
+        <a href="profile.jsp">My Profile</a>
+        <a href="logout.jsp">Logout</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="content" id="content" style="height: calc(100vh - 100px); display: flex; flex-direction: column; justify-content: space-between; overflow: hidden;">
+
+  <!-- Header dan Aktiviti -->
+  <div>
+    <div class="activity-header">
+      <h1>AVAILABLE ACTIVITIES</h1>
+    </div>
+    <div class="activity-list" style="padding: 10px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; justify-items: center;">
       <div class="activity-card">
         <h3>KERETAPI SARONG</h3>
         <p>12 Sept 2025</p>
@@ -312,7 +372,7 @@
       <div class="activity-card">
         <h3>IT Workshop</h3>
         <p>15 Sept 2025</p>
-        <button  onclick="location.href='qrPaymentTypePage.jsp'" >Register</button>
+        <button onclick="location.href='qrPaymentTypePage.jsp'">Register</button>
       </div>
       <div class="activity-card">
         <h3>LEADERSHIP CAMP</h3>
@@ -335,43 +395,44 @@
         <button>Register</button>
       </div>
     </div>
+  </div>
 
-    <div>
-      <a href="activities.jsp" class="back-btn">← Back</a>
-    </div>
+  <!-- Butang back bawah kiri -->
+  <div style="text-align: left; padding: 10px 30px;">
+    <button class="back-btn" onclick="location.href='activities.jsp'">← Back</button>
   </div>
 </div>
 
-<!-- Script -->
-<script>
-  const sidebar = document.getElementById('sidebar');
-  const toggleBtn = document.getElementById('toggleBtn');
-  const notificationBtn = document.getElementById('notificationBtn');
-  const notificationDropdown = document.getElementById('notificationDropdown');
-  const profileBtn = document.getElementById('profileBtn');
-  const profileDropdown = document.getElementById('profileDropdown');
+  <!-- Script -->
+  <script>
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('toggleBtn');
+    const notificationBtn = document.getElementById('notificationBtn');
+    const notificationDropdown = document.getElementById('notificationDropdown');
+    const profileBtn = document.getElementById('profileBtn');
+    const profileDropdown = document.getElementById('profileDropdown');
 
-  toggleBtn.addEventListener('click', () => {
-    sidebar.classList.toggle('closed');
-  });
+    toggleBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('closed');
+    });
 
-  notificationBtn.addEventListener('click', function (e) {
-    e.stopPropagation();
-    notificationDropdown.classList.toggle('show');
-    profileDropdown.classList.remove('show');
-  });
+    notificationBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      notificationDropdown.classList.toggle('show');
+      profileDropdown.classList.remove('show');
+    });
 
-  profileBtn.addEventListener('click', function (e) {
-    e.stopPropagation();
-    profileDropdown.classList.toggle('show');
-    notificationDropdown.classList.remove('show');
-  });
+    profileBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      profileDropdown.classList.toggle('show');
+      notificationDropdown.classList.remove('show');
+    });
 
-  window.addEventListener('click', function () {
-    notificationDropdown.classList.remove('show');
-    profileDropdown.classList.remove('show');
-  });
-</script>
+    window.addEventListener('click', function () {
+      notificationDropdown.classList.remove('show');
+      profileDropdown.classList.remove('show');
+    });
+  </script>
 
 </body>
 </html>

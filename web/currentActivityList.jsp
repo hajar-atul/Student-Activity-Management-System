@@ -1,10 +1,16 @@
+<%-- 
+    Document   : currentActivityList
+    Created on : Jun 8, 2025, 12:54:58 AM
+    Author     : wafa
+--%>
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Activity Page</title>
-  <link href="https://fonts.googleapis.com/css2?family=Arial&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <title>Student Activity List</title>
+  <link href="https://fonts.googleapis.com/css2?family=Arial&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -81,6 +87,30 @@
       color: white;
       border-radius: 5px;
       text-align: center;
+    }
+
+    .logout-container {
+      margin-top: auto;
+      padding-top: 20px;
+    }
+
+    .logout-container .LOGOUT-btn {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background-color: #d82215d2;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: bold;
+      transition: background-color 0.2s;
+      cursor: pointer;
+    }
+
+    .logout-container .LOGOUT-btn:hover {
+      background-color: #b71c1c;
     }
 
     .topbar {
@@ -200,28 +230,29 @@
     .sidebar.closed ~ .content {
       margin-left: 0;
     }
-
-    .activity-container {
-      max-width: 1200px;
-      margin: 0 auto;
+    
+    /* Table Section */
+    .activity-section {
+      padding: 40px;
     }
 
-    .activity-section {
-      max-width: 1000px;
-      margin: 0 auto;
+    .activity-section h2 {
+      text-align: center;
+      font-size: 32px;
+      font-weight: bold;
     }
 
     .table-wrapper {
+      margin-top: 30px;
       border: 1px solid #ccc;
-      border-radius: 10px;
-      overflow: hidden;
-      background: white;
+      border-radius: 8px;
+      overflow-x: auto;
     }
 
     .table-wrapper .title-bar {
-      padding: 15px 20px;
+      padding: 12px 20px;
       font-weight: bold;
-      border-bottom: 3px solid #008b8b;
+      border-bottom: 3px solid #009688;
       background-color: #f5f5f5;
     }
 
@@ -236,80 +267,97 @@
       border-bottom: 1px solid #ccc;
     }
 
-    thead tr {
-      background-color: #f0f0f0;
-    }
-
     tbody tr:hover {
       background-color: #f9f9f9;
     }
 
+    /* Back Button */
     .back-btn {
-      display: inline-block;
-      margin: 30px auto 0;
-      padding: 12px 24px;
       background-color: #008b8b;
       color: white;
-      text-decoration: none;
-      border-radius: 8px;
-      font-weight: bold;
-      text-align: center;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-bottom: 20px;
+      font-size: 16px;
     }
+
+    .back-btn:hover {
+      background-color: #006d6d;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .content {
+        margin-left: 0;
+      }
+    }
+
   </style>
 </head>
 <body>
 
-<!-- Sidebar -->
-<div class="sidebar" id="sidebar">
-  <img src="image/amin.jpg" alt="Profile" class="profile-pic" />
-  <h2>
-    <%= session.getAttribute("studName") %><br>
-    <%= session.getAttribute("studID") %>
-  </h2>
-  <div class="menu">
-    <a href="studentDashboardPage.jsp">DASHBOARD</a>
-    <a href="activities.jsp">ACTIVITIES</a>
-    <a href="studentClub.jsp">CLUBS</a>
-    <a href="achievements.jsp">ACHIEVEMENTS</a>
-    <a href="settings.jsp">SETTINGS</a>
-  </div>
-</div>
-
-<!-- Toggle Button -->
-<button class="toggle-btn" id="toggleBtn">☰</button>
-
-<!-- Topbar -->
-<div class="topbar">
-  <div class="search-container">
-    <input type="text" placeholder="Search..." />
-    <button class="search-btn">X</button>
-  </div>
-  <div class="dashboard-title">ACTIVITIES</div>
-  <div class="top-icons">
-    <img src="image/umpsa.png" class="umpsa-icon" alt="UMPSA">
-    <button class="notification-btn" id="notificationBtn">
-      <img src="image/bell.png" alt="Notification">
-    </button>
-    <div class="notification-dropdown" id="notificationDropdown">
-      <p>No new notifications</p>
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <img src="image/amin.jpg" alt="Profile" class="profile-pic" />
+    <h2>
+      <%= session.getAttribute("studName") %><br>
+      <%= session.getAttribute("studID") %>
+    </h2>
+    <div class="menu">
+      <a href="studentDashboardPage.jsp">DASHBOARD</a>
+      <a href="activities.jsp">ACTIVITIES</a>
+      <a href="studentClub.jsp">CLUBS</a>
+      <a href="achievements.jsp">ACHIEVEMENTS</a>
+      <a href="settings.jsp">SETTINGS</a>
     </div>
-    <img src="image/amin.jpg" alt="Profile" class="profile-icon" id="profileBtn">
-    <div class="profile-dropdown" id="profileDropdown">
-      <a href="profile.jsp">My Profile</a>
-      <a href="logout.jsp">Logout</a>
+
+    <!-- Logout button fixed at the bottom -->
+    <div class="logout-container">
+      <form action="index.jsp">
+        <button type="submit" class="LOGOUT-btn">Logout</button>
+      </form>
     </div>
   </div>
-</div>
 
-<!-- Content -->
-<div class="content">
-  <div class="activity-section">
-    <h2 style="text-align:center; font-size: 28px; margin-bottom: 20px;">ACTIVITY LIST</h2>
+  <!-- Toggle Button -->
+  <button class="toggle-btn" id="toggleBtn">☰</button>
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="search-container">
+      <input type="text" placeholder="Search..." />
+      <button class="search-btn">X</button>
+    </div>
+    <div class="dashboard-title">ACTIVITIES</div>
+    <div class="top-icons">
+      <img src="image/umpsa.png" class="umpsa-icon" alt="UMPSA">
+      <button class="notification-btn" id="notificationBtn">
+        <img src="image/bell.png" alt="Notification">
+      </button>
+      <div class="notification-dropdown" id="notificationDropdown">
+        <p>No new notifications</p>
+      </div>
+      <img src="image/amin.jpg" alt="Profile" class="profile-icon" id="profileBtn">
+      <div class="profile-dropdown" id="profileDropdown">
+        <a href="profile.jsp">My Profile</a>
+        <a href="logout.jsp">Logout</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="content" id="content" style="display: flex; flex-direction: column; justify-content: space-between; align-items: stretch; height: calc(100vh - 80px); margin-left: 250px; padding: 100px 30px 20px 30px; overflow: hidden; box-sizing: border-box;">
+  
+  <!-- Activity Section -->
+  <div class="activity-section" style="flex-grow: 1;">
+    <h2>ACTIVITY LIST</h2>
     <div class="table-wrapper">
       <div class="title-bar">My Activities</div>
       <table>
         <thead>
-          <tr>
+          <tr style="background-color: #f0f0f0;">
             <th>ACTIVITY</th>
             <th>DATE</th>
             <th>STATUS</th>
@@ -344,40 +392,44 @@
         </tbody>
       </table>
     </div>
-    <a href="activities.jsp" class="back-btn">← Back</a>
+  </div>
+
+  <!-- Back button bawah kiri -->
+  <div style="text-align: left; margin-top: 10px;">
+    <button class="back-btn" onclick="location.href='activities.jsp'">← Back</button>
   </div>
 </div>
 
-<!-- Script -->
-<script>
-  const sidebar = document.getElementById('sidebar');
-  const toggleBtn = document.getElementById('toggleBtn');
-  const notificationBtn = document.getElementById('notificationBtn');
-  const notificationDropdown = document.getElementById('notificationDropdown');
-  const profileBtn = document.getElementById('profileBtn');
-  const profileDropdown = document.getElementById('profileDropdown');
+  <!-- Script -->
+  <script>
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('toggleBtn');
+    const notificationBtn = document.getElementById('notificationBtn');
+    const notificationDropdown = document.getElementById('notificationDropdown');
+    const profileBtn = document.getElementById('profileBtn');
+    const profileDropdown = document.getElementById('profileDropdown');
 
-  toggleBtn.addEventListener('click', () => {
-    sidebar.classList.toggle('closed');
-  });
+    toggleBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('closed');
+    });
 
-  notificationBtn.addEventListener('click', function (e) {
-    e.stopPropagation();
-    notificationDropdown.classList.toggle('show');
-    profileDropdown.classList.remove('show');
-  });
+    notificationBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      notificationDropdown.classList.toggle('show');
+      profileDropdown.classList.remove('show');
+    });
 
-  profileBtn.addEventListener('click', function (e) {
-    e.stopPropagation();
-    profileDropdown.classList.toggle('show');
-    notificationDropdown.classList.remove('show');
-  });
+    profileBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      profileDropdown.classList.toggle('show');
+      notificationDropdown.classList.remove('show');
+    });
 
-  window.addEventListener('click', function () {
-    notificationDropdown.classList.remove('show');
-    profileDropdown.classList.remove('show');
-  });
-</script>
+    window.addEventListener('click', function () {
+      notificationDropdown.classList.remove('show');
+      profileDropdown.classList.remove('show');
+    });
+  </script>
 
 </body>
 </html>

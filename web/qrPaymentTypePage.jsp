@@ -10,35 +10,51 @@
 <head>
   <meta charset="UTF-8">
   <title>Student Activity - IT Workshop</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Arial&display=swap" rel="stylesheet">
   <style>
     * {
-     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
 
-    body {
-      font-family: 'Poppins', Arial, sans-serif;
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
     }
 
-    /* Sidebar */
     .sidebar {
-      width: 270px;
-      height: 100vh;
-      background-color: #00796B;
+      width: 250px;
+      background-color: #008b8b;
       color: white;
+      padding: 20px;
+      height: 100vh;
       position: fixed;
-      padding: 70px 20px 20px 20px;
+      left: 0;
+      top: 0;
+      z-index: 1001;
+      display: flex;
+      flex-direction: column;
       transition: transform 0.3s ease;
-      overflow-y: auto;
-      text-align: center;
-      z-index: 10;
     }
 
     .sidebar.closed {
       transform: translateX(-100%);
+    }
+
+    .toggle-btn {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background-color: #008b8b;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      z-index: 1002;
     }
 
     .sidebar img.profile-pic {
@@ -46,78 +62,108 @@
       aspect-ratio: 1 / 1;
       border-radius: 50%;
       object-fit: cover;
-      margin-bottom: 15px;
+      margin: 0 auto 15px;
+      display: block;
       border: 3px solid white;
       box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
     }
 
-    .sidebar h4,
-    .sidebar p {
-      margin-bottom: 10px;
+    .sidebar h2 {
+      text-align: center;
+      font-size: 14px;
+      margin-top: 10px;
     }
 
-    .sidebar ul {
-      list-style: none;
-      padding-left: 0;
-      margin-top: 20px;
+    .menu {
+      margin-top: 30px;
     }
 
-    .sidebar ul li {
-      margin-bottom: 15px;
-    }
-
-    .sidebar ul li a {
-      color: white;
-      text-decoration: none;
-      padding: 10px;
+    .menu a {
       display: block;
+      padding: 10px;
+      background-color: #0a6d6d;
+      margin-top: 10px;
+      text-decoration: none;
+      color: white;
       border-radius: 5px;
-      transition: background-color 0.2s ease;
+      text-align: center;
     }
 
-    .sidebar ul li a:hover,
-    .sidebar ul li a.active {
-      background-color: rgba(0, 0, 0, 0.2);
+    .logout-container {
+      margin-top: auto;
+      padding-top: 20px;
     }
 
-    /* Toggle Button */
-    .toggle-btn {
-      position: fixed;
-      left: 10px;
-      top: 10px;
-      z-index: 1000;
-      background-color: #00796B;
+    .logout-container .LOGOUT-btn {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background-color: #d82215d2;
       color: white;
       border: none;
-      padding: 10px 15px;
-      cursor: pointer;
       border-radius: 5px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: bold;
+      transition: background-color 0.2s;
+      cursor: pointer;
     }
 
-    /* Main Content */
-    .main-content {
-      margin-left: 270px;
+    .logout-container .LOGOUT-btn:hover {
+      background-color: #b71c1c;
+    }
+
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 80px;
+      background-color: #008b8b;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 30px;
+      z-index: 1000;
+    }
+
+    .search-container {
+      display: flex;
+      align-items: center;
+      margin-left: 250px;
       transition: margin-left 0.3s ease;
     }
 
-    .main-content.full-width {
-      margin-left: 20px;
+    .sidebar.closed ~ .topbar .search-container {
+      margin-left: 70px;
     }
 
-    /* Header */
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background-color: #0a8079;
-      color: white;
-      padding: 20px 40px;
-      width: 100%;
+    .search-container input {
+      padding: 8px 12px;
+      border-radius: 20px;
+      border: none;
+      outline: none;
+      width: 200px;
     }
 
-    .header-title {
-      font-size: 28px;
+    .search-btn {
+      background: white;
+      border: none;
+      margin-left: -30px;
+      cursor: pointer;
       font-weight: bold;
+      border-radius: 50%;
+      padding: 4px 8px;
+      color: #009B9D;
+    }
+
+    .dashboard-title {
+      font-size: 26px;
+      font-weight: bold;
+      text-align: center;
+      flex-grow: 1;
+      margin-left: 60px;
     }
 
     .top-icons {
@@ -127,41 +173,68 @@
     }
 
     .top-icons img.umpsa-icon {
-      width: 36px;
-      height: 36px;
-    }
-
-    .notification-btn {
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 0;
-    }
-
-    .notification-btn img {
-      width: 30px;
-      height: 30px;
-    }
-
-    .profile-icon {
       width: 40px;
       height: 40px;
-      border-radius: 50%;
     }
 
-    .notification-dropdown {
+    .notification-btn img,
+    .profile-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .notification-dropdown,
+    .profile-dropdown {
+      display: none;
       position: absolute;
       top: 80px;
-      right: 40px;
-      background-color: white;
+      right: 30px;
+      background: white;
       color: black;
-      border: 1px solid #ccc;
+      min-width: 200px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      z-index: 999;
       border-radius: 8px;
-      padding: 10px;
-      width: 200px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-      display: none;
-      z-index: 100;
+      overflow: hidden;
+    }
+
+    .notification-dropdown.show,
+    .profile-dropdown.show {
+      display: block;
+    }
+
+    .notification-dropdown p,
+    .profile-dropdown a {
+      margin: 0;
+      padding: 10px 20px;
+      border-bottom: 1px solid #eee;
+      text-decoration: none;
+      color: black;
+      display: block;
+    }
+
+    .profile-dropdown a:hover {
+      background-color: #f0f0f0;
+    }
+
+    .content {
+  margin-left: 250px;
+  height: calc(100vh - 80px); /* 80px = topbar height */
+  transition: margin-left 0.3s ease;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 100px 30px 20px 30px; /* ← TOLAK ke bawah dari topbar */
+  box-sizing: border-box;
+}
+
+
+    .sidebar.closed ~ .content {
+      margin-left: 0;
     }
 
     .payment-header h1 {
@@ -212,80 +285,134 @@
       border-radius: 5px;
       cursor: pointer;
     }
+
+    /* Back Button */
+    .back-btn {
+      background-color: #008b8b;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-bottom: 20px;
+      font-size: 16px;
+    }
+
+    .back-btn:hover {
+      background-color: #006d6d;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .content {
+        margin-left: 0;
+      }
+    }
   </style>
 </head>
 <body>
 
-   <!-- Toggle Sidebar Button -->
-  <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
-
-  <!-- Sidebar -->
+   <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
-    <img src="image/amin.jpg" alt="Profile Picture" class="profile-pic">
-    <h4><%= session.getAttribute("studName") %></h4>
-    <p><%= session.getAttribute("studID") %></p>
+    <img src="image/amin.jpg" alt="Profile" class="profile-pic" />
+    <h2>
+      <%= session.getAttribute("studName") %><br>
+      <%= session.getAttribute("studID") %>
+    </h2>
+    <div class="menu">
+      <a href="studentDashboardPage.jsp">DASHBOARD</a>
+      <a href="activities.jsp">ACTIVITIES</a>
+      <a href="studentClub.jsp">CLUBS</a>
+      <a href="achievements.jsp">ACHIEVEMENTS</a>
+      <a href="settings.jsp">SETTINGS</a>
+    </div>
 
-    <ul>
-      <li><a href="studentDashboardPage.jsp">Dashboard</a></li>
-      <li><a href="activities.jsp" class="active">Activities</a></li>
-      <li><a href="studentClub.jsp">Clubs</a></li>
-      <li><a href="achievements.jsp">Achievements</a></li>
-      <li><a href="settings.jsp">Settings</a></li>
-    </ul>
+    <!-- Logout button fixed at the bottom -->
+    <div class="logout-container">
+      <form action="index.jsp">
+        <button type="submit" class="LOGOUT-btn">Logout</button>
+      </form>
+    </div>
   </div>
 
-  <!-- Main Content -->
-   <div class="main-content" id="mainContent">
-    <div class="header">
-      <div class="header-title">ACTIVITIES</div>
-      <div class="top-icons">
-        <img src="image/umpsa.png" alt="Universiti Malaysia Pahang Logo" class="umpsa-icon" />
-        <button class="notification-btn" id="notificationBtn">
-          <img src="image/bell.png" alt="Notifications" />
-        </button>
-        <img src="image/amin.jpg" alt="User Avatar" class="profile-icon" />
+  <!-- Toggle Button -->
+  <button class="toggle-btn" id="toggleBtn">☰</button>
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="search-container">
+      <input type="text" placeholder="Search..." />
+      <button class="search-btn">X</button>
+    </div>
+    <div class="dashboard-title">ACTIVITIES</div>
+    <div class="top-icons">
+      <img src="image/umpsa.png" class="umpsa-icon" alt="UMPSA">
+      <button class="notification-btn" id="notificationBtn">
+        <img src="image/bell.png" alt="Notification">
+      </button>
+      <div class="notification-dropdown" id="notificationDropdown">
+        <p>No new notifications</p>
+      </div>
+      <img src="image/amin.jpg" alt="Profile" class="profile-icon" id="profileBtn">
+      <div class="profile-dropdown" id="profileDropdown">
+        <a href="profile.jsp">My Profile</a>
+        <a href="logout.jsp">Logout</a>
       </div>
     </div>
-
-    <!-- Notification Dropdown -->
-    <div class="notification-dropdown" id="notificationDropdown">
-      <p>No new notifications</p>
-    </div>
-
-    <div class="payment-header">
-      <h1>IT WORKSHOP</h1>
-    </div>
-
-    <div class="qr-section" id="qrSection">
-      <img src="image/qr_zahwa.jfif" alt="QR Code">
-      <div class="form">
-        <form id="receiptForm" enctype="multipart/form-data">
-          <label for="paymentType">Payment Method:</label>
-          <input type="text" id="paymentType" name="paymentType" value="QR payment" readonly>
-
-          <label for="receipt">Provide receipt:</label>
-          <input type="file" id="receipt" name="receipt" accept=".jpg,.jpeg,.png,.pdf">
-
-          <div class="submit-button">
-            <button type="submit">Submit Receipt</button>
-          </div>
-        </form>
-      </div>
-    </div>
-
   </div>
+
+  <!-- Content -->
+  <div class="content" id="content" style="display: flex; flex-direction: column; justify-content: space-between; align-items: center; height: calc(100vh - 80px); margin-left: 250px; padding: 100px 30px 20px 30px; overflow: hidden; box-sizing: border-box;">
+
+  <div style="text-align: center;">
+    <h1 style="margin-bottom: 10px;">IT WORKSHOP</h1>
+    <img src="image/qr_zahwa.jfif" alt="QR Code" style="width: 200px; margin-bottom: 10px;">
+    <form id="receiptForm" enctype="multipart/form-data" style="max-width: 300px; text-align: left;">
+      <label for="paymentType">Payment Method:</label>
+      <input type="text" id="paymentType" name="paymentType" value="QR payment" readonly style="width: 100%; margin-bottom: 10px; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background-color: #eee;">
+
+      <label for="receipt">Provide receipt:</label>
+      <input type="file" id="receipt" name="receipt" accept=".jpg,.jpeg,.png,.pdf" style="width: 100%; margin-bottom: 10px; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background-color: #eee;">
+
+      <div style="text-align: center;">
+        <button type="submit" style="padding: 8px 16px; background-color: #00796B; color: white; border: none; border-radius: 5px;">Submit Receipt</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- BACK BUTTON BAWAH KIRI -->
+  <div style="align-self: flex-start;">
+    <button class="back-btn" onclick="location.href='availableActivityList.jsp'">← Back</button>
+  </div>
+</div>
 
   <script>
-    function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      const main = document.getElementById('mainContent');
-      sidebar.classList.toggle('closed');
-      main.classList.toggle('full-width');
-    }
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('toggleBtn');
+    const notificationBtn = document.getElementById('notificationBtn');
+    const notificationDropdown = document.getElementById('notificationDropdown');
+    const profileBtn = document.getElementById('profileBtn');
+    const profileDropdown = document.getElementById('profileDropdown');
 
-    document.getElementById("notificationBtn").addEventListener("click", function () {
-      const dropdown = document.getElementById("notificationDropdown");
-      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    toggleBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('closed');
+    });
+
+    notificationBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      notificationDropdown.classList.toggle('show');
+      profileDropdown.classList.remove('show');
+    });
+
+    profileBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      profileDropdown.classList.toggle('show');
+      notificationDropdown.classList.remove('show');
+    });
+
+    window.addEventListener('click', function () {
+      notificationDropdown.classList.remove('show');
+      profileDropdown.classList.remove('show');
     });
 
     document.getElementById('receiptForm').addEventListener('submit', function (e) {
