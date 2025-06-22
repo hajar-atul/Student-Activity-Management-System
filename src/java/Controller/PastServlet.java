@@ -5,6 +5,11 @@ import java.sql.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.WebServlet;
+import model.ACTIVITY;
+import java.util.List;
+import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @WebServlet("/PastServlet")
 public class PastServlet extends HttpServlet {
@@ -42,6 +47,22 @@ public class PastServlet extends HttpServlet {
             e.printStackTrace();
         }
 
+        // Fetch and filter past activities
+        List<ACTIVITY> allActivities = ACTIVITY.getAllActivities();
+        List<ACTIVITY> pastActivities = new ArrayList<>();
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        for (ACTIVITY act : allActivities) {
+            try {
+                LocalDate actDate = LocalDate.parse(act.getActivityDate(), formatter);
+                if (actDate.isBefore(today)) {
+                    pastActivities.add(act);
+                }
+            } catch (Exception e) {
+                // Ignore parse errors
+            }
+        }
+        request.setAttribute("pastActivities", pastActivities);
         request.getRequestDispatcher("pastActivityList.jsp").forward(request, response);
     }
 } 

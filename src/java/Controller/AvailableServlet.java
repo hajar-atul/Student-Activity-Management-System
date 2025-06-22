@@ -5,6 +5,11 @@ import java.sql.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.WebServlet;
+import model.ACTIVITY;
+import java.util.List;
+import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @WebServlet("/AvailableServlet")
 public class AvailableServlet extends HttpServlet {
@@ -42,6 +47,22 @@ public class AvailableServlet extends HttpServlet {
             e.printStackTrace();
         }
 
+        // Fetch and filter available activities
+        List<ACTIVITY> allActivities = ACTIVITY.getAllActivities();
+        List<ACTIVITY> availableActivities = new ArrayList<>();
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        for (ACTIVITY act : allActivities) {
+            try {
+                LocalDate actDate = LocalDate.parse(act.getActivityDate(), formatter);
+                if (actDate.isAfter(today)) {
+                    availableActivities.add(act);
+                }
+            } catch (Exception e) {
+                // Ignore parse errors
+            }
+        }
+        request.setAttribute("availableActivities", availableActivities);
         request.getRequestDispatcher("availableActivityList.jsp").forward(request, response);
     }
 } 

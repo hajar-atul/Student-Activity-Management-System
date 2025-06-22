@@ -318,7 +318,6 @@
     <a href="studentDashboardPage.jsp">DASHBOARD</a>
     <a href="activities.jsp">ACTIVITIES</a>
     <a href="studentClub.jsp">CLUBS</a>
-    <a href="achievements.jsp">ACHIEVEMENTS</a>
     <a href="settings.jsp">SETTINGS</a>
   </div>
 
