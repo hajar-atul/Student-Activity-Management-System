@@ -118,6 +118,10 @@ public class LoginServlet extends HttpServlet {
                 }
                 if (STUDENT.validatePassword(studID, password)) {
                     STUDENT student = STUDENT.getStudentById(studID);
+                    if (student == null) {
+                        response.sendRedirect("indexStudent.jsp?error=student_not_found");
+                        return;
+                    }
                     HttpSession session = request.getSession();
                     session.setAttribute("student", student);
                     session.setAttribute("user", userID);

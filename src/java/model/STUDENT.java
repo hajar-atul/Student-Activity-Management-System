@@ -28,6 +28,7 @@ public class STUDENT {
     private String dob;
     private String muetStatus;
     private String advisor;
+    private int adabPoint;
 
     // Database connection details
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/student?useSSL=false&serverTimezone=UTC";
@@ -70,6 +71,15 @@ public class STUDENT {
                 student.setDob(rs.getString("dob"));
                 student.setMuetStatus(rs.getString("muetStatus"));
                 student.setAdvisor(rs.getString("advisor"));
+                
+                // Try to get adabPoint, but don't fail if column doesn't exist
+                try {
+                    student.setAdabPoint(rs.getInt("adabPoint"));
+                } catch (SQLException e) {
+                    // If adabPoint column doesn't exist, set default value
+                    student.setAdabPoint(0);
+                }
+                
                 return student;
             }
         } catch (SQLException e) {
@@ -252,6 +262,14 @@ public class STUDENT {
         this.advisor = advisor;
     }
 
+    public void setAdabPoint(int adabPoint) {
+        this.adabPoint = adabPoint;
+    }
+
+    public int getAdabPoint() {
+        return adabPoint;
+    }
+
     // Update password
     public static boolean updatePassword(int studID, String newPassword) {
         String query = "UPDATE student SET studPassword = ? WHERE studID = ?";
@@ -277,6 +295,31 @@ public class STUDENT {
             pstmt.setString(1, newEmail);
             pstmt.setString(2, newType);
             pstmt.setInt(3, studID);
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // Update student information from settings page
+    public static boolean updateStudentFromSettings(int studID, String studName, String studEmail, 
+            String studNoPhone, String studCourse, String studSemester, String dob, 
+            String muetStatus, String advisor) {
+        String sql = "UPDATE student SET studName = ?, studEmail = ?, studNoPhone = ?, " +
+                    "studCourse = ?, studSemester = ?, dob = ?, muetStatus = ?, " +
+                    "advisor = ? WHERE studID = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, studName);
+            pstmt.setString(2, studEmail);
+            pstmt.setString(3, studNoPhone);
+            pstmt.setString(4, studCourse);
+            pstmt.setString(5, studSemester);
+            pstmt.setString(6, dob);
+            pstmt.setString(7, muetStatus);
+            pstmt.setString(8, advisor);
+            pstmt.setInt(9, studID);
             return pstmt.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();

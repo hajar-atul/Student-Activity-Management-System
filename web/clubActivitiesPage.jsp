@@ -212,6 +212,26 @@
       font-weight: bold;
     }
 
+    /* Dashboard Buttons */
+    .dashboard-btn {
+      background: #00796B;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.9em;
+      transition: background-color 0.3s ease;
+    }
+
+    .dashboard-btn:hover {
+      background: #004d40;
+    }
+
+    .dashboard-btn.active {
+      background: #004d40;
+    }
+
     @media (max-width: 768px) {
       .main-content {
         margin-left: 0 !important;
@@ -246,10 +266,11 @@
     <img src="image/Raccoon.gif" alt="User Profile Picture" class="profile-pic">
     <h3><%= session.getAttribute("clubName") %></h3>
     <ul>
-      <li><a href="clubDashboardPage.jsp">Dashboard</a></li>
-      <li><a href="clubActivitiesPage.jsp" class="active">Activities</a></li>
-      <li><a href="clubAchievements.jsp">Achievements</a></li>
-      <li><a href="clubSettings.jsp">Settings</a></li>
+      <li><a href="clubDashboardPage.jsp">DASHBOARD</a></li>
+    <li><a href="clubActivitiesPage.jsp" class="active">ACTIVITIES</a></li>
+    <li><a href="venueBooking.jsp">VENUE BOOKING</a></li>
+    <li><a href="resourceReq.jsp">RESOURCE BOOKING</a></li>
+    <li><a href="clubSettings.jsp">SETTINGS</a></li>
     </ul>
   </div>
 
@@ -274,6 +295,33 @@
     <!-- Activities Table Section -->
     <div class="activity-section" style="padding: 40px;">
       <h2 style="text-align:center; font-size: 28px; margin-bottom: 30px;">List Activities</h2>
+      
+      <!-- Success/Error Messages -->
+      <% 
+        String successMsg = request.getParameter("success");
+        String errorMsg = request.getParameter("error");
+        if (successMsg != null) {
+      %>
+        <div style="background: #c8f7c5; color: #218838; padding: 12px; margin-bottom: 20px; border-radius: 6px; text-align: center; font-weight: 500;">
+          <%= successMsg.replace("+", " ") %>
+        </div>
+      <% } %>
+      <% if (errorMsg != null) { %>
+        <div style="background: #f8d7da; color: #721c24; padding: 12px; margin-bottom: 20px; border-radius: 6px; text-align: center; font-weight: 500;">
+          <%= errorMsg.replace("+", " ") %>
+        </div>
+      <% } %>
+      
+      <!-- Create Activity Button -->
+      <div style="margin-bottom: 20px; text-align: right;">
+        <a href="createActivity.jsp" 
+           style="background: #00796B; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: 500; transition: background-color 0.3s ease;"
+           onmouseover="this.style.background='#004d40'"
+           onmouseout="this.style.background='#00796B'">
+          ➕ Create New Activity
+        </a>
+      </div>
+      
       <div style="margin-bottom: 20px; display: flex; gap: 10px; align-items: center;">
         <span style="font-weight: 500;">Sort:</span>
         <form method="get" style="display:inline;">
@@ -290,6 +338,8 @@
             <th style="padding:12px; text-align:left;">Activity Name</th>
             <th style="padding:12px; text-align:left;">Date</th>
             <th style="padding:12px; text-align:left;">Status</th>
+            <th style="padding:12px; text-align:left;">Participants</th>
+            <th style="padding:12px; text-align:left;">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -311,6 +361,7 @@
               }
             }
             for (model.ACTIVITY act : activities) {
+              int participantCount = model.ACTIVITY.getParticipantCount(act.getActivityID());
           %>
           <tr>
             <td style="padding:10px; border-bottom:1px solid #eee;"><%= act.getActivityID() %></td>
@@ -327,10 +378,23 @@
                 <span style="background:#e2e3e5; color:#383d41; padding:4px 12px; border-radius:12px; font-weight:500;"><%= act.getActivityStatus() %></span>
               <% } %>
             </td>
+            <td style="padding:10px; border-bottom:1px solid #eee; text-align:center;">
+              <span style="background:#00796B; color:white; padding:4px 8px; border-radius:12px; font-weight:500; font-size:0.9em;">
+                <%= participantCount %>
+              </span>
+            </td>
+            <td style="padding:10px; border-bottom:1px solid #eee; text-align:center;">
+              <a href="ActivityParticipantsServlet?activityId=<%= act.getActivityID() %>" 
+                 style="background:#00796B; color:white; padding:8px 16px; border-radius:5px; text-decoration:none; font-size:0.9em; transition:background-color 0.3s ease;"
+                 onmouseover="this.style.background='#004d40'"
+                 onmouseout="this.style.background='#00796B'">
+                List Participants
+              </a>
+            </td>
           </tr>
           <% } %>
           <% if (activities.isEmpty()) { %>
-          <tr><td colspan="4" style="text-align:center; padding:20px; color:#888;">No activities found.</td></tr>
+          <tr><td colspan="6" style="text-align:center; padding:20px; color:#888;">No activities found.</td></tr>
           <% } %>
         </tbody>
       </table>
