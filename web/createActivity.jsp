@@ -78,6 +78,8 @@
     }
     .form-group input[type="text"],
     .form-group input[type="date"],
+    .form-group input[type="number"],
+    .form-group select,
     .form-group textarea {
       padding: 10px;
       border: 1px solid #b2dfdb;
@@ -86,6 +88,9 @@
       background: #e0ffff;
       font-family: 'Poppins', Arial, sans-serif;
       resize: none;
+    }
+    .form-group select {
+      cursor: pointer;
     }
     .form-group textarea {
       min-height: 80px;
@@ -152,30 +157,95 @@
   </div>
   <div class="activity-form-container">
     <div class="activity-form-title">Activity</div>
+    
+    <!-- Success/Error Messages -->
+    <% 
+      String successMsg = request.getParameter("success");
+      String errorMsg = request.getParameter("error");
+      if (successMsg != null) {
+    %>
+      <div style="background: #c8f7c5; color: #218838; padding: 12px; margin: 0 24px; border-radius: 6px; text-align: center; font-weight: 500;">
+        <%= successMsg.replace("+", " ") %>
+      </div>
+    <% } %>
+    <% if (errorMsg != null) { %>
+      <div style="background: #f8d7da; color: #721c24; padding: 12px; margin: 0 24px; border-radius: 6px; text-align: center; font-weight: 500;">
+        <%= errorMsg.replace("+", " ") %>
+      </div>
+    <% } %>
+    
     <form action="CreateActivityServlet" method="post" enctype="multipart/form-data">
       <div class="form-group">
         <label for="activityName">Activity Name</label>
-        <input type="text" id="activityName" name="activityName" required />
+        <input type="text" id="activityName" name="activityName" maxlength="500" required />
+        <small style="color: #666; font-size: 0.8em;">Maximum 500 characters</small>
       </div>
       <div class="form-group">
-        <label for="attachFile">Attach File:</label>
-        <input type="file" id="attachFile" name="attachFile" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" />
-        <span class="file-note">*THE FILE MUST NOT EXCEED 15MB</span>
+        <label for="activityType">Activity Type</label>
+        <select id="activityType" name="activityType" required onchange="toggleQrUpload()">
+          <option value="">Select Activity Type</option>
+          <option value="Free">Free</option>
+          <option value="Paid">Paid</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="venue">Venue</label>
+        <select id="venueName" name="venueName" required>
+          <option value="">Select Venue</option>
+          <option value="Dewan Serbaguna">Dewan Serbaguna</option>
+          <option value="Dewan Aspirasi">Dewan Aspirasi</option>
+          <option value="Dewan Tengku Hassanal">Dewan Tengku Hassanal</option>
+          <option value="Dewan Chanselor">Dewan Chanselor</option>
+          <option value="Dewan Ibnu Battuta">Dewan Ibnu Battuta</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="proposedBudget">Proposed Budget (RM)</label>
+        <input type="number" id="proposedBudget" name="proposedBudget" step="0.01" min="0" placeholder="0.00" required />
+      </div>
+      <div class="form-group">
+        <label for="adabPoint">Adab Points (Merit)</label>
+        <input type="number" id="adabPoint" name="adabPoint" min="0" max="1000" placeholder="0" required />
+        <small style="color: #666; font-size: 0.8em;">Points given to students who join this activity (0-100)</small>
+      </div>
+      <div class="form-group" id="qrImageGroup" style="display: none;">
+        <label for="qrImage">QR Code / Banking Details Image:</label>
+        <input type="file" id="qrImage" name="qrImage" accept=".jpg,.jpeg,.png" />
+        <span class="file-note">*Upload QR code or banking details image for paid activities</span>
       </div>
       <div class="form-group">
         <label for="description">Description</label>
-        <textarea id="description" name="description" placeholder="Enter a description.." required></textarea>
+        <textarea id="description" name="description" placeholder="Enter a description.." maxlength="65535" required></textarea>
+        <small style="color: #666; font-size: 0.8em;">Maximum 65,535 characters</small>
       </div>
       <div class="form-group">
         <label for="date">Date</label>
         <input type="date" id="date" name="date" required />
       </div>
-      <div class="remarks-group">
-        <label for="remarks">Remarks</label>
-        <textarea id="remarks" name="remarks" placeholder="Your Comments..."></textarea>
+      <div class="form-group">
+        <label for="proposalFile">Proposal File:</label>
+        <input type="file" id="proposalFile" name="proposalFile" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" />
+        <span class="file-note">*THE FILE MUST NOT EXCEED 15MB</span>
       </div>
       <button type="submit" class="submit-btn">Submit</button>
     </form>
   </div>
+  
+  <script>
+    function toggleQrUpload() {
+      const activityType = document.getElementById('activityType').value;
+      const qrImageGroup = document.getElementById('qrImageGroup');
+      const qrImageInput = document.getElementById('qrImage');
+      
+      if (activityType === 'Paid') {
+        qrImageGroup.style.display = 'flex';
+        qrImageInput.required = true;
+      } else {
+        qrImageGroup.style.display = 'none';
+        qrImageInput.required = false;
+        qrImageInput.value = ''; // Clear the input when hidden
+      }
+    }
+  </script>
 </body>
 </html> 

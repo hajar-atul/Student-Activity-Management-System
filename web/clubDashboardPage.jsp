@@ -451,10 +451,11 @@
   <img src="image/Raccoon.gif" alt="User Profile Picture" class="profile-pic">
   <h3><%= session.getAttribute("clubName") %></h3>
   <ul>
-    <li><a href="clubDashboardPage.jsp" class="active">Dashboard</a></li>
-    <li><a href="clubActivitiesPage.jsp">Activities</a></li>
-    <li><a href="clubAchievements.jsp">Achievements</a></li>
-    <li><a href="clubSettings.jsp">Settings</a></li>
+    <li><a href="clubDashboardPage.jsp" class="active">DASHBOARD</a></li>
+    <li><a href="clubActivitiesPage.jsp">ACTIVITIES</a></li>
+    <li><a href="venueBooking.jsp">VENUE BOOKING</a></li>
+    <li><a href="resourceReq.jsp">RESOURCE BOOKING</a></li>
+    <li><a href="clubSettings.jsp">SETTINGS</a></li>
   </ul>
 </div>
 
@@ -481,19 +482,19 @@
           <div class="summary-icon">
             <img src="image/create_icon.png" alt="Create Activity" />
           </div>
-          <div class="summary-text"><h3>Create Activity</h3></div>
+          <div class="summary-text"><h3>CREATE ACTIVITY</h3></div>
         </div>
-        <div class="summary-card" onclick="location.href='venueBooking.jsp'">
+        <div class="summary-card" onclick="location.href=">
           <div class="summary-icon">
             <img src="image/venue_icon.png" alt="Venue" />
           </div>
-          <div class="summary-text"><h3>Venue Booking</h3><p>2</p></div>
+          <div class="summary-text"><h3>VENUE BOOKED</h3><p>2</p></div>
         </div>
-        <div class="summary-card resource" onclick="location.href='resourceReq.jsp'">
+        <div class="summary-card resource" onclick="location.href=">
           <div class="summary-icon">
             <img src="image/resource_icon.png" alt="Resource" />
           </div>
-          <div class="summary-text"><h3>Resource Request</h3><p>5</p></div>
+          <div class="summary-text"><h3>RESOURCE ACCEPTED</h3><p>5</p></div>
         </div>
       </div>
     </div>

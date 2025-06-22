@@ -1,73 +1,192 @@
 package Controller;
 
-import java.io.*;
-import java.nio.file.*;
+import java.io.IOException;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
-import java.sql.*;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
+import model.ACTIVITY;
+import model.CLUB;
 
 @WebServlet("/CreateActivityServlet")
-@MultipartConfig(fileSizeThreshold=1024*1024*2, // 2MB
-                 maxFileSize=1024*1024*15,      // 15MB
-                 maxRequestSize=1024*1024*20)   // 20MB
+@MultipartConfig(
+    fileSizeThreshold = 1024 * 1024, // 1 MB
+    maxFileSize = 1024 * 1024 * 15,  // 15 MB
+    maxRequestSize = 1024 * 1024 * 20 // 20 MB
+)
 public class CreateActivityServlet extends HttpServlet {
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/student?useSSL=false&serverTimezone=UTC";
-    private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "";
-    private static final String UPLOAD_DIR = "uploads";
-
-    @Override
+    
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
-        String activityName = request.getParameter("activityName");
-        String description = request.getParameter("description");
-        String date = request.getParameter("date");
-        String remarks = request.getParameter("remarks");
-        Part filePart = request.getPart("attachFile");
-        String fileName = null;
-
-        // Handle file upload
-        if (filePart != null && filePart.getSize() > 0 && filePart.getSubmittedFileName() != null && !filePart.getSubmittedFileName().isEmpty()) {
-            fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-            String appPath = request.getServletContext().getRealPath("");
-            String uploadPath = appPath + File.separator + UPLOAD_DIR;
-            File uploadDir = new File(uploadPath);
-            if (!uploadDir.exists()) uploadDir.mkdirs();
-            filePart.write(uploadPath + File.separator + fileName);
+        
+        // Get the current club from session
+        CLUB club = (CLUB) request.getSession().getAttribute("club");
+        if (club == null) {
+            response.sendRedirect("index.jsp");
+            return;
         }
-
-        // Insert into database
-        int activityID = -1;
+        
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
-                String sql = "INSERT INTO activity (activityName, description, date, remarks, fileName) VALUES (?, ?, ?, ?, ?)";
-                PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-                pstmt.setString(1, activityName);
-                pstmt.setString(2, description);
-                pstmt.setString(3, date);
-                pstmt.setString(4, remarks);
-                pstmt.setString(5, fileName);
-                int affectedRows = pstmt.executeUpdate();
-                if (affectedRows > 0) {
-                    try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
-                        if (generatedKeys.next()) {
-                            activityID = generatedKeys.getInt(1);
-                        }
-                    }
+            // Get form parameters
+            String activityName = request.getParameter("activityName");
+            String activityType = request.getParameter("activityType");
+            String description = request.getParameter("description");
+            String date = request.getParameter("date");
+            String venueName = request.getParameter("venueName");
+            String proposedBudgetStr = request.getParameter("proposedBudget");
+            String adabPointStr = request.getParameter("adabPoint");
+            
+            // Validate required fields with detailed error messages
+            if (activityName == null || activityName.trim().isEmpty()) {
+                response.sendRedirect("createActivity.jsp?error=Activity+name+is+required");
+                return;
+            }
+            if (activityName.trim().length() > 500) {
+                response.sendRedirect("createActivity.jsp?error=Activity+name+is+too+long.+Maximum+500+characters+allowed.");
+                return;
+            }
+            if (activityType == null || activityType.trim().isEmpty()) {
+                response.sendRedirect("createActivity.jsp?error=Activity+type+is+required");
+                return;
+            }
+            if (description == null || description.trim().isEmpty()) {
+                response.sendRedirect("createActivity.jsp?error=Description+is+required");
+                return;
+            }
+            if (description.trim().length() > 65535) { // TEXT field limit
+                response.sendRedirect("createActivity.jsp?error=Description+is+too+long.+Maximum+65535+characters+allowed.");
+                return;
+            }
+            if (date == null || date.trim().isEmpty()) {
+                response.sendRedirect("createActivity.jsp?error=Date+is+required");
+                return;
+            }
+            if (venueName == null || venueName.trim().isEmpty()) {
+                response.sendRedirect("createActivity.jsp?error=Venue+is+required");
+                return;
+            }
+            if (venueName.trim().length() > 500) {
+                response.sendRedirect("createActivity.jsp?error=Venue+name+is+too+long.+Maximum+500+characters+allowed.");
+                return;
+            }
+            if (proposedBudgetStr == null || proposedBudgetStr.trim().isEmpty()) {
+                response.sendRedirect("createActivity.jsp?error=Budget+is+required");
+                return;
+            }
+            if (adabPointStr == null || adabPointStr.trim().isEmpty()) {
+                response.sendRedirect("createActivity.jsp?error=Adab+points+are+required");
+                return;
+            }
+            
+            // Validate activity type
+            if (!activityType.equals("Free") && !activityType.equals("Paid")) {
+                response.sendRedirect("createActivity.jsp?error=Invalid+activity+type");
+                return;
+            }
+            
+            // Parse budget
+            double proposedBudget;
+            try {
+                proposedBudget = Double.parseDouble(proposedBudgetStr);
+                if (proposedBudget < 0) {
+                    response.sendRedirect("createActivity.jsp?error=Budget+cannot+be+negative");
+                    return;
                 }
+            } catch (NumberFormatException e) {
+                response.sendRedirect("createActivity.jsp?error=Invalid+budget+amount");
+                return;
             }
-            if (activityID > 0) {
-                response.sendRedirect("clubDashboardPage.jsp?success=Activity+created+successfully!+ID:+" + activityID);
+            
+            // Parse adab points
+            int adabPoint;
+            try {
+                adabPoint = Integer.parseInt(adabPointStr);
+                if (adabPoint < 0) {
+                    response.sendRedirect("createActivity.jsp?error=Adab+points+cannot+be+negative");
+                    return;
+                }
+                if (adabPoint > 1000) {
+                    response.sendRedirect("createActivity.jsp?error=Adab+points+cannot+exceed+1000");
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                response.sendRedirect("createActivity.jsp?error=Invalid+adab+points+amount");
+                return;
+            }
+            
+            // Handle proposal file upload
+            Part proposalFilePart = request.getPart("proposalFile");
+            String proposalFileName = null;
+            if (proposalFilePart != null && proposalFilePart.getSize() > 0) {
+                proposalFileName = getSubmittedFileName(proposalFilePart);
+                // You can save the file to a specific directory here if needed
+            }
+            
+            // Handle QR image upload (only for paid activities)
+            Part qrImagePart = request.getPart("qrImage");
+            String qrImageName = null;
+            if (activityType.equals("Paid")) {
+                if (qrImagePart == null || qrImagePart.getSize() == 0) {
+                    response.sendRedirect("createActivity.jsp?error=QR+image+is+required+for+paid+activities");
+                    return;
+                }
+                qrImageName = getSubmittedFileName(qrImagePart);
+                // You can save the file to a specific directory here if needed
+            }
+            
+            // Create activity object
+            ACTIVITY activity = new ACTIVITY();
+            activity.setActivityName(activityName.trim());
+            activity.setActivityType(activityType);
+            activity.setActivityDesc(description.trim());
+            activity.setActivityDate(date);
+            activity.setActivityVenue(venueName.trim());
+            activity.setActivityBudget(proposedBudget);
+            activity.setAdabPoint(adabPoint);
+            activity.setProposalFile(proposalFileName);
+            activity.setQrImage(qrImageName);
+            activity.setActivityStatus("Pending"); // Default status for admin approval
+            activity.setClubID(club.getClubId());
+            
+            // Save to database using the simpler method
+            String generatedActivityId = activity.saveAndReturnIdSimple();
+            
+            if (generatedActivityId != null && !generatedActivityId.isEmpty()) {
+                // Success - redirect to activities page with success message
+                response.sendRedirect("clubActivitiesPage.jsp?success=Activity+created+successfully.+Waiting+for+admin+approval.");
             } else {
-                response.sendRedirect("createActivity.jsp?error=Failed+to+create+activity");
+                // Failed to save
+                response.sendRedirect("createActivity.jsp?error=Failed+to+create+activity.+Please+try+again.");
             }
-        } catch (Exception e) {
+            
+        } catch (RuntimeException e) {
+            // Handle specific runtime exceptions from saveAndReturnId
             e.printStackTrace();
-            response.sendRedirect("createActivity.jsp?error=Error:+" + e.getMessage().replaceAll(" ", "+"));
+            response.sendRedirect("createActivity.jsp?error=Database+error:+%20" + e.getMessage().replace(" ", "+"));
+        } catch (Exception e) {
+            // Handle other unexpected exceptions
+            e.printStackTrace();
+            response.sendRedirect("createActivity.jsp?error=An+unexpected+error+occurred.+Please+try+again.");
         }
+    }
+    
+    private String getSubmittedFileName(Part part) {
+        String contentDisp = part.getHeader("content-disposition");
+        String[] tokens = contentDisp.split(";");
+        for (String token : tokens) {
+            if (token.trim().startsWith("filename")) {
+                return token.substring(token.indexOf("=") + 2, token.length() - 1);
+            }
+        }
+        return "";
+    }
+    
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // Redirect GET requests to the create activity page
+        response.sendRedirect("createActivity.jsp");
     }
 } 
