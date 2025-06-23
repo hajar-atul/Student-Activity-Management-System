@@ -5,6 +5,7 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.sql.*;
+import model.STUDENT;
 
 @WebServlet("/StudentDashboardServlet")
 public class StudentDashboardServlet extends HttpServlet {
@@ -46,13 +47,22 @@ public class StudentDashboardServlet extends HttpServlet {
                 session.setAttribute("dob", rs.getString("dob"));
                 session.setAttribute("muetStatus", rs.getString("muetStatus"));
                 session.setAttribute("advisor", rs.getString("advisor"));
-                
+
+                // Get adab point
+                int adabPoint = STUDENT.getAdabPointByStudentId(Integer.parseInt(studID));
+                session.setAttribute("adabPoint", adabPoint);
+
+                // Get days until next registered event
+                int daysUntilEvent = STUDENT.getDaysUntilNextActivity(Integer.parseInt(studID));
+                session.setAttribute("eventCountdown", daysUntilEvent >= 0 ? daysUntilEvent : "No upcoming events");
+
+                // Optional logs
                 System.out.println("DOB: " + rs.getString("dob"));
-                System.out.println("MUET: " + rs.getString("muetStatus"));
-                System.out.println("ADVISOR: " + rs.getString("advisor"));
+                System.out.println("ADAB POINT: " + adabPoint);
+                System.out.println("Event Countdown: " + daysUntilEvent);
             }
 
-            // Forward to dashboard JSP
+            // Forward to JSP
             RequestDispatcher dispatcher = request.getRequestDispatcher("studentDashboardPage.jsp");
             dispatcher.forward(request, response);
 
@@ -60,7 +70,6 @@ public class StudentDashboardServlet extends HttpServlet {
             e.printStackTrace();
             response.sendRedirect("errorStudent.jsp");
         } finally {
-            // Clean up
             try { if (rs != null) rs.close(); } catch (Exception e) {}
             try { if (ps != null) ps.close(); } catch (Exception e) {}
             try { if (con != null) con.close(); } catch (Exception e) {}

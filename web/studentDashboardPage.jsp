@@ -87,7 +87,7 @@
             padding-top: 20px;
         }
 
-        .logout-container .LOGOUT-btn {
+        .LOGOUT-btn {
             display: block;
             width: 100%;
             padding: 10px;
@@ -102,7 +102,7 @@
             cursor: pointer;
         }
 
-        .logout-container .LOGOUT-btn:hover {
+        .LOGOUT-btn:hover {
             background-color: #b71c1c;
         }
 
@@ -227,13 +227,21 @@
         .content h1 {
             font-size: 24px;
             color: #0a6d6d;
+            margin-bottom: 20px;
+        }
+
+        .profile-container {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
         }
 
         .profile-box {
             background-color: #b3e0e0;
             padding: 20px;
             border-radius: 10px;
-            width: 650px;
+            flex: 1;
+            min-width: 300px;
         }
 
         .profile-box h2 {
@@ -255,68 +263,72 @@
             width: 200px;
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             .content {
                 margin-left: 0;
+            }
+
+            .profile-container {
+                flex-direction: column;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- Sidebar -->
-    <div class="sidebar" id="sidebar">
-        <img src="image/amin.jpg" alt="Profile" class="profile-pic" />
-        <h2>
-            <%= session.getAttribute("studName") %><br>
-            <%= session.getAttribute("studID") %>
-        </h2>
-        <div class="menu">
-            <a href="studentDashboardPage.jsp">DASHBOARD</a>
-            <a href="activities.jsp">ACTIVITIES</a>
-            <a href="studentClub.jsp">CLUBS</a>
-            <a href="settings.jsp">SETTINGS</a>
-        </div>
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+    <img src="image/amin.jpg" alt="Profile" class="profile-pic" />
+    <h2>
+        <%= session.getAttribute("studName") %><br>
+        <%= session.getAttribute("studID") %>
+    </h2>
+    <div class="menu">
+        <a href="studentDashboardPage.jsp">DASHBOARD</a>
+        <a href="activities.jsp">ACTIVITIES</a>
+        <a href="studentClub.jsp">CLUBS</a>
+        <a href="settings.jsp">SETTINGS</a>
+    </div>
+    <div class="logout-container">
+        <form action="index.jsp">
+            <button type="submit" class="LOGOUT-btn">Logout</button>
+        </form>
+    </div>
+</div>
 
-        <!-- Logout button fixed at the bottom -->
-        <div class="logout-container">
-            <form action="index.jsp">
-                <button type="submit" class="LOGOUT-btn">Logout</button>
-            </form>
+<!-- Toggle Button -->
+<button class="toggle-btn" id="toggleBtn">☰</button>
+
+<!-- Topbar -->
+<div class="topbar">
+    <div class="search-container">
+        <input type="text" placeholder="Search..." />
+        <button class="search-btn">X</button>
+    </div>
+    <div class="dashboard-title">DASHBOARD</div>
+    <div class="top-icons">
+        <img src="image/umpsa.png" class="umpsa-icon" alt="UMPSA">
+        <button class="notification-btn" id="notificationBtn">
+            <img src="image/bell.png" alt="Notification">
+        </button>
+        <div class="notification-dropdown" id="notificationDropdown">
+            <p>No new notifications</p>
+        </div>
+        <img src="image/amin.jpg" alt="Profile" class="profile-icon" id="profileBtn">
+        <div class="profile-dropdown" id="profileDropdown">
+            <a href="profile.jsp">My Profile</a>
+            <a href="logout.jsp">Logout</a>
         </div>
     </div>
+</div>
 
-    <!-- Toggle Button -->
-    <button class="toggle-btn" id="toggleBtn">☰</button>
+<!-- Content -->
+<div class="content" id="content">
+    <h1>Welcome, <%= session.getAttribute("studName") %></h1>
 
-    <!-- Topbar -->
-    <div class="topbar">
-        <div class="search-container">
-            <input type="text" placeholder="Search..." />
-            <button class="search-btn">X</button>
-        </div>
-        <div class="dashboard-title">DASHBOARD</div>
-        <div class="top-icons">
-            <img src="image/umpsa.png" class="umpsa-icon" alt="UMPSA">
-            <button class="notification-btn" id="notificationBtn">
-                <img src="image/bell.png" alt="Notification">
-            </button>
-            <div class="notification-dropdown" id="notificationDropdown">
-                <p>No new notifications</p>
-            </div>
-            <img src="image/amin.jpg" alt="Profile" class="profile-icon" id="profileBtn">
-            <div class="profile-dropdown" id="profileDropdown">
-                <a href="profile.jsp">My Profile</a>
-                <a href="logout.jsp">Logout</a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Content -->
-    <div class="content" id="content">
-        <h1>Welcome, <%= session.getAttribute("studName") %></h1>
-        <div class="profile-box">
+    <div class="profile-container">
+        <!-- Student Info Box -->
+        <div class="profile-box" style="flex: 1 1 600px;">
             <h2>STUDENT PROFILE</h2>
             <table>
                 <tr><td>STUDENT ID</td><td><%= session.getAttribute("studID") %></td></tr>
@@ -329,36 +341,68 @@
                 <tr><td>ADVISOR</td><td><%= session.getAttribute("advisor") %></td></tr>
             </table>
         </div>
+
+        <!-- Right Column -->
+        <div style="display: flex; flex-direction: column; gap: 20px; flex: 1 1 300px;">
+
+            <!-- Adab Point Card -->
+            <div class="profile-box" style="background: #ffffff; border-left: 6px solid #008b8b; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+                <h2 style="color: #008b8b;">ADAB POINT</h2>
+                <div style="margin-top: 10px;">
+                    <div style="margin: auto; width: 100px; height: 100px; border-radius: 50%; background: #008b8b; display: flex; align-items: center; justify-content: center; color: white; font-size: 28px; font-weight: bold;">
+                        <%= session.getAttribute("adabPoint") != null ? session.getAttribute("adabPoint") : "0" %>
+                    </div>
+                    <p style="margin-top: 10px; color: #333;">Total Adab Points</p>
+                </div>
+            </div>
+
+            <!-- Event Countdown -->
+            <div class="profile-box" style="background: #ffe9c8; border-left: 6px solid #ff9800;">
+                <h2 style="color: #c27000;">NEXT EVENT COUNTDOWN</h2>
+                <p style="font-size: 22px; font-weight: bold; color: #cc7000;">
+                    <% 
+                        Object days = session.getAttribute("daysUntilEvent");
+                        if (days != null) {
+                            out.print(days + " day(s) left");
+                        } else {
+                            out.print("No upcoming events");
+                        }
+                    %>
+                </p>
+            </div>
+
+        </div>
     </div>
+</div>
 
-    <script>
-        const sidebar = document.getElementById('sidebar');
-        const toggleBtn = document.getElementById('toggleBtn');
-        const notificationBtn = document.getElementById('notificationBtn');
-        const notificationDropdown = document.getElementById('notificationDropdown');
-        const profileBtn = document.getElementById('profileBtn');
-        const profileDropdown = document.getElementById('profileDropdown');
+<script>
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('toggleBtn');
+    const notificationBtn = document.getElementById('notificationBtn');
+    const notificationDropdown = document.getElementById('notificationDropdown');
+    const profileBtn = document.getElementById('profileBtn');
+    const profileDropdown = document.getElementById('profileDropdown');
 
-        toggleBtn.addEventListener('click', () => {
-            sidebar.classList.toggle('closed');
-        });
+    toggleBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('closed');
+    });
 
-        notificationBtn.addEventListener('click', function (e) {
-            e.stopPropagation();
-            notificationDropdown.classList.toggle('show');
-            profileDropdown.classList.remove('show');
-        });
+    notificationBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        notificationDropdown.classList.toggle('show');
+        profileDropdown.classList.remove('show');
+    });
 
-        profileBtn.addEventListener('click', function (e) {
-            e.stopPropagation();
-            profileDropdown.classList.toggle('show');
-            notificationDropdown.classList.remove('show');
-        });
+    profileBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        profileDropdown.classList.toggle('show');
+        notificationDropdown.classList.remove('show');
+    });
 
-        window.addEventListener('click', function () {
-            notificationDropdown.classList.remove('show');
-            profileDropdown.classList.remove('show');
-        });
-    </script>
+    window.addEventListener('click', function () {
+        notificationDropdown.classList.remove('show');
+        profileDropdown.classList.remove('show');
+    });
+</script>
 </body>
 </html>
