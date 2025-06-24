@@ -1,4 +1,54 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.util.List, java.util.ArrayList, model.REPORT, model.CLUB" %>
+<%
+    int currentPage = 1;
+    int reportsPerPage = 10;
+    int totalReports = 0;
+    if (request.getParameter("page") != null) {
+        try { currentPage = Integer.parseInt(request.getParameter("page")); } catch(Exception e) { currentPage = 1; }
+        if (currentPage < 1) currentPage = 1;
+    }
+    List reports = new ArrayList();
+    java.sql.Connection conn = null;
+    java.sql.PreparedStatement stmt = null;
+    java.sql.ResultSet rs = null;
+    java.sql.Statement countStmt = null;
+    java.sql.ResultSet countRs = null;
+    try {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        conn = java.sql.DriverManager.getConnection("jdbc:mysql://localhost:3306/student?useSSL=false&serverTimezone=UTC", "root", "");
+        // Get total number of reports
+        countStmt = conn.createStatement();
+        countRs = countStmt.executeQuery("SELECT COUNT(*) FROM report");
+        if (countRs.next()) {
+            totalReports = countRs.getInt(1);
+        }
+        int offset = (currentPage - 1) * reportsPerPage;
+        stmt = conn.prepareStatement("SELECT * FROM report ORDER BY reportID DESC LIMIT ? OFFSET ?");
+        stmt.setInt(1, reportsPerPage);
+        stmt.setInt(2, offset);
+        rs = stmt.executeQuery();
+        while (rs.next()) {
+            REPORT report = new REPORT();
+            report.setReportId(rs.getInt("reportID"));
+            report.setClubId(rs.getInt("clubID"));
+            try { report.getClass().getMethod("setActivityId", new Class[]{int.class}).invoke(report, new Object[]{new Integer(rs.getInt("activityID"))}); } catch(Exception e){}
+            report.setReportDate(rs.getString("reportDate"));
+            report.setReportDetails(rs.getString("reportDetails"));
+            try { report.getClass().getMethod("setFilePath", new Class[]{String.class}).invoke(report, new Object[]{rs.getString("filePath")}); } catch(Exception e){} // if filePath exists
+            try { report.getClass().getMethod("setStatus", new Class[]{String.class}).invoke(report, new Object[]{rs.getString("status")}); } catch(Exception e){} // if status exists
+            reports.add(report);
+        }
+    } catch (Exception e) { e.printStackTrace(); }
+    finally {
+        try { if (rs != null) rs.close(); } catch (Exception e) {}
+        try { if (stmt != null) stmt.close(); } catch (Exception e) {}
+        try { if (countRs != null) countRs.close(); } catch (Exception e) {}
+        try { if (countStmt != null) countStmt.close(); } catch (Exception e) {}
+        try { if (conn != null) conn.close(); } catch (Exception e) {}
+    }
+    int totalPages = (int)Math.ceil((double)totalReports / reportsPerPage);
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -301,6 +351,31 @@
             font-size: 22px;
             margin-left: 6px;
         }
+        .pagination-btn {
+            background-color: #238B87;
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            margin: 0 8px;
+            transition: background 0.2s;
+        }
+        .pagination-btn:disabled {
+            background: #b2dfdb;
+            color: #fff;
+            cursor: not-allowed;
+        }
+        .pagination-controls {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-top: 18px;
+            margin-right: 40px;
+            gap: 8px;
+        }
         @media (max-width: 1100px) {
             .report-table-container { width: 100%; }
             .main-content { margin-left: 0; }
@@ -351,81 +426,64 @@
                     </tr>
                 </thead>
                 <tbody>
+                <% for (int i = 0; i < reports.size(); i++) {
+                    REPORT report = (REPORT)reports.get(i);
+                    CLUB club = CLUB.getClubById(report.getClubId());
+                    String clubName = (club != null) ? club.getClubName() : "N/A";
+                    String status = "Unchecked";
+                    String statusColor = "#f44336";
+                    try {
+                        String s = (String)report.getClass().getMethod("getStatus", new Class[]{}).invoke(report, new Object[]{});
+                        if (s != null && s.equalsIgnoreCase("checked")) {
+                            status = "Checked";
+                            statusColor = "#23bfae";
+                        }
+                    } catch(Exception e){}
+                    String statusStyle = "color:" + statusColor + "; font-weight:bold;";
+                %>
                     <tr>
-                        <td>EACC</td>
+                        <td><%= clubName %></td>
                         <td>
                             <div class="activity-proposal-cell">
-                                <span class="activity-proposal-name">KIMONO PAINTING</span>
+                                <span class="activity-proposal-name">Activity ID: <%= report.getActivityId() %></span>
                                 <span class="activity-proposal-actions">
-                                    <button class="btn-view">View</button>
-                                    <button class="btn-download"><img src="image/downloadIcon.png" alt="Download"></button>
+                                    <a href="handleReportStatus.jsp?action=view&reportID=<%= report.getReportId() %>" class="btn-view">View</a>
+                                    <a href="downloadReport.jsp?reportID=<%= report.getReportId() %>" class="btn-download"><img src="image/downloadIcon.png" alt="Download"></a>
                                 </span>
                             </div>
                         </td>
-                        <td>23 FEB 2025</td>
-                        <td class="status-checked"><img src="image/checked.png" alt="Checked">Checked</td>
-                    </tr>
-                    <tr>
-                        <td>RELEX</td>
-                        <td>
-                            <div class="activity-proposal-cell">
-                                <span class="activity-proposal-name">HIKING</span>
-                                <span class="activity-proposal-actions">
-                                    <button class="btn-view">View</button>
-                                    <button class="btn-download"><img src="image/downloadIcon.png" alt="Download"></button>
-                                </span>
-                            </div>
+                        <td><%= report.getReportDate() %></td>
+                        <td <%= "style='" + statusStyle + "'" %>>
+                            <% if (status.equals("Checked")) { %>
+                                <span class="status-checked"><img src="image/checked.png" alt="Checked">Checked</span>
+                            <% } else { %>
+                                <span><b>Unchecked</b></span>
+                            <% } %>
                         </td>
-                        <td>4 APR 2025</td>
-                        <td class="status-checked"><img src="image/checked.png" alt="Checked">Checked</td>
                     </tr>
-                    <tr>
-                        <td>BADMINTOON</td>
-                        <td>
-                            <div class="activity-proposal-cell">
-                                <span class="activity-proposal-name">FRIENDLY LEAGUE</span>
-                                <span class="activity-proposal-actions">
-                                    <button class="btn-view">View</button>
-                                    <button class="btn-download"><img src="image/downloadIcon.png" alt="Download"></button>
-                                </span>
-                            </div>
-                        </td>
-                        <td>10 MAY 2025</td>
-                        <td class="status-checked"><img src="image/checked.png" alt="Checked">Checked</td>
-                    </tr>
-                    <tr>
-                        <td>PINGPONG</td>
-                        <td>
-                            <div class="activity-proposal-cell">
-                                <span class="activity-proposal-name">SPORTS FEST</span>
-                                <span class="activity-proposal-actions">
-                                    <button class="btn-view">View</button>
-                                    <button class="btn-download"><img src="image/downloadIcon.png" alt="Download"></button>
-                                </span>
-                            </div>
-                        </td>
-                        <td>28 JUNE 2025</td>
-                        <td class="status-checked"><img src="image/checked.png" alt="Checked">Checked</td>
-                    </tr>
-                    <tr>
-                        <td>RELEX</td>
-                        <td>
-                            <div class="activity-proposal-cell">
-                                <span class="activity-proposal-name">KAYAKING</span>
-                                <span class="activity-proposal-actions">
-                                    <button class="btn-view">View</button>
-                                    <button class="btn-download"><img src="image/downloadIcon.png" alt="Download"></button>
-                                </span>
-                            </div>
-                        </td>
-                        <td>12 JUNE 2025</td>
-                        <td class="status-checked"><img src="image/checked.png" alt="Checked">Checked</td>
-                    </tr>
+                <% } %>
                 </tbody>
             </table>
         </div>
     </div>
-    <button class="more-report-btn">More Report <span class="arrow">&#8594;</span></button>
+    <div class="pagination-controls">
+        <% if (currentPage > 1) { %>
+            <form method="get" style="display:inline;">
+                <input type="hidden" name="page" value="<%= currentPage - 1 %>" />
+                <button type="submit" class="pagination-btn">Back</button>
+            </form>
+        <% } %>
+        <% if (currentPage < totalPages) { %>
+            <form method="get" style="display:inline;">
+                <input type="hidden" name="page" value="<%= currentPage + 1 %>" />
+                <button type="submit" class="pagination-btn">Next</button>
+            </form>
+        <% } %>
+    </div>
+    <form method="get" style="display:inline; float:right; margin-right:40px;">
+        <input type="hidden" name="page" value="<%= (currentPage < totalPages ? currentPage + 1 : totalPages) %>" />
+        <button type="submit" class="more-report-btn">More Report <span class="arrow">&#8594;</span></button>
+    </form>
 </div>
 
 <script>
