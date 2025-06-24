@@ -5,6 +5,11 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<% String registrationMessage = (String) session.getAttribute("registrationMessage");
+   if (registrationMessage != null) { session.removeAttribute("registrationMessage"); %>
+  <div class="alert" style="color: green; text-align: center; margin: 20px 0; font-weight: bold;"> <%= registrationMessage %> </div>
+<% } %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
