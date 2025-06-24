@@ -148,7 +148,7 @@
     <div class="resource-form-title">RESOURCE BOOKING FORM</div>
     
     <% if (request.getParameter("message") != null) { %>
-      <div class="message" style="text-align:center; padding:10px; margin: 0 24px 15px 24px; border-radius:8px; background: #d4edda; color: #155724; border: 1px solid #c3e6cb;">
+      <div class="message" style="text-align:center; padding:10px; margin: 0 24px 15px 24px; border-radius:8px; background: #red; color: #155724; border: 1px solid #c3e6cb;">
           <%= request.getParameter("message") %>
       </div>
     <% } %>

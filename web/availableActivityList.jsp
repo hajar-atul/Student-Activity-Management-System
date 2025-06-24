@@ -368,36 +368,13 @@
       <h1>AVAILABLE ACTIVITIES</h1>
     </div>
     <div class="activity-list" style="padding: 10px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; justify-items: center;">
-      <div class="activity-card">
-        <h3>KERETAPI SARONG</h3>
-        <p>12 Sept 2025</p>
-        <button>Register</button>
-      </div>
-      <div class="activity-card">
-        <h3>IT Workshop</h3>
-        <p>15 Sept 2025</p>
-        <button onclick="location.href='qrPaymentTypePage.jsp'">Register</button>
-      </div>
-      <div class="activity-card">
-        <h3>LEADERSHIP CAMP</h3>
-        <p>20 Sept 2025</p>
-        <button>Register</button>
-      </div>
-      <div class="activity-card">
-        <h3>ENTREPRENEUR TALK</h3>
-        <p>25 Sept 2025</p>
-        <button>Register</button>
-      </div>
-      <div class="activity-card">
-        <h3>FINDING NATURE</h3>
-        <p>30 Sept 2025</p>
-        <button>Register</button>
-      </div>
-      <div class="activity-card">
-        <h3>CULTURAL NIGHT</h3>
-        <p>2 OCT 2025</p>
-        <button>Register</button>
-      </div>
+      <c:forEach var="activity" items="${availableActivities}">
+        <div class="activity-card">
+          <h3>${activity.activityName}</h3>
+          <p>${activity.activityDate}</p>
+          <button class="register-btn" data-activity-id="${activity.activityID}">Register</button>
+        </div>
+      </c:forEach>
     </div>
   </div>
 
@@ -406,6 +383,14 @@
     <button class="back-btn" onclick="location.href='activities.jsp'">← Back</button>
   </div>
 </div>
+
+  <!-- Registration Modal -->
+  <div id="registerModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.4); z-index:2000; align-items:center; justify-content:center;">
+    <div id="modalContent" style="background:#fff; border-radius:16px; max-width:600px; width:90vw; margin:auto; padding:30px; position:relative;">
+      <button onclick="closeModal()" style="position:absolute; top:10px; right:20px; background:none; border:none; font-size:24px; cursor:pointer;">&times;</button>
+      <div id="modalBody">Loading...</div>
+    </div>
+  </div>
 
   <!-- Script -->
   <script>
@@ -435,6 +420,25 @@
     window.addEventListener('click', function () {
       notificationDropdown.classList.remove('show');
       profileDropdown.classList.remove('show');
+    });
+
+    // Modal logic
+    function openModal(activityID) {
+      document.getElementById('registerModal').style.display = 'flex';
+      document.getElementById('modalBody').innerHTML = 'Loading...';
+      fetch('RegisterActivityStudentServlet?activityID=' + encodeURIComponent(activityID))
+        .then(response => response.text())
+        .then(html => {
+          document.getElementById('modalBody').innerHTML = html;
+        });
+    }
+    function closeModal() {
+      document.getElementById('registerModal').style.display = 'none';
+    }
+    document.querySelectorAll('.register-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        openModal(this.getAttribute('data-activity-id'));
+      });
     });
   </script>
 

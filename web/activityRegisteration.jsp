@@ -5,6 +5,12 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page import="model.ACTIVITY, model.STUDENT, model.CLUB" %>
+<%
+  ACTIVITY activity = (ACTIVITY) request.getAttribute("activity");
+  STUDENT student = (STUDENT) request.getAttribute("student");
+  CLUB club = (CLUB) request.getAttribute("club");
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -253,20 +259,26 @@
         <h1>IT WORKSHOP</h1>
     </div>
 
-    <div class="payment-form">
-        <div class="form-group">
-            <label for="amount">Amount:</label>
-         <input type="text" id="amount" value="RM180.00" readonly />
+    <div style="max-width:500px;margin:auto;padding:20px;">
+      <form method="post" action="RegisterActivityStudentServlet">
+        <input type="hidden" name="activityID" value="<%= activity.getActivityID() %>" />
+        <h2 style="text-align:center;margin-bottom:20px;">Register for <%= activity.getActivityName() %></h2>
+        <div style="margin-bottom:10px;"><b>Organized by:</b> <%= club != null ? club.getClubName() : "-" %></div>
+        <div style="margin-bottom:10px;"><b>Description:</b> <%= activity.getActivityDesc() %></div>
+        <div style="margin-bottom:10px;"><b>Date:</b> <%= activity.getActivityDate() %></div>
+        <div style="margin-bottom:10px;"><b>Venue:</b> <%= activity.getActivityVenue() %></div>
+        <div style="margin-bottom:10px;"><b>Adab Point:</b> <%= activity.getAdabPoint() %></div>
+        <% if ("paid".equalsIgnoreCase(activity.getActivityType()) && activity.getQrImage() != null && !activity.getQrImage().isEmpty()) { %>
+          <div style="margin-bottom:10px;"><b>Payment QR:</b><br>
+            <img src="<%= activity.getQrImage() %>" alt="QR Code" style="max-width:200px;max-height:200px;display:block;margin:auto;" />
+          </div>
+        <% } %>
+        <div style="margin-bottom:10px;"><b>Student Name:</b> <input type="text" value="<%= student.getStudName() %>" readonly style="width:70%;background:#eee;border:none;padding:5px 10px;" /></div>
+        <div style="margin-bottom:20px;"><b>Student ID:</b> <input type="text" value="<%= student.getStudID() %>" readonly style="width:70%;background:#eee;border:none;padding:5px 10px;" /></div>
+        <div style="text-align:center;">
+          <button type="submit" style="background:#008b8b;color:#fff;padding:10px 30px;border:none;border-radius:20px;font-size:16px;cursor:pointer;">Register</button>
         </div>
-
-        <div class="form-group">
-            <label for="payment">Payment Method:</label>
-               <select id="payment">
-                  <option selected disabled>choose</option>
-                  <option>QR payment</option>
-                  <option>Online Transfer</option>
-               </select>
-        </div>
+      </form>
     </div>
 
   <!-- Script -->
