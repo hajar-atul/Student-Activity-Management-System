@@ -2,9 +2,11 @@ package Controller;
 
 import java.io.*;
 import java.sql.*;
+import java.util.List;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.WebServlet;
+import model.ACTIVITY;
 
 @WebServlet("/AvailableServlet")
 public class AvailableServlet extends HttpServlet {
@@ -34,14 +36,20 @@ public class AvailableServlet extends HttpServlet {
 
                 if (rs.next()) {
                     String studName = rs.getString("studName");
-                    request.setAttribute("studName", studName);
-                    request.setAttribute("studID", studID);
+                    session.setAttribute("studName", studName);
+                    session.setAttribute("studID", studID);
                 }
             }
+
+            // ✅ Use the updated method to get future available activities
+            List<ACTIVITY> availableActivities = ACTIVITY.getAvailableUpcomingActivities();
+            request.setAttribute("availableActivities", availableActivities);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+        // Forward to JSP
         request.getRequestDispatcher("availableActivityList.jsp").forward(request, response);
     }
-} 
+}

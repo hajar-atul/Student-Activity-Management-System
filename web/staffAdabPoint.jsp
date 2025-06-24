@@ -213,19 +213,16 @@
             <%= session.getAttribute("staffID") %>
         </h2>
         <div class="menu">
-            <a href="staffDashboardPage.jsp">HOME</a>
-            <a href="staffBooking.jsp">BOOKING</a>
-            <a href="staffAdabPoint.jsp">ADAB POINT</a>
-            <a href="addClub.jsp">Club Registration</a>
+            <a href="<%= request.getContextPath() %>/staffDashboardPage.jsp">HOME</a>
+            <a href="<%= request.getContextPath() %>/staffBooking.jsp">BOOKING</a>
+            <a href="<%= request.getContextPath() %>/staffAdabPoint.jsp">ADAB POINT</a>
+            <a href="<%= request.getContextPath() %>/addClub.jsp">CLUB REGISTRATION</a>
+            <a href="<%= request.getContextPath() %>/addStaff.jsp">ADD STAFF</a>
         </div>
     </div>
         
  <!-- Top Navigation Bar -->
     <div class="topbar">
-        <div class="search-container">
-            <input type="text" placeholder="Search..." />
-            <button class="search-btn">X</button>
-        </div>
         <div class="dashboard-title">ADAB POINT EVALUATION</div>
         <div class="top-icons">
             <img src="image/umpsa.png" alt="UMPSA" class="umpsa-icon">
@@ -395,7 +392,7 @@ table.adab-table th:first-child {
                         <td>1.2</td>
                     </tr>
                     <tr>
-                        <td>Zahwa Faqihah Binti Haruzan</td>
+                        <td>Zahwa Faqihah Binti Harizuan</td>
                         <td>2023288954</td>
                         <td>4</td>
                         <td><span class="badge no">No</span></td>
@@ -413,4 +410,4 @@ table.adab-table th:first-child {
             <button class="more-btn">More Student &rarr;</button>
         </div>
     </div>
-    </html> 
+    </html>

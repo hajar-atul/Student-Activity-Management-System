@@ -201,6 +201,94 @@
             font-weight: bold;
             width: 200px;
         }
+
+        .booking-actions {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .action-btn {
+            background: #007b7b;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .action-btn:hover {
+            background: #005f5f;
+        }
+
+        .booking-table-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 24px;
+            letter-spacing: 1px;
+            color: #222;
+        }
+
+        table.booking-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 1em;
+            background: #fff;
+        }
+
+        table.booking-table thead th {
+            background: #eaf6f4;
+            color: #222;
+            font-weight: 700;
+            padding: 14px 8px;
+            border: 2px solid #222;
+            text-align: center;
+        }
+
+        table.booking-table tbody td {
+            padding: 12px 8px;
+            border: 2px solid #222;
+            text-align: center;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 16px;
+            padding: 6px 18px;
+            font-weight: 600;
+            font-size: 1em;
+            margin-right: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn.view {
+            background: #1a8a7c;
+            color: #fff;
+        }
+
+        .btn.approve {
+            background: #1a8a7c;
+            color: #fff;
+        }
+
+        .btn.reject {
+            background: #e74c3c;
+            color: #fff;
+        }
+
+        .btn.view:hover, .btn.approve:hover {
+            background: #15796b;
+        }
+
+        .btn.reject:hover {
+            background: #c0392b;
+        }
     </style>
 </head>
 <body>
@@ -213,19 +301,16 @@
             <%= session.getAttribute("staffID") %>
         </h2>
         <div class="menu">
-            <a href="staffDashboardPage.jsp">HOME</a>
-            <a href="staffBooking.jsp">BOOKING</a>
-            <a href="staffAdabPoint.jsp">ADAB POINT</a>
-            <a href="addClub.jsp">Club Registration</a>
+            <a href="<%= request.getContextPath() %>/StaffDashboardServlet">HOME</a>
+            <a href="<%= request.getContextPath() %>/staffBooking.jsp">BOOKING</a>
+            <a href="<%= request.getContextPath() %>/staffAdabPoint.jsp">ADAB POINT</a>
+            <a href="<%= request.getContextPath() %>/addClub.jsp">CLUB REGISTRATION</a>
+            <a href="<%= request.getContextPath() %>/addStaff.jsp">ADD STAFF</a>
         </div>
     </div>
         
  <!-- Top Navigation Bar -->
     <div class="topbar">
-        <div class="search-container">
-            <input type="text" placeholder="Search..." />
-            <button class="search-btn">X</button>
-        </div>
         <div class="dashboard-title">BOOKING REQUEST</div>
         <div class="top-icons">
             <img src="image/umpsa.png" alt="UMPSA" class="umpsa-icon">
@@ -328,12 +413,19 @@ table.booking-table tbody td {
        <!-- Main Content -->
     <div class="content">
         <div class="booking-table-container">
-            <div class="booking-table-title">BOOKING REQUEST</div>
+            <div class="booking-table-title">OVERALL BOOKING REQUEST</div>
+            
+            <div class="booking-actions">
+                <a href="<%= request.getContextPath() %>/BookingListServlet?type=venue" class="action-btn">VENUE BOOKING</a>
+                <a href="<%= request.getContextPath() %>/BookingListServlet?type=resource" class="action-btn">RESOURCE BOOKING</a>
+            </div>
+
             <table class="booking-table">
                 <thead>
                     <tr>
-                        <th>ITEMS</th>
-                        <th>CAPACITY</th>
+                        <th>BOOKING TYPE</th>
+                        <th>ITEM/VENUE</th>
+                        <th>DETAILS</th>
                         <th>CLUB</th>
                         <th>DATE</th>
                         <th>ACTION</th>
@@ -341,52 +433,91 @@ table.booking-table tbody td {
                 </thead>
                 <tbody>
                     <tr>
+                        <td><span class="badge type-venue">Venue</span></td>
+                        <td>Dewan Serbaguna</td>
+                        <td>Duration: 3 hours</td>
+                        <td>SOCIETY</td>
+                        <td>15 JULY 2025</td>
+                        <td>
+                            <form action="<%= request.getContextPath() %>/UpdateBookingStatusServlet" method="post" style="display:inline;">
+                                <input type="hidden" name="bookingId" value="1">
+                                <input type="hidden" name="status" value="Approved">
+                                <input type="hidden" name="redirectPage" value="staffBooking.jsp">
+                                <button type="submit" class="btn approve">Approve</button>
+                            </form>
+                            <form action="<%= request.getContextPath() %>/UpdateBookingStatusServlet" method="post" style="display:inline;">
+                                <input type="hidden" name="bookingId" value="1">
+                                <input type="hidden" name="status" value="Rejected">
+                                <input type="hidden" name="redirectPage" value="staffBooking.jsp">
+                                <button type="submit" class="btn reject">Reject</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge type-resource">Resource</span></td>
                         <td>CHAIR</td>
-                        <td>100</td>
+                        <td>Quantity: 100</td>
                         <td>IT CLUB</td>
                         <td>26 JUNE 2025</td>
                         <td>
-                            <button class="btn view">View</button>
-                            <button class="btn approve">Approve</button>
-                            <button class="btn reject">Reject</button>
+                            <form action="<%= request.getContextPath() %>/UpdateBookingStatusServlet" method="post" style="display:inline;">
+                                <input type="hidden" name="bookingId" value="2">
+                                <input type="hidden" name="status" value="Approved">
+                                <input type="hidden" name="redirectPage" value="staffBooking.jsp">
+                                <button type="submit" class="btn approve">Approve</button>
+                            </form>
+                            <form action="<%= request.getContextPath() %>/UpdateBookingStatusServlet" method="post" style="display:inline;">
+                                <input type="hidden" name="bookingId" value="2">
+                                <input type="hidden" name="status" value="Rejected">
+                                <input type="hidden" name="redirectPage" value="staffBooking.jsp">
+                                <button type="submit" class="btn reject">Reject</button>
+                            </form>
                         </td>
                     </tr>
                     <tr>
+                        <td><span class="badge type-resource">Resource</span></td>
                         <td>CURTAINS</td>
-                        <td>5</td>
+                        <td>Quantity: 5</td>
                         <td>EACC CLUB</td>
                         <td>12 JULY 2025</td>
                         <td>
-                            <button class="btn view">View</button>
-                            <button class="btn approve">Approve</button>
-                            <button class="btn reject">Reject</button>
+                            <form action="<%= request.getContextPath() %>/UpdateBookingStatusServlet" method="post" style="display:inline;">
+                                <input type="hidden" name="bookingId" value="3">
+                                <input type="hidden" name="status" value="Approved">
+                                <input type="hidden" name="redirectPage" value="staffBooking.jsp">
+                                <button type="submit" class="btn approve">Approve</button>
+                            </form>
+                            <form action="<%= request.getContextPath() %>/UpdateBookingStatusServlet" method="post" style="display:inline;">
+                                <input type="hidden" name="bookingId" value="3">
+                                <input type="hidden" name="status" value="Rejected">
+                                <input type="hidden" name="redirectPage" value="staffBooking.jsp">
+                                <button type="submit" class="btn reject">Reject</button>
+                            </form>
                         </td>
                     </tr>
                     <tr>
-                        <td>TABLE CLOTH</td>
-                        <td>4</td>
-                        <td>SOCIETY</td>
-                        <td>15 JULY 2025</td>
+                        <td><span class="badge type-venue">Venue</span></td>
+                        <td>Dewan Aspirasi</td>
+                        <td>Duration: 2 hours</td>
+                        <td>EACC CLUB</td>
+                        <td>18 JULY 2025</td>
                         <td>
-                            <button class="btn view">View</button>
-                            <button class="btn approve">Approve</button>
-                            <button class="btn reject">Reject</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>ROUND TABLE</td>
-                        <td>4</td>
-                        <td>SOCIETY</td>
-                        <td>15 JULY 2025</td>
-                        <td>
-                            <button class="btn view">View</button>
-                            <button class="btn approve">Approve</button>
-                            <button class="btn reject">Reject</button>
+                            <form action="<%= request.getContextPath() %>/UpdateBookingStatusServlet" method="post" style="display:inline;">
+                                <input type="hidden" name="bookingId" value="4">
+                                <input type="hidden" name="status" value="Approved">
+                                <input type="hidden" name="redirectPage" value="staffBooking.jsp">
+                                <button type="submit" class="btn approve">Approve</button>
+                            </form>
+                            <form action="<%= request.getContextPath() %>/UpdateBookingStatusServlet" method="post" style="display:inline;">
+                                <input type="hidden" name="bookingId" value="4">
+                                <input type="hidden" name="status" value="Rejected">
+                                <input type="hidden" name="redirectPage" value="staffBooking.jsp">
+                                <button type="submit" class="btn reject">Reject</button>
+                            </form>
                         </td>
                     </tr>
                 </tbody>
             </table>
-            <button class="more-request-btn">More Request &rarr;</button>
         </div>
     </div>
 </html>

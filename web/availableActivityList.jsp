@@ -357,44 +357,36 @@
   <!-- Content -->
   <div class="content" id="content" style="height: calc(100vh - 100px); display: flex; flex-direction: column; justify-content: space-between; overflow: hidden;">
 
-  <!-- Header dan Aktiviti -->
-  <div>
-    <div class="activity-header">
-      <h1>AVAILABLE ACTIVITIES</h1>
-    </div>
-    <div class="activity-list" style="padding: 10px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; justify-items: center;">
-      <div class="activity-card">
-        <h3>KERETAPI SARONG</h3>
-        <p>12 Sept 2025</p>
-        <button>Register</button>
-      </div>
-      <div class="activity-card">
-        <h3>IT Workshop</h3>
-        <p>15 Sept 2025</p>
-        <button onclick="location.href='qrPaymentTypePage.jsp'">Register</button>
-      </div>
-      <div class="activity-card">
-        <h3>LEADERSHIP CAMP</h3>
-        <p>20 Sept 2025</p>
-        <button>Register</button>
-      </div>
-      <div class="activity-card">
-        <h3>ENTREPRENEUR TALK</h3>
-        <p>25 Sept 2025</p>
-        <button>Register</button>
-      </div>
-      <div class="activity-card">
-        <h3>FINDING NATURE</h3>
-        <p>30 Sept 2025</p>
-        <button>Register</button>
-      </div>
-      <div class="activity-card">
-        <h3>CULTURAL NIGHT</h3>
-        <p>2 OCT 2025</p>
-        <button>Register</button>
-      </div>
-    </div>
+ <!-- Header and Activities -->
+<div>
+  <div class="activity-header">
+    <h1>AVAILABLE ACTIVITIES</h1>
   </div>
+  <div class="activity-list" style="padding: 10px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; justify-items: center;">
+    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+    <c:choose>
+      <c:when test="${not empty availableActivities}">
+        <c:forEach var="activity" items="${availableActivities}">
+          <div class="activity-card">
+            <h3>${activity.activityName}</h3>
+            <p><strong>Date:</strong> ${activity.activityDate}</p>
+            <p><strong>Venue:</strong> ${activity.activityVenue}</p>
+            <p><strong>Description:</strong> ${activity.activityDesc}</p>
+            <form action="RegisterActivityServlet" method="post">
+              <input type="hidden" name="activityID" value="${activity.activityID}">
+              <button type="submit">Register</button>
+            </form>
+          </div>
+        </c:forEach>
+      </c:when>
+      <c:otherwise>
+        <div style="grid-column: 1 / -1; text-align: center; font-size: 18px; color: #888;">
+          No activity available
+        </div>
+      </c:otherwise>
+    </c:choose>
+  </div>
+</div>
 
   <!-- Butang back bawah kiri -->
   <div style="text-align: left; padding: 10px 30px;">

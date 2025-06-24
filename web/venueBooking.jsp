@@ -1,194 +1,242 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.util.List" %>
+<%@ page import="model.BOOKING" %>
+<%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Venue Booking Form</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Poppins', Arial, sans-serif;
-      background: #e6f2ff;
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-    }
-    .header-bar {
-      background: #009688;
-      color: #fff;
-      padding: 18px 32px 10px 32px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .header-bar h1 {
-      font-size: 2.2em;
-      font-weight: bold;
-      margin: 0;
-    }
-    .header-icons {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-    }
-    .header-icons img {
-      height: 38px;
-      width: 38px;
-      border-radius: 50%;
-      background: #fff;
-      padding: 4px;
-    }
-    .venue-form-container {
-      background: #f4f4f4;
-      max-width: 700px;
-      margin: 40px auto;
-      border-radius: 18px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
-      padding: 0 0 32px 0;
-      border: 2px solid #ccc;
-      height: 420px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-    .venue-form-title {
-      text-align: center;
-      color: #111;
-      font-size: 2em;
-      font-weight: bold;
-      padding: 24px 0 10px 0;
-      letter-spacing: 1px;
-    }
-    form {
-      background: #f4f4f4;
-      border-radius: 12px;
-      margin: 0 24px;
-      padding: 18px 0 0 0;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 22px 32px;
-      box-sizing: border-box;
-      justify-content: space-between;
-      align-items: flex-start;
-      height: 260px;
-    }
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      flex: 1 1 45%;
-      min-width: 220px;
-      max-width: 320px;
-    }
-    .form-group label {
-      font-weight: 600;
-      color: #222;
-      margin-bottom: 2px;
-    }
-    .form-group input[type="text"],
-    .form-group input[type="date"],
-    .form-group input[type="time"] {
-      padding: 10px 16px;
-      border: 1.5px solid #bbb;
-      border-radius: 18px;
-      font-size: 1em;
-      background: #fff;
-      font-family: 'Poppins', Arial, sans-serif;
-      outline: none;
-      transition: border 0.2s;
-    }
-    .form-group input[type="text"]:focus,
-    .form-group input[type="date"]:focus,
-    .form-group input[type="time"]:focus {
-      border: 1.5px solid #009688;
-    }
-    .form-group select {
-      padding: 10px 16px;
-      border: 1.5px solid #bbb;
-      border-radius: 18px;
-      font-size: 1em;
-      background: #fff;
-      font-family: 'Poppins', Arial, sans-serif;
-      outline: none;
-      appearance: none;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      cursor: pointer;
-      margin-bottom: 0;
-      transition: border 0.2s;
-    }
-    .form-group select:focus {
-      border: 1.5px solid #009688;
-    }
-    .submit-btn {
-      background: #002aff;
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      font-size: 1.2em;
-      font-weight: bold;
-      padding: 16px 0;
-      margin-top: 18px;
-      width: 100%;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.2s;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      letter-spacing: 1px;
-      align-self: flex-end;
-      max-width: 320px;
-    }
-    .submit-btn:hover {
-      background: #001a99;
-      transform: translateY(-2px) scale(1.03);
-    }
-    @media (max-width: 600px) {
-      .venue-form-container {
-        margin: 18px 6px;
-        max-width: 98vw;
-      }
-      form {
-        margin: 0 6px;
-        padding: 12px 0 0 0;
-      }
-    }
-  </style>
+    <title>Venue Booking Requests</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            background-color: #f0f0f0;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #008b8b;
+            color: white;
+            padding: 20px;
+            height: 100vh;
+        }
+
+        .sidebar img {
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            font-size: 14px;
+            margin: 10px 0 0;
+        }
+
+        .menu {
+            margin-top: 30px;
+        }
+
+        .menu a {
+            display: block;
+            padding: 10px;
+            background-color: #0a6d6d;
+            margin-top: 10px;
+            text-decoration: none;
+            color: white;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 250px;
+            right: 0;
+            height: 60px;
+            background-color: #008b8b;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 1000;
+        }
+        
+        .dashboard-title {
+            font-size: 22px;
+            font-weight: bold;
+            flex-grow: 1;
+            text-align: center;
+            margin-left: 50px;
+        }
+
+        .top-icons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .top-icons img.umpsa-icon {
+            width: 36px;
+            height: 36px;
+        }
+
+        .profile-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 100px 40px 40px 40px;
+            margin-left: 250px;
+        }
+
+        .booking-table-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 24px;
+            color: #222;
+        }
+
+        table.booking-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+        }
+
+        table.booking-table thead th {
+            background: #eaf6f4;
+            color: #222;
+            font-weight: 700;
+            padding: 14px 8px;
+            border: 2px solid #222;
+            text-align: center;
+        }
+
+        table.booking-table tbody td {
+            padding: 12px 8px;
+            border: 2px solid #222;
+            text-align: center;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 16px;
+            padding: 6px 18px;
+            font-weight: 600;
+            font-size: 1em;
+            margin-right: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn.approve { background: #1a8a7c; color: #fff; }
+        .btn.reject { background: #e74c3c; color: #fff; }
+        .btn.approve:hover { background: #15796b; }
+        .btn.reject:hover { background: #c0392b; }
+    </style>
 </head>
 <body>
-  <div class="header-bar">
-    <h1>Venue Booking</h1>
-    <div class="header-icons">
-      <img src="image/umpsa.png" alt="UMPSA" />
-      <img src="image/bell.png" alt="Notifications" />
-      <img src="image/Raccoon.gif" alt="Profile" />
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <img src="image/staff.jpg" alt="Profile Picture">
+        <h2>
+            <%= session.getAttribute("staffName") %><br>
+            <%= session.getAttribute("staffID") %>
+        </h2>
+        <div class="menu">
+            <a href="<%= request.getContextPath() %>/StaffDashboardServlet">HOME</a>
+            <a href="<%= request.getContextPath() %>/staffBooking.jsp">BOOKING</a>
+            <a href="<%= request.getContextPath() %>/staffAdabPoint.jsp">ADAB POINT</a>
+            <a href="<%= request.getContextPath() %>/addClub.jsp">CLUB REGISTRATION</a>
+            <a href="<%= request.getContextPath() %>/addStaff.jsp">ADD STAFF</a>
+        </div>
     </div>
-  </div>
-  <div class="venue-form-container">
-    <div class="venue-form-title">VENUE BOOKING FORM</div>
-    <form action="VenueBookingServlet" method="post">
-      <div class="form-group">
-        <label for="date">Date</label>
-        <input type="date" id="date" name="date" required />
-      </div>
-      <div class="form-group">
-        <label for="duration">Duration</label>
-        <input type="text" id="duration" name="duration" placeholder="" required />
-      </div>
-      <div class="form-group">
-        <label for="time">Time</label>
-        <input type="text" id="time" name="time" placeholder="" required />
-      </div>
-      <div class="form-group">
-        <label for="venueName">Venue Name</label>
-        <select id="venueName" name="venueName" required>
-          <option value="Dewan Serbaguna">Dewan Serbaguna</option>
-          <option value="Dewan Aspirasi">Dewan Aspirasi</option>
-          <option value="Dewan Tengku Hassanal">Dewan Tengku Hassanal</option>
-          <option value="Dewan Chanselor">Dewan Chanselor</option>
-          <option value="Dewan Ibnu Battuta">Dewan Ibnu Battuta</option>
-        </select>
-      </div>
-      <button type="submit" class="submit-btn">Submit</button>
-    </form>
-  </div>
+        
+    <!-- Top Navigation Bar -->
+    <div class="topbar">
+        <div class="dashboard-title">VENUE BOOKING REQUEST</div>
+        <div class="top-icons">
+            <img src="image/umpsa.png" alt="UMPSA" class="umpsa-icon">
+            <img src="image/staff.jpg" alt="Profile" class="profile-icon">
+        </div>
+    </div>
+ 
+    <!-- Main Content -->
+    <div class="content">
+        <div class="booking-table-container">
+            <div class="booking-table-title">VENUE BOOKING REQUESTS</div>
+            <table class="booking-table">
+                <thead>
+                    <tr>
+                        <th>VENUE NAME</th>
+                        <th>CLUB</th>
+                        <th>DATE</th>
+                        <th>TIME</th>
+                        <th>DURATION</th>
+                        <th>ACTION</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% 
+                        List<BOOKING> bookings = (List<BOOKING>) request.getAttribute("bookings");
+                        if (bookings != null && !bookings.isEmpty()) {
+                            for (BOOKING booking : bookings) {
+                    %>
+                    <tr>
+                        <td><%= booking.getItemName() %></td>
+                        <td><%= booking.getClubName() %></td>
+                        <td><%= booking.getBookingDate() %></td>
+                        <%
+                            String itemDetails = booking.getItemDetails();
+                            String time = "N/A";
+                            String duration = "N/A";
+
+                            if (itemDetails != null) {
+                                String[] parts = itemDetails.split(",");
+                                for (String part : parts) {
+                                    part = part.trim();
+                                    if (part.startsWith("Time:")) {
+                                        time = part.substring(part.indexOf(":") + 1).trim();
+                                    } else if (part.startsWith("Duration:")) {
+                                        duration = part.substring(part.indexOf(":") + 1).trim();
+                                    }
+                                }
+                            }
+                        %>
+                        <td><%= time %></td>
+                        <td><%= duration %></td>
+                        <td>
+                            <form action="<%= request.getContextPath() %>/UpdateBookingStatusServlet" method="post" style="display:inline;">
+                                <input type="hidden" name="bookingId" value="<%= booking.getBookingID() %>">
+                                <input type="hidden" name="status" value="Approved">
+                                <input type="hidden" name="redirectPage" value="<%= request.getContextPath() %>/BookingListServlet?type=venue">
+                                <button type="submit" class="btn approve">Approve</button>
+                            </form>
+                            <form action="<%= request.getContextPath() %>/UpdateBookingStatusServlet" method="post" style="display:inline;">
+                                <input type="hidden" name="bookingId" value="<%= booking.getBookingID() %>">
+                                <input type="hidden" name="status" value="Rejected">
+                                <input type="hidden" name="redirectPage" value="<%= request.getContextPath() %>/BookingListServlet?type=venue">
+                                <button type="submit" class="btn reject">Reject</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <% 
+                            }
+                        } else {
+                    %>
+                    <tr>
+                        <td colspan="6">No pending venue booking requests found.</td>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </body>
-</html> 
+</html>

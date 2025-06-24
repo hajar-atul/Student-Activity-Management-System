@@ -5,6 +5,8 @@ import java.sql.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.WebServlet;
+import model.ACTIVITY;
+import java.util.List;
 
 @WebServlet("/CurrentServlet")
 public class CurrentServlet extends HttpServlet {
@@ -41,6 +43,10 @@ public class CurrentServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        // Fetch current activities and set as request attribute
+        List<ACTIVITY> currentActivities = ACTIVITY.getCurrentActivities();
+        request.setAttribute("currentActivities", currentActivities);
 
         request.setAttribute("studName", studName);
         request.setAttribute("studID", studID);

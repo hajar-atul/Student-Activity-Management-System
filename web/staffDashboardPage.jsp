@@ -69,31 +69,6 @@
             z-index: 1000;
         }
 
-        .search-container {
-            display: flex;
-            align-items: center;
-            margin-left: 30px;
-        }
-
-        .search-container input {
-            padding: 6px 10px;
-            border-radius: 20px;
-            border: none;
-            outline: none;
-            width: 180px;
-        }
-
-        .search-btn {
-            background: white;
-            border: none;
-            margin-left: -30px;
-            cursor: pointer;
-            font-weight: bold;
-            border-radius: 50%;
-            padding: 4px 8px;
-            color: #009B9D;
-        }
-
         .dashboard-title {
             font-size: 22px;
             font-weight: bold;
@@ -213,19 +188,16 @@
             <%= session.getAttribute("staffID") %>
         </h2>
         <div class="menu">
-            <a href="staffDashboardPage.jsp">HOME</a>
-            <a href="staffBooking.jsp">BOOKING</a>
-            <a href="staffAdabPoint.jsp">ADAB POINT</a>
-            <a href="addClub.jsp">Club Registration</a>
+            <a href="<%= request.getContextPath() %>/StaffDashboardServlet">HOME</a>
+            <a href="<%= request.getContextPath() %>/staffBooking.jsp">BOOKING</a>
+            <a href="<%= request.getContextPath() %>/staffAdabPoint.jsp">ADAB POINT</a>
+            <a href="<%= request.getContextPath() %>/addClub.jsp">CLUB REGISTRATION</a>
+            <a href="<%= request.getContextPath() %>/addStaff.jsp">ADD STAFF</a>
         </div>
     </div>
         
  <!-- Top Navigation Bar -->
     <div class="topbar">
-        <div class="search-container">
-            <input type="text" placeholder="Search..." />
-            <button class="search-btn">X</button>
-        </div>
         <div class="dashboard-title">STAFF DASHBOARD</div>
         <div class="top-icons">
             <img src="image/umpsa.png" alt="UMPSA" class="umpsa-icon">
@@ -241,6 +213,13 @@
  
     
     <div class="content">
+        <!-- Error Message Display -->
+        <% if (request.getAttribute("dashboardError") != null) { %>
+            <div style="background:#ffdddd; border:1px solid #ff0000; color:#d8000c; padding:15px; margin:0 auto 24px auto; max-width:900px; border-radius:8px;">
+                <strong>Error:</strong> <%= request.getAttribute("dashboardError") %>
+            </div>
+        <% } %>
+    
         <!-- Welcome Card -->
         <div style="background:#fff; border-radius:16px; box-shadow:0 2px 12px rgba(0,0,0,0.07); padding:24px 40px; display:flex; align-items:center; gap:24px; max-width:900px; margin:0 auto 24px auto;">
             <img src="image/staff.jpg" alt="Staff" style="width:80px; height:80px; border-radius:50%; object-fit:cover; border:3px solid #008b8b;">
@@ -253,21 +232,14 @@
         
         <div style="display:flex; gap:24px; max-width:900px; margin:0 auto 24px auto;">
             <div style="flex:1; background:#eaf6f4; border-radius:12px; padding:24px 0; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
-                <h3 style="margin:0 0 8px 0; font-size:2em; color:#008b8b;">3</h3>
-                <p style="margin:0; color:#444; font-weight:bold;">Pending Proposals</p>
-            </div>
-            <div style="flex:1; background:#eaf6f4; border-radius:12px; padding:24px 0; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
-                <h3 style="margin:0 0 8px 0; font-size:2em; color:#008b8b;">5</h3>
+                <h3 style="margin:0 0 8px 0; font-size:2em; color:#008b8b;"><%= request.getAttribute("bookingRequests") != null ? request.getAttribute("bookingRequests") : "0" %></h3>
                 <p style="margin:0; color:#444; font-weight:bold;">Booking Requests</p>
             </div>
             <div style="flex:1; background:#eaf6f4; border-radius:12px; padding:24px 0; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
-                <h3 style="margin:0 0 8px 0; font-size:2em; color:#008b8b;">12</h3>
+                <h3 style="margin:0 0 8px 0; font-size:2em; color:#008b8b;"><%= request.getAttribute("approvedBookings") != null ? request.getAttribute("approvedBookings") : "0" %></h3>
                 <p style="margin:0; color:#444; font-weight:bold;">Approved Bookings</p>
             </div>
         </div>
-       <div style="margin-top:18px; text-align:right;">
-    <a href="staffAnnouncement.jsp" style="display:inline-block; text-decoration:none; border:none; border-radius:16px; padding:8px 28px; font-weight:600; font-size:1em; background:#008b8b; color:#fff; cursor:pointer; transition:background 0.2s;">
-        Create New Announcement
-    </a>
-</div>
-    </html>
+    </div>
+</body>
+</html>

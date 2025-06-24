@@ -488,4 +488,173 @@ public class ACTIVITY {
         // Format as 'A001', 'A002', etc.
         return String.format("A%03d", nextNum);
     }
+    
+    // Get only available activities (e.g., activityStatus = 'Available')
+public static java.util.List<ACTIVITY> getAvailableActivities() {
+    java.util.List<ACTIVITY> activities = new java.util.ArrayList<>();
+    try {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        try (java.sql.Connection conn = java.sql.DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "SELECT * FROM activity WHERE activityStatus = 'Available'";
+            java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
+            java.sql.ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                ACTIVITY activity = new ACTIVITY();
+                activity.setActivityID(rs.getString("activityID"));
+                activity.setActivityName(rs.getString("activityName"));
+                activity.setActivityType(rs.getString("activityType"));
+                activity.setActivityDesc(rs.getString("activityDesc"));
+                activity.setActivityDate(rs.getString("activityDate"));
+                activity.setActivityVenue(rs.getString("activityVenue"));
+                activity.setActivityStatus(rs.getString("activityStatus"));
+                activity.setActivityBudget(rs.getDouble("activityBudget"));
+                activity.setAdabPoint(rs.getInt("adabPoint"));
+                activity.setProposalFile(rs.getString("proposalFile"));
+                activity.setQrImage(rs.getString("qrImage"));
+                activity.setClubID(rs.getInt("clubID"));
+                activities.add(activity);
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return activities;
+}
+
+// Get available future activities (status = 'approved' AND date >= today)
+public static java.util.List<ACTIVITY> getAvailableUpcomingActivities() {
+    java.util.List<ACTIVITY> activities = new java.util.ArrayList<>();
+    try {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        try (java.sql.Connection conn = java.sql.DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "SELECT * FROM activity WHERE LOWER(TRIM(activityStatus)) = 'approved' AND activityDate >= CURDATE() ORDER BY activityDate ASC";
+            try (java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
+                 java.sql.ResultSet rs = stmt.executeQuery()) {
+
+                while (rs.next()) {
+                    ACTIVITY activity = new ACTIVITY();
+                    activity.setActivityID(rs.getString("activityID"));
+                    activity.setActivityName(rs.getString("activityName"));
+                    activity.setActivityType(rs.getString("activityType"));
+                    activity.setActivityDesc(rs.getString("activityDesc"));
+                    activity.setActivityDate(rs.getString("activityDate"));
+                    activity.setActivityVenue(rs.getString("activityVenue"));
+                    activity.setActivityStatus(rs.getString("activityStatus"));
+                    activity.setActivityBudget(rs.getDouble("activityBudget"));
+                    activity.setAdabPoint(rs.getInt("adabPoint"));
+                    activity.setProposalFile(rs.getString("proposalFile"));
+                    activity.setQrImage(rs.getString("qrImage"));
+                    activity.setClubID(rs.getInt("clubID"));
+                    activities.add(activity);
+                }
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return activities;
+}
+
+// Get activities held today or in the last 3 days
+public static java.util.List<ACTIVITY> getCurrentActivities() {
+    java.util.List<ACTIVITY> activities = new java.util.ArrayList<>();
+    try {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        try (java.sql.Connection conn = java.sql.DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "SELECT * FROM activity WHERE activityDate BETWEEN DATE_SUB(CURDATE(), INTERVAL 3 DAY) AND CURDATE() ORDER BY activityDate DESC";
+            try (java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
+                 java.sql.ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    ACTIVITY activity = new ACTIVITY();
+                    activity.setActivityID(rs.getString("activityID"));
+                    activity.setActivityName(rs.getString("activityName"));
+                    activity.setActivityType(rs.getString("activityType"));
+                    activity.setActivityDesc(rs.getString("activityDesc"));
+                    activity.setActivityDate(rs.getString("activityDate"));
+                    activity.setActivityVenue(rs.getString("activityVenue"));
+                    activity.setActivityStatus(rs.getString("activityStatus"));
+                    activity.setActivityBudget(rs.getDouble("activityBudget"));
+                    activity.setAdabPoint(rs.getInt("adabPoint"));
+                    activity.setProposalFile(rs.getString("proposalFile"));
+                    activity.setQrImage(rs.getString("qrImage"));
+                    activity.setClubID(rs.getInt("clubID"));
+                    activities.add(activity);
+                }
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return activities;
+}
+
+// Get all activities a student has joined
+public static java.util.List<ACTIVITY> getActivitiesByStudentId(String studID) {
+    java.util.List<ACTIVITY> activities = new java.util.ArrayList<>();
+    try {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        try (java.sql.Connection conn = java.sql.DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "SELECT a.* FROM activity a INNER JOIN registeration r ON a.activityID = r.activityID WHERE r.studID = ?";
+            try (java.sql.PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, studID);
+                try (java.sql.ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        ACTIVITY activity = new ACTIVITY();
+                        activity.setActivityID(rs.getString("activityID"));
+                        activity.setActivityName(rs.getString("activityName"));
+                        activity.setActivityDate(rs.getString("activityDate"));
+                        activity.setActivityStatus(rs.getString("activityStatus"));
+                        activity.setClubID(rs.getInt("clubID"));
+                        activities.add(activity);
+                    }
+                }
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return activities;
+}
+
+// Get the count of unique clubs a student has joined
+public static int getClubCountByStudentId(String studID) {
+    int count = 0;
+    try {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        try (java.sql.Connection conn = java.sql.DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "SELECT COUNT(DISTINCT a.clubID) FROM activity a INNER JOIN registeration r ON a.activityID = r.activityID WHERE r.studID = ?";
+            try (java.sql.PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, studID);
+                try (java.sql.ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) {
+                        count = rs.getInt(1);
+                    }
+                }
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return count;
+}
+
+public static int getAdabPointByActivityId(int activityID) {
+    int adabPoint = 0;
+    try {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        try (java.sql.Connection conn = java.sql.DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "SELECT adabPoint FROM activity WHERE activityID = ?";
+            java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, activityID);
+            java.sql.ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                adabPoint = rs.getInt("adabPoint");
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return adabPoint;
+}
+
 }

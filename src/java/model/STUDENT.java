@@ -268,6 +268,18 @@ public class STUDENT {
     return -1; // return -1 if no upcoming event is found
 }
 
+    public static boolean incrementAdabPoint(int studID, int increment) {
+        String sql = "UPDATE adab_point SET adab_point = adab_point + ? WHERE studId = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, increment);
+            pstmt.setInt(2, studID);
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     // ------------------- Getters and Setters -------------------
     public int getStudID() { return studID; }

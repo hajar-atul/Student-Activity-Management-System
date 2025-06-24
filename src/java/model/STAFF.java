@@ -129,4 +129,24 @@ public class STAFF {
         }
         return false;
     }
+
+    // Add new staff method
+    public static boolean addNewStaff(int staffID, String staffName, String staffEmail, String staffPhone, String staffDep, String staffPassword) {
+        String query = "INSERT INTO staff (staffID, staffName, staffEmail, staffPhone, staffDep, staffPassword) VALUES (?, ?, ?, ?, ?, ?)";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, staffID);
+            pstmt.setString(2, staffName);
+            pstmt.setString(3, staffEmail);
+            pstmt.setString(4, staffPhone);
+            pstmt.setString(5, staffDep);
+            pstmt.setString(6, staffPassword);
+            
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

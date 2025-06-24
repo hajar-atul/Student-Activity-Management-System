@@ -133,6 +133,9 @@ public class LoginServlet extends HttpServlet {
                     session.setAttribute("studCourse", student.getStudCourse());
                     session.setAttribute("studSemester", student.getStudSemester());
                     session.setAttribute("studNoPhone", student.getStudNoPhone());
+                    session.setAttribute("dob", student.getDob());
+                    session.setAttribute("muetStatus", student.getMuetStatus());
+                    session.setAttribute("advisor", student.getAdvisor());
                     switch (student.getStudType()) {
                         case "student":
                         case "admin":

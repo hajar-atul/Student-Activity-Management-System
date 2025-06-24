@@ -5,6 +5,8 @@ import java.sql.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.WebServlet;
+import model.ACTIVITY;
+import java.util.List;
 
 @WebServlet("/PastServlet")
 public class PastServlet extends HttpServlet {
@@ -38,6 +40,12 @@ public class PastServlet extends HttpServlet {
                     request.setAttribute("studID", studID);
                 }
             }
+            // Fetch joined activities and club count
+            List<ACTIVITY> joinedActivities = ACTIVITY.getActivitiesByStudentId(studID);
+            int clubCount = ACTIVITY.getClubCountByStudentId(studID);
+            request.setAttribute("joinedActivities", joinedActivities);
+            request.setAttribute("totalActivities", joinedActivities.size());
+            request.setAttribute("clubCount", clubCount);
         } catch (Exception e) {
             e.printStackTrace();
         }
