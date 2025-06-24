@@ -1,7 +1,7 @@
 <%-- 
     Document   : addStaff
-    Created on : Jun 17, 2025, 6:02:34 PM
-    Author     : semaaa
+    Created on : Jun 24, 2025, 10:01:35 PM
+    Author     : sema
 --%>
 
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
@@ -12,9 +12,10 @@
     <style>
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
             display: flex;
-            background-color: #f0f0f0;
+            background: linear-gradient(135deg, #e0f7fa 0%, #f0f0f0 100%);
+            min-height: 100vh;
             overflow: hidden;
         }
 
@@ -97,84 +98,103 @@
 
         .content {
             flex-grow: 1;
-            padding: 80px 40px 20px 40px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding-left: 6vw;
+            padding-right: 2vw;
             margin-left: 250px;
         }
 
         .form-container {
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.07);
-            padding: 25px 40px;
-            max-width: 600px;
-            margin: 0 auto;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,139,139,0.10), 0 1.5px 6px rgba(0,0,0,0.04);
+            padding: 40px 48px 32px 48px;
+            max-width: 480px;
+            width: 100%;
+            margin: 40px 0;
+            position: relative;
+            transition: box-shadow 0.3s;
         }
-
+        .form-container:hover {
+            box-shadow: 0 12px 40px rgba(0,139,139,0.18), 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .form-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+        .form-header img {
+            width: 38px;
+            height: 38px;
+        }
         .form-container h1 {
             color: #008b8b;
-            margin-top: 0;
-            margin-bottom: 20px;
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 700;
             text-align: center;
         }
-
         .form-group {
-            margin-bottom: 12px;
+            margin-bottom: 18px;
         }
-
         .form-group label {
             display: block;
-            margin-bottom: 6px;
-            font-weight: bold;
-            color: #333;
+            margin-bottom: 7px;
+            font-weight: 600;
+            color: #008b8b;
+            letter-spacing: 0.5px;
         }
-
         .form-group input, .form-group select {
             width: 100%;
-            padding: 8px 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 15px;
+            padding: 10px 14px;
+            border: 1.5px solid #b2dfdb;
+            border-radius: 10px;
+            font-size: 16px;
+            background: #f8fdfd;
             box-sizing: border-box;
-            transition: border-color 0.3s;
+            transition: border-color 0.3s, box-shadow 0.3s;
         }
-
         .form-group input:focus, .form-group select:focus {
             outline: none;
             border-color: #008b8b;
+            box-shadow: 0 0 0 2px #b2dfdb55;
         }
-
         .submit-btn {
-            background: #008b8b;
+            background: linear-gradient(90deg, #008b8b 60%, #00bfae 100%);
             color: white;
             border: none;
-            padding: 10px 30px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
+            padding: 12px 0;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 700;
             cursor: pointer;
             width: 100%;
-            margin-top: 20px;
-            transition: background-color 0.3s;
+            margin-top: 10px;
+            box-shadow: 0 2px 8px rgba(0,139,139,0.08);
+            letter-spacing: 0.5px;
+            transition: background 0.3s, box-shadow 0.3s;
         }
-
         .submit-btn:hover {
-            background: #0a6d6d;
+            background: linear-gradient(90deg, #0a6d6d 60%, #00bfae 100%);
+            box-shadow: 0 4px 16px rgba(0,139,139,0.13);
         }
-
         .message {
             padding: 12px;
-            margin: 20px 0;
+            margin: 20px 0 10px 0;
             border-radius: 8px;
             text-align: center;
             font-weight: bold;
         }
-
         .success {
             background: #d4edda;
             color: #155724;
             border: 1px solid #c3e6cb;
         }
-
         .error {
             background: #f8d7da;
             color: #721c24;
@@ -183,6 +203,22 @@
     </style>
 </head>
 <body>
+
+    <!-- Decorative Background Elements -->
+    <div style="position: fixed; z-index: 0; left: 0; top: 0; width: 100vw; height: 100vh; pointer-events: none; overflow: hidden;">
+        <!-- Blurred Circles -->
+        <div style="position: absolute; left: 10vw; top: 10vh; width: 220px; height: 220px; background: #00bfae44; border-radius: 50%; filter: blur(60px);"></div>
+        <div style="position: absolute; right: 8vw; top: 30vh; width: 180px; height: 180px; background: #008b8b33; border-radius: 50%; filter: blur(50px);"></div>
+        <div style="position: absolute; left: 20vw; bottom: 8vh; width: 160px; height: 160px; background: #ffd70033; border-radius: 50%; filter: blur(60px);"></div>
+        <!-- Additional Decorative Circles -->
+        <div style="position: absolute; left: 2vw; top: 2vh; width: 120px; height: 120px; background: #008b8b22; border-radius: 50%; filter: blur(40px);"></div>
+        <div style="position: absolute; right: 2vw; top: 6vh; width: 90px; height: 90px; background: #00bfae22; border-radius: 50%; filter: blur(30px);"></div>
+        <div style="position: absolute; left: 4vw; bottom: 4vh; width: 100px; height: 100px; background: #ffd70022; border-radius: 50%; filter: blur(30px);"></div>
+        <!-- Faint Logo Watermark -->
+        <img src="image/logoUMP.jpg" alt="UMPSA Logo" style="position: absolute; right: 5vw; bottom: 5vh; width: 320px; opacity: 0.07; z-index: 1; pointer-events: none;">
+        <!-- Faint Tagline -->
+        <div style="position: absolute; left: 0; top: 50%; width: 100vw; text-align: center; transform: rotate(-8deg) translateY(-50%); font-size: 2.8vw; color: #008b8b11; font-weight: bold; letter-spacing: 2px; user-select: none; pointer-events: none;">Empowering Staff, Enriching Campus Life</div>
+    </div>
 
     <!-- Sidebar -->
     <div class="sidebar">
@@ -211,7 +247,10 @@
  
     <div class="content">
         <div class="form-container">
-            <h1>Add New Staff</h1>
+            <div class="form-header">
+                <img src="image/userIcon.png" alt="User Icon">
+                <h1>Add New Staff</h1>
+            </div>
             
             <% if (request.getParameter("success") != null) { %>
                 <div class="message success">
@@ -228,22 +267,22 @@
             <form action="<%= request.getContextPath() %>/AddStaffServlet" method="post">
                 <div class="form-group">
                     <label for="staffID">Staff ID:</label>
-                    <input type="number" id="staffID" name="staffID" required>
+                    <input type="number" id="staffID" name="staffID" required placeholder="Enter staff ID">
                 </div>
                 
                 <div class="form-group">
                     <label for="staffName">Staff Name:</label>
-                    <input type="text" id="staffName" name="staffName" required>
+                    <input type="text" id="staffName" name="staffName" required placeholder="Enter full name">
                 </div>
                 
                 <div class="form-group">
                     <label for="staffEmail">Staff Email:</label>
-                    <input type="email" id="staffEmail" name="staffEmail" required>
+                    <input type="email" id="staffEmail" name="staffEmail" required placeholder="e.g. staff@university.edu">
                 </div>
                 
                 <div class="form-group">
                     <label for="staffPhone">Staff Phone:</label>
-                    <input type="tel" id="staffPhone" name="staffPhone" required>
+                    <input type="tel" id="staffPhone" name="staffPhone" required placeholder="e.g. 012-3456789">
                 </div>
                 
                 <div class="form-group">
@@ -264,7 +303,7 @@
                 
                 <div class="form-group">
                     <label for="staffPassword">Staff Password:</label>
-                    <input type="password" id="staffPassword" name="staffPassword" required>
+                    <input type="password" id="staffPassword" name="staffPassword" required placeholder="Create a password">
                 </div>
                 
                 <button type="submit" class="submit-btn">Add Staff</button>
@@ -273,4 +312,4 @@
     </div>
 
 </body>
-</html> 
+</html>
