@@ -1,4 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.util.List, model.PROPOSAL, model.CLUB, model.STUDENT" %>
+<%
+    List<PROPOSAL> pendingProposals = PROPOSAL.getPendingProposals();
+    int totalStudents = STUDENT.getTotalStudents();
+    int totalClubs = CLUB.getTotalClubs();
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -202,6 +208,11 @@
       width: 70px;
       text-align: center;
     }
+    .overview-card .icon img {
+      width: 70px;
+      height: 70px;
+      object-fit: contain;
+    }
     .overview-card .info {
       display: flex;
       flex-direction: column;
@@ -271,36 +282,26 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>TECH EXPO</td>
-          <td>IT CLUB</td>
-          <td>26 JUNE 2025</td>
+      <% if (pendingProposals != null && !pendingProposals.isEmpty()) {
+          for (PROPOSAL proposal : pendingProposals) {
+              CLUB club = CLUB.getClubById(proposal.getClubID());
+              String clubName = (club != null) ? club.getClubName() : "N/A";
+      %>
+      <tr>
+          <td><%= proposal.getProposalName() %></td>
+          <td><%= clubName %></td>
+          <td><%= proposal.getSubmissionDate() %></td>
           <td>
-            <button class="action-btn view-btn">View</button>
-            <button class="action-btn approve-btn">Approve</button>
-            <button class="action-btn reject-btn">Reject</button>
+              <a href="viewProposal.jsp?proposalId=<%= proposal.getProposalID() %>" class="action-btn view-btn">View</a>
+              <a href="handleProposal.jsp?action=approve&proposalId=<%= proposal.getProposalID() %>" class="action-btn approve-btn">Approve</a>
+              <a href="handleProposal.jsp?action=reject&proposalId=<%= proposal.getProposalID() %>" class="action-btn reject-btn">Reject</a>
           </td>
-        </tr>
-        <tr>
-          <td>CHARITY RUN</td>
-          <td>EACC CLUB</td>
-          <td>12 JULY 2025</td>
-          <td>
-            <button class="action-btn view-btn">View</button>
-            <button class="action-btn approve-btn">Approve</button>
-            <button class="action-btn reject-btn">Reject</button>
-          </td>
-        </tr>
-        <tr>
-          <td>DEBATE NIGHT</td>
-          <td>SOCIETY</td>
-          <td>15 JULY 2025</td>
-          <td>
-            <button class="action-btn view-btn">View</button>
-            <button class="action-btn approve-btn">Approve</button>
-            <button class="action-btn reject-btn">Reject</button>
-          </td>
-        </tr>
+      </tr>
+      <% } } else { %>
+      <tr>
+          <td colspan="4">No pending proposals at the moment.</td>
+      </tr>
+      <% } %>
       </tbody>
     </table>
 
@@ -308,23 +309,17 @@
       <div class="overview-title">Overview</div>
       <div class="overview-cards">
         <div class="overview-card">
-          <div class="icon">👤</div>
+          <div class="icon"><img src="image/userIcon.png" alt="Student Icon"></div>
           <div class="info">
-            <div class="number">17925</div>
+            <div class="number"><%= totalStudents %></div>
             <div class="label">Student</div>
           </div>
         </div>
         <div class="overview-card">
-          <div class="icon">🏛️</div>
+          <div class="icon"><img src="image/clubIcon.jpg" alt="Club Icon"></div>
           <div class="info">
-            <div class="number">25</div>
+            <div class="number"><%= totalClubs %></div>
             <div class="label">Club</div>
-          </div>
-        </div>
-        <div class="overview-card" style="flex-direction: row; align-items: center;">
-          <div class="icon" style="display: flex; align-items: center;"><img src="image/statistic.png" alt="Statistic" style="width:60px;height:60px;"></div>
-          <div style="margin-left: 24px; display: flex; align-items: center; height: 60px;">
-            <span style="font-size: 24px; color: #444; line-height: 60px;">Statistic</span>
           </div>
         </div>
       </div>
