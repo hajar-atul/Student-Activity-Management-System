@@ -270,6 +270,7 @@
     <li><a href="clubActivitiesPage.jsp" class="active">ACTIVITIES</a></li>
     <li><a href="venueBooking.jsp">VENUE BOOKING</a></li>
     <li><a href="resourceReq.jsp">RESOURCE BOOKING</a></li>
+    <li><a href="clubFeedback.jsp">FEEDBACK</a></li>
     <li><a href="clubSettings.jsp">SETTINGS</a></li>
     </ul>
   </div>
