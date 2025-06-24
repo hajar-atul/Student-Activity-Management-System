@@ -323,10 +323,12 @@
     <img src="image/Raccoon.gif" alt="User Profile Picture" class="profile-pic">
     <h3><%= session.getAttribute("clubName") %></h3>
     <ul>
-      <li><a href="clubDashboardPage.jsp">Dashboard</a></li>
-      <li><a href="clubActivitiesPage.jsp" class="active">Activities</a></li>
-      <li><a href="clubAchievements.jsp">Achievements</a></li>
-      <li><a href="clubSettings.jsp">Settings</a></li>
+        <li><a href="clubDashboardPage.jsp" class="active">DASHBOARD</a></li>
+        <li><a href="clubActivitiesPage.jsp">ACTIVITIES</a></li>
+        <li><a href="venueBooking.jsp">VENUE BOOKING</a></li>
+        <li><a href="resourceReq.jsp">RESOURCE BOOKING</a></li>
+        <li><a href="clubFeedback.jsp">FEEDBACK</a></li>
+        <li><a href="clubSettings.jsp">SETTINGS</a></li>
     </ul>
   </div>
 

@@ -221,11 +221,12 @@
     <p>2023217854</p>
 
     <ul>
-      <li><a href="dashboard.jsp">Dashboard</a></li>
-      <li><a href="activities.jsp" class="active">Activities</a></li>
-      <li><a href="clubs.jsp">Clubs</a></li>
-      <li><a href="achievements.jsp">Achievements</a></li>
-      <li><a href="settings.jsp">Settings</a></li>
+      <li><a href="clubDashboardPage.jsp" class="active">DASHBOARD</a></li>
+        <li><a href="clubActivitiesPage.jsp">ACTIVITIES</a></li>
+        <li><a href="venueBooking.jsp">VENUE BOOKING</a></li>
+        <li><a href="resourceReq.jsp">RESOURCE BOOKING</a></li>
+        <li><a href="clubFeedback.jsp">FEEDBACK</a></li>
+        <li><a href="clubSettings.jsp">SETTINGS</a></li>
     </ul>
   </div>
 
