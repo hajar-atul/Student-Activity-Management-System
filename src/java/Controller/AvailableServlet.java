@@ -41,7 +41,7 @@ public class AvailableServlet extends HttpServlet {
                 }
             }
 
-            // ✅ Use the updated method to get future available activities
+            // Only show approved activities
             List<ACTIVITY> availableActivities = ACTIVITY.getAvailableUpcomingActivities();
             request.setAttribute("availableActivities", availableActivities);
 

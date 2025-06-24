@@ -95,12 +95,12 @@ public class REGISTERATION {
         return students;
     }
 
-    public static boolean registerStudentForActivity(int studID, int activityID) {
+    public static boolean registerStudentForActivity(int studID,String activityID) {
         String sql = "INSERT INTO registeration (studID, activityID, regDate) VALUES (?, ?, CURDATE())";
         try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, studID);
-            pstmt.setInt(2, activityID);
+            pstmt.setString(2, activityID);
             return pstmt.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();

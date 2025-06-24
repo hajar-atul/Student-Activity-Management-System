@@ -5,7 +5,6 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -310,6 +309,7 @@
       <a href="studentDashboardPage.jsp">DASHBOARD</a>
       <a href="activities.jsp">ACTIVITIES</a>
       <a href="studentClub.jsp">CLUBS</a>
+      <a href="achievements.jsp">ACHIEVEMENTS</a>
       <a href="settings.jsp">SETTINGS</a>
     </div>
 
@@ -365,23 +365,30 @@
           </tr>
         </thead>
         <tbody>
-          <c:choose>
-            <c:when test="${not empty currentActivities}">
-              <c:forEach var="activity" items="${currentActivities}">
-                <tr>
-                  <td>${activity.activityName}</td>
-                  <td>${activity.activityDate}</td>
-                  <td>${activity.activityStatus}</td>
-                  <td>Participant</td>
-                </tr>
-              </c:forEach>
-            </c:when>
-            <c:otherwise>
-              <tr>
-                <td colspan="4" style="text-align:center; color:#888;">No current activities</td>
-              </tr>
-            </c:otherwise>
-          </c:choose>
+          <tr>
+            <td>Flood Rescue Volunteer</td>
+            <td>12 Jan 2026</td>
+            <td>Upcoming</td>
+            <td>Participant</td>
+          </tr>
+          <tr>
+            <td>Basketball Clinic</td>
+            <td>8 Sep 2025</td>
+            <td>Upcoming</td>
+            <td>Participant</td>
+          </tr>
+          <tr>
+            <td>Elder Care Visit</td>
+            <td>23 March 2025</td>
+            <td>Upcoming</td>
+            <td>Participant</td>
+          </tr>
+          <tr>
+            <td>Biodiversity Seminar</td>
+            <td>22 May 2026</td>
+            <td>Upcoming</td>
+            <td>Participant</td>
+          </tr>
         </tbody>
       </table>
     </div>
