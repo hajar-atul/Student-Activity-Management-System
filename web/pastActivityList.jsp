@@ -5,7 +5,6 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -421,7 +420,7 @@
           </div>
           <div class="summary-text">
             <h3>TOTAL ACTIVITIES JOINED</h3>
-            <p>${totalActivities}</p>
+            <p>8</p>
           </div>
         </div>
         <div class="summary-card">
@@ -430,7 +429,7 @@
           </div>
           <div class="summary-text">
             <h3>CLUBS PARTICIPATED</h3>
-            <p>${clubCount}</p>
+            <p>3</p>
           </div>
         </div>
         <div class="summary-card">
@@ -458,24 +457,38 @@
             </tr>
           </thead>
           <tbody>
-            <c:choose>
-              <c:when test="${not empty joinedActivities}">
-                <c:forEach var="activity" items="${joinedActivities}">
-                  <tr>
-                    <td>${activity.activityName}</td>
-                    <td>${activity.activityDate}</td>
-                    <td>Attended</td>
-                    <td>Participant</td>
-                    <td><button onclick="location.href='feedback.jsp'">Feedback →</button></td>
-                  </tr>
-                </c:forEach>
-              </c:when>
-              <c:otherwise>
-                <tr>
-                  <td colspan="5" style="text-align:center; color:#888;">No past activities</td>
-                </tr>
-              </c:otherwise>
-            </c:choose>
+            <tr>
+              <td>HACKATHON FACULTY</td>
+              <td>12 Apr 2025</td>
+              <td>Attended</td>
+              <td>Participant</td>
+              <td><button onclick="location.href='feedback.jsp'">Feedback →</button>
+                  <button style="margin-left:8px;background:#bdbdbd;color:#222;" onclick="location.href='viewResponse.jsp'">View Response</button></td>
+            </tr>
+            <tr>
+              <td>BADMINTON LEAGUE</td>
+              <td>8 Apr 2025</td>
+              <td>Attended</td>
+              <td>Participant</td>
+              <td><button onclick="location.href='feedback.jsp'">Feedback →</button>
+                  <button style="margin-left:8px;background:#bdbdbd;color:#222;" onclick="location.href='viewResponse.jsp'">View Response</button></td>
+            </tr>
+            <tr>
+              <td>ACADEMIC CONFERENCE</td>
+              <td>23 March 2025</td>
+              <td>Attended</td>
+              <td>Participant</td>
+              <td><button onclick="location.href='feedback.jsp'">Feedback →</button>
+                  <button style="margin-left:8px;background:#bdbdbd;color:#222;" onclick="location.href='viewResponse.jsp'">View Response</button></td>
+            </tr>
+            <tr>
+              <td>VISIT TO ORPHANAGE</td>
+              <td>22 Feb 2025</td>
+              <td>Attended</td>
+              <td>Participant</td>
+              <td><button onclick="location.href='feedback.jsp'">Feedback →</button>
+                  <button style="margin-left:8px;background:#bdbdbd;color:#222;" onclick="location.href='viewResponse.jsp'">View Response</button></td>
+            </tr>
           </tbody>
         </table>
       </div>

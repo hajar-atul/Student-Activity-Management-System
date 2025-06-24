@@ -13,6 +13,7 @@ public class PAYMENT {
     private int paymentID;
     private String paymentMethod;
     private String paymentDate;
+    private String paymentTime;
     private double payment_total;
     
     public void setPaymentId(int paymentID) {
@@ -37,6 +38,14 @@ public class PAYMENT {
 
     public String getPaymentDate() {
         return paymentDate;
+    }
+    
+    public void setPaymentTime(String paymentTime) {
+        this.paymentTime = paymentTime;
+    }
+
+    public String getPaymentTime() {
+        return paymentTime;
     }
     
     public void setPaymentTotal(double payment_total) {

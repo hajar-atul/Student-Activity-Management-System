@@ -12,6 +12,7 @@ package model;
 public class ADAB_POINT {
     private int studID;
     private int staffID;
+    private int activityID;
     private int adabPoint;
     
     public void setStudId(int studID) {
@@ -28,6 +29,14 @@ public class ADAB_POINT {
 
     public int getStaffId() {
         return staffID;
+    }
+    
+    public void setActivityID(int activityID) {
+        this.activityID = activityID;
+    }
+
+    public int getActivityID() {
+        return activityID;
     }
     
     public void setAdabPoint(int adabPoint) {

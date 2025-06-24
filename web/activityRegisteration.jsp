@@ -217,16 +217,17 @@
   <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
     <img src="image/amin.jpg" alt="Profile Picture" class="profile-pic">
-    <h4>MUHAMMAD AMINUDDIN BIN HASNAN</h4>
-    <p>2023217854</p>
+    <h2>
+        <%= session.getAttribute("studName") %><br>
+        <%= session.getAttribute("studID") %>
+    </h2>
 
-    <ul>
-      <li><a href="dashboard.jsp">Dashboard</a></li>
-      <li><a href="activities.jsp" class="active">Activities</a></li>
-      <li><a href="clubs.jsp">Clubs</a></li>
-      <li><a href="achievements.jsp">Achievements</a></li>
-      <li><a href="settings.jsp">Settings</a></li>
-    </ul>
+    <div class="menu">
+        <a href="studentDashboardPage.jsp">DASHBOARD</a>
+        <a href="activities.jsp">ACTIVITIES</a>
+        <a href="studentClub.jsp">CLUBS</a>
+        <a href="settings.jsp">SETTINGS</a>
+    </div>
   </div>
 
   <!-- Main Content -->

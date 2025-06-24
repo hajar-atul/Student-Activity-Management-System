@@ -9,6 +9,14 @@
         <servlet-name>StaffDashboardServlet</servlet-name>
         <servlet-class>Controller.StaffDashboardServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ResourceBookingServlet</servlet-name>
+        <servlet-class>Controller.ResourceBookingServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>VenueBookingServlet</servlet-name>
+        <servlet-class>Controller.VenueBookingServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
@@ -71,6 +79,14 @@
     <servlet-mapping>
         <servlet-name>StaffDashboardServlet</servlet-name>
         <url-pattern>/StaffDashboardServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ResourceBookingServlet</servlet-name>
+        <url-pattern>/ResourceBookingServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>VenueBookingServlet</servlet-name>
+        <url-pattern>/VenueBookingServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>

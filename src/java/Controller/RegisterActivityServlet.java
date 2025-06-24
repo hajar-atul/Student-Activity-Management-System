@@ -19,34 +19,38 @@ public class RegisterActivityServlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         String studIDStr = (String) session.getAttribute("studID");
-        String activityIDStr = request.getParameter("activityID");
+        String activityID = request.getParameter("activityID");
 
-        if (studIDStr == null || activityIDStr == null) {
-            response.sendRedirect("availableActivityList.jsp?error=Missing+student+or+activity+ID");
+        if (studIDStr == null || activityID == null) {
+            response.sendRedirect("AvailableServlet?error=Missing+student+or+activity+ID");
             return;
         }
 
         try {
             int studID = Integer.parseInt(studIDStr);
-            int activityID = Integer.parseInt(activityIDStr);
-
-            // Register the student for the activity
+            ACTIVITY activity = ACTIVITY.getActivityById(activityID);
+            if (activity == null) {
+                response.sendRedirect("AvailableServlet?error=Activity+not+found");
+                return;
+            }
+            double budget = activity.getActivityBudget();
             boolean registered = REGISTERATION.registerStudentForActivity(studID, activityID);
             if (registered) {
-                // Get adabPoint for the activity
-                int adabPoint = ACTIVITY.getAdabPointByActivityId(activityID);
-                // Increment student's adabPoint
+                int adabPoint = activity.getAdabPoint();
                 STUDENT.incrementAdabPoint(studID, adabPoint);
-                // Optionally, update session value for immediate feedback
                 session.setAttribute("adabPoint", STUDENT.getAdabPointByStudentId(studID));
-                // Redirect to dashboard
-                response.sendRedirect("StudentDashboardServlet");
+                if (budget == 0) {
+                    session.setAttribute("registrationMessage", "You have been registered");
+                    response.sendRedirect("AvailableServlet");
+                } else {
+                    response.sendRedirect("qrPaymentTypePage.jsp?activityID=" + activityID);
+                }
             } else {
-                response.sendRedirect("availableActivityList.jsp?error=Registration+failed");
+                response.sendRedirect("AvailableServlet?error=Registration+failed");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect("availableActivityList.jsp?error=Registration+error");
+            response.sendRedirect("AvailableServlet?error=Registration+error");
         }
     }
 } 
