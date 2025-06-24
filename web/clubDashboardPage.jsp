@@ -456,6 +456,7 @@
     <li><a href="venueBooking.jsp">VENUE BOOKING</a></li>
     <li><a href="resourceReq.jsp">RESOURCE BOOKING</a></li>
     <li><a href="clubFeedback.jsp">FEEDBACK</a></li>
+    <li><a href="clubReport.jsp">REPORT</a></li>
     <li><a href="clubSettings.jsp">SETTINGS</a></li>
   </ul>
 </div>
@@ -485,13 +486,13 @@
           </div>
           <div class="summary-text"><h3>CREATE ACTIVITY</h3></div>
         </div>
-        <div class="summary-card" onclick="location.href=">
+        <div class="summary-card">
           <div class="summary-icon">
             <img src="image/venue_icon.png" alt="Venue" />
           </div>
           <div class="summary-text"><h3>VENUE BOOKED</h3><p>2</p></div>
         </div>
-        <div class="summary-card resource" onclick="location.href=">
+        <div class="summary-card resource">
           <div class="summary-icon">
             <img src="image/resource_icon.png" alt="Resource" />
           </div>
