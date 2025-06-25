@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import model.BOOKING;
+import model.STAFF;
 
 @WebServlet(name = "StaffDashboardServlet", urlPatterns = {"/StaffDashboardServlet"})
 public class StaffDashboardServlet extends HttpServlet {
@@ -23,7 +24,13 @@ public class StaffDashboardServlet extends HttpServlet {
             // Set counts as request attributes
             request.setAttribute("bookingRequests", pendingBookings);
             request.setAttribute("approvedBookings", approvedBookings);
-        
+
+            // Fetch staff object for profile image
+            Integer staffId = (Integer) request.getSession().getAttribute("staffID");
+            if (staffId != null) {
+                STAFF staff = STAFF.getStaffById(staffId);
+                request.setAttribute("staffObj", staff);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("dashboardError", "Error fetching dashboard data: " + e.getMessage());

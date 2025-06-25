@@ -195,7 +195,7 @@
                     <% } %>
                 </div>
             <% } %>
-            <form action="AddClubServlet" method="post">
+            <form action="AddClubServlet" method="post" enctype="multipart/form-data">
                 <div class="form-row">
                     <label for="clubName">Club Name<span style="color:red">*</span>:</label>
                     <input type="text" id="clubName" name="clubName" required>
@@ -215,6 +215,10 @@
                 <div class="form-row">
                     <label for="clubPassword">Club Password<span style="color:red">*</span>:</label>
                     <input type="password" id="clubPassword" name="clubPassword" required>
+                </div>
+                <div class="form-row">
+                    <label>Profile Picture <span style='color:red'>*</span></label>
+                    <input type="file" name="profilePic" accept="image/png, image/jpeg" required>
                 </div>
                 <button type="submit" class="button">Register Club</button>
             </form>

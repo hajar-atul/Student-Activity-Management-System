@@ -48,6 +48,9 @@ public class StudentDashboardServlet extends HttpServlet {
                 session.setAttribute("muetStatus", rs.getString("muetStatus"));
                 session.setAttribute("advisor", rs.getString("advisor"));
 
+                // Set profile image URL for BLOB
+                session.setAttribute("profilePicUrl", "StudentImageServlet?studID=" + studID);
+
                 // Get adab point
                 int adabPoint = STUDENT.getAdabPointByStudentId(Integer.parseInt(studID));
                 session.setAttribute("adabPoint", adabPoint);

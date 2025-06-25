@@ -350,7 +350,6 @@
     <img src="image/amin.jpg" alt="Profile" class="profile-icon" id="profileBtn">
     <div class="profile-dropdown" id="profileDropdown">
       <a href="profile.jsp">My Profile</a>
-      <a href="logout.jsp">Logout</a>
     </div>
   </div>
 </div>

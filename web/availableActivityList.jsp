@@ -6,30 +6,24 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<% String registrationMessage = (String) session.getAttribute("registrationMessage");
-   if (registrationMessage != null) { session.removeAttribute("registrationMessage"); %>
-  <div class="alert" style="color: green; text-align: center; margin: 20px 0; font-weight: bold;"> <%= registrationMessage %> </div>
-<% } %>
+<%@ page import="java.util.List, model.ACTIVITY, model.CLUB" %>
+<%
+    List<ACTIVITY> availableActivities = (List<ACTIVITY>) request.getAttribute("availableActivities");
+    out.println("<div style='color:red;'>DEBUG: availableActivities = " + availableActivities + "</div>");
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Student Activity List</title>
+  <title>Available Activities</title>
   <link href="https://fonts.googleapis.com/css2?family=Arial&display=swap" rel="stylesheet">
   <style>
-    * {
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #f0f0f0;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
     }
-
-    html, body {
-      height: 100%;
-      overflow: hidden;
-      font-family: Arial, sans-serif;
-      background-color: #f0f0f0;
-    }
-
     .sidebar {
       width: 250px;
       background-color: #008b8b;
@@ -42,26 +36,7 @@
       z-index: 1001;
       display: flex;
       flex-direction: column;
-      transition: transform 0.3s ease;
     }
-
-    .sidebar.closed {
-      transform: translateX(-100%);
-    }
-
-    .toggle-btn {
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      background-color: #008b8b;
-      color: white;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 4px;
-      cursor: pointer;
-      z-index: 1002;
-    }
-
     .sidebar img.profile-pic {
       width: 100px;
       aspect-ratio: 1 / 1;
@@ -72,17 +47,14 @@
       border: 3px solid white;
       box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
     }
-
     .sidebar h2 {
       text-align: center;
       font-size: 14px;
       margin-top: 10px;
     }
-
     .menu {
       margin-top: 30px;
     }
-
     .menu a {
       display: block;
       padding: 10px;
@@ -93,12 +65,10 @@
       border-radius: 5px;
       text-align: center;
     }
-
     .logout-container {
       margin-top: auto;
       padding-top: 20px;
     }
-
     .logout-container .LOGOUT-btn {
       display: block;
       width: 100%;
@@ -113,11 +83,9 @@
       transition: background-color 0.2s;
       cursor: pointer;
     }
-
     .logout-container .LOGOUT-btn:hover {
       background-color: #b71c1c;
     }
-
     .topbar {
       position: fixed;
       top: 0;
@@ -132,37 +100,6 @@
       padding: 0 30px;
       z-index: 1000;
     }
-
-    .search-container {
-      display: flex;
-      align-items: center;
-      margin-left: 250px;
-      transition: margin-left 0.3s ease;
-    }
-
-    .sidebar.closed ~ .topbar .search-container {
-      margin-left: 70px;
-    }
-
-    .search-container input {
-      padding: 8px 12px;
-      border-radius: 20px;
-      border: none;
-      outline: none;
-      width: 200px;
-    }
-
-    .search-btn {
-      background: white;
-      border: none;
-      margin-left: -30px;
-      cursor: pointer;
-      font-weight: bold;
-      border-radius: 50%;
-      padding: 4px 8px;
-      color: #009B9D;
-    }
-
     .dashboard-title {
       font-size: 26px;
       font-weight: bold;
@@ -170,147 +107,115 @@
       flex-grow: 1;
       margin-left: 60px;
     }
-
-    .top-icons {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .top-icons img.umpsa-icon {
-      width: 40px;
-      height: 40px;
-    }
-
-    .notification-btn img,
-    .profile-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      cursor: pointer;
-    }
-
-    .notification-dropdown,
-    .profile-dropdown {
-      display: none;
-      position: absolute;
-      top: 80px;
-      right: 30px;
-      background: white;
-      color: black;
-      min-width: 200px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-      z-index: 999;
-      border-radius: 8px;
-      overflow: hidden;
-    }
-
-    .notification-dropdown.show,
-    .profile-dropdown.show {
-      display: block;
-    }
-
-    .notification-dropdown p,
-    .profile-dropdown a {
-      margin: 0;
-      padding: 10px 20px;
-      border-bottom: 1px solid #eee;
-      text-decoration: none;
-      color: black;
-      display: block;
-    }
-
-    .profile-dropdown a:hover {
-      background-color: #f0f0f0;
-    }
-
     .content {
       padding: 100px 30px 20px 30px;
       margin-left: 250px;
-      height: calc(100vh - 100px);
-      overflow-y: auto;
-      transition: margin-left 0.3s ease;
+      min-height: 100vh;
+      background: #f0f0f0;
     }
-
-    .sidebar.closed ~ .content {
-      margin-left: 0;
-    }
-    
-    /* Table Section */
     .activity-header h1 {
-        text-align: center;
-        padding: 40px;
+      text-align: center;
+      padding: 40px 0 20px 0;
+      font-size: 2.2em;
+      font-weight: bold;
+      color: #008b8b;
     }
-
     .activity-list {
-        gap: 20px;
-        padding: 30px;
-        justify-content: center;
-        display: flex;
-        flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 30px;
+      justify-content: center;
+      margin-top: 20px;
     }
-
     .activity-card {
-        background-color: #fff;
-        padding: 20px;
-        border: 2px solid #000;
-        border-radius: 20px;
-        width: 250px;
-        text-align: center;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      padding: 28px 24px 20px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      position: relative;
+      border: 2px solid #008b8b;
+      transition: box-shadow 0.2s;
     }
-
+    .activity-card:hover {
+      box-shadow: 0 6px 18px rgba(0,0,0,0.13);
+    }
     .activity-card h3 {
-        font-size: 16px;
-        font-weight: bold;
-        margin-bottom: 10px;
+      font-size: 1.3em;
+      color: #008b8b;
+      margin-bottom: 8px;
+      font-weight: bold;
     }
-
-    .activity-card p {
-        font-size: 14px;
-        margin-bottom: 15px;
+    .activity-card .meta {
+      font-size: 0.98em;
+      color: #444;
+      margin-bottom: 6px;
     }
-
-    .activity-card button {
-        padding: 10px 20px;
-        border: none;
-        background-color: #d3d3d3;
-        border-radius: 20px;
-        cursor: pointer;
-        transition: background-color 0.2s ease;
+    .activity-card .club {
+      font-size: 1em;
+      color: #00796B;
+      margin-bottom: 10px;
+      font-weight: 500;
     }
-
-    .activity-card button:hover {
-        background-color: #bbb;
+    .activity-card .type {
+      font-size: 0.95em;
+      color: #fff;
+      background: #009688;
+      border-radius: 8px;
+      padding: 2px 12px;
+      margin-bottom: 10px;
+      display: inline-block;
     }
-
-    /* Back Button */
-    .back-btn {
-      background-color: #008b8b;
-      color: white;
+    .activity-card .desc {
+      font-size: 1em;
+      color: #333;
+      margin-bottom: 12px;
+      min-height: 40px;
+    }
+    .activity-card .adab-point {
+      font-size: 1em;
+      color: #fff;
+      background: #ff9800;
+      border-radius: 8px;
+      padding: 2px 12px;
+      margin-bottom: 10px;
+      display: inline-block;
+      font-weight: bold;
+    }
+    .activity-card .register-btn {
+      background: #008b8b;
+      color: #fff;
       border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
+      border-radius: 8px;
+      font-size: 1.1em;
+      font-weight: bold;
+      padding: 10px 0;
+      width: 100%;
       cursor: pointer;
-      margin-bottom: 20px;
-      font-size: 16px;
+      transition: background 0.2s, transform 0.2s;
+      margin-top: 10px;
+      text-align: center;
     }
-
-    .back-btn:hover {
-      background-color: #006d6d;
+    .activity-card .register-btn:hover {
+      background: #00796B;
+      transform: translateY(-2px) scale(1.03);
     }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      .content {
-        margin-left: 0;
-      }
+    .no-activities {
+      text-align: center;
+      color: #888;
+      font-size: 1.3em;
+      margin-top: 60px;
     }
-
+    @media (max-width: 900px) {
+      .content { margin-left: 0; padding: 100px 5px 20px 5px; }
+      .activity-list { gap: 16px; }
+      .activity-card { width: 98vw; max-width: 350px; }
+    }
   </style>
 </head>
 <body>
-
   <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
     <img src="image/amin.jpg" alt="Profile" class="profile-pic" />
@@ -324,123 +229,43 @@
       <a href="studentClub.jsp">CLUBS</a>
       <a href="settings.jsp">SETTINGS</a>
     </div>
-
-    <!-- Logout button fixed at the bottom -->
     <div class="logout-container">
       <form action="index.jsp">
         <button type="submit" class="LOGOUT-btn">Logout</button>
       </form>
     </div>
   </div>
-
-  <!-- Toggle Button -->
-  <button class="toggle-btn" id="toggleBtn">☰</button>
-
   <!-- Topbar -->
   <div class="topbar">
-    <div class="search-container">
-      <input type="text" placeholder="Search..." />
-      <button class="search-btn">X</button>
-    </div>
     <div class="dashboard-title">ACTIVITIES</div>
-    <div class="top-icons">
-      <img src="image/umpsa.png" class="umpsa-icon" alt="UMPSA">
-      <button class="notification-btn" id="notificationBtn">
-        <img src="image/bell.png" alt="Notification">
-      </button>
-      <div class="notification-dropdown" id="notificationDropdown">
-        <p>No new notifications</p>
-      </div>
-      <img src="image/amin.jpg" alt="Profile" class="profile-icon" id="profileBtn">
-      <div class="profile-dropdown" id="profileDropdown">
-        <a href="profile.jsp">My Profile</a>
-        <a href="logout.jsp">Logout</a>
-      </div>
-    </div>
   </div>
-
   <!-- Content -->
-  <div class="content" id="content" style="height: calc(100vh - 100px); display: flex; flex-direction: column; justify-content: space-between; overflow: hidden;">
-
-  <!-- Header dan Aktiviti -->
-  <div>
+  <div class="content">
     <div class="activity-header">
       <h1>AVAILABLE ACTIVITIES</h1>
     </div>
-    <div class="activity-list" style="padding: 10px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; justify-items: center;">
-      <c:forEach var="activity" items="${availableActivities}">
+    <% if (availableActivities == null || availableActivities.isEmpty()) { %>
+      <div class="no-activities">No available activities at the moment. Please check back later!</div>
+    <% } else { %>
+      <div class="activity-list">
+        <% for (int i = 0; i < availableActivities.size(); i++) {
+             ACTIVITY activity = (ACTIVITY) availableActivities.get(i);
+             CLUB club = CLUB.getClubById(activity.getClubID());
+             String clubName = (club != null) ? club.getClubName() : "N/A";
+        %>
         <div class="activity-card">
-          <h3>${activity.activityName}</h3>
-          <p>${activity.activityDate}</p>
-          <button class="register-btn" data-activity-id="${activity.activityID}">Register</button>
+          <div class="type"><%= activity.getActivityType() %></div>
+          <h3><%= activity.getActivityName() %></h3>
+          <div class="meta">Date: <%= activity.getActivityDate() %></div>
+          <div class="meta">Venue: <%= activity.getActivityVenue() %></div>
+          <div class="club">Organized by: <%= clubName %></div>
+          <div class="desc"><%= activity.getActivityDesc() %></div>
+          <div class="adab-point">Adab Point: <%= activity.getAdabPoint() %></div>
+          <a class="register-btn" href="RegisterActivityStudentServlet?activityID=<%= activity.getActivityID() %>">Register</a>
         </div>
-      </c:forEach>
-    </div>
+        <% } %>
+      </div>
+    <% } %>
   </div>
-
-  <!-- Butang back bawah kiri -->
-  <div style="text-align: left; padding: 10px 30px;">
-    <button class="back-btn" onclick="location.href='activities.jsp'">← Back</button>
-  </div>
-</div>
-
-  <!-- Registration Modal -->
-  <div id="registerModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.4); z-index:2000; align-items:center; justify-content:center;">
-    <div id="modalContent" style="background:#fff; border-radius:16px; max-width:600px; width:90vw; margin:auto; padding:30px; position:relative;">
-      <button onclick="closeModal()" style="position:absolute; top:10px; right:20px; background:none; border:none; font-size:24px; cursor:pointer;">&times;</button>
-      <div id="modalBody">Loading...</div>
-    </div>
-  </div>
-
-  <!-- Script -->
-  <script>
-    const sidebar = document.getElementById('sidebar');
-    const toggleBtn = document.getElementById('toggleBtn');
-    const notificationBtn = document.getElementById('notificationBtn');
-    const notificationDropdown = document.getElementById('notificationDropdown');
-    const profileBtn = document.getElementById('profileBtn');
-    const profileDropdown = document.getElementById('profileDropdown');
-
-    toggleBtn.addEventListener('click', () => {
-      sidebar.classList.toggle('closed');
-    });
-
-    notificationBtn.addEventListener('click', function (e) {
-      e.stopPropagation();
-      notificationDropdown.classList.toggle('show');
-      profileDropdown.classList.remove('show');
-    });
-
-    profileBtn.addEventListener('click', function (e) {
-      e.stopPropagation();
-      profileDropdown.classList.toggle('show');
-      notificationDropdown.classList.remove('show');
-    });
-
-    window.addEventListener('click', function () {
-      notificationDropdown.classList.remove('show');
-      profileDropdown.classList.remove('show');
-    });
-
-    // Modal logic
-    function openModal(activityID) {
-      document.getElementById('registerModal').style.display = 'flex';
-      document.getElementById('modalBody').innerHTML = 'Loading...';
-      fetch('RegisterActivityStudentServlet?activityID=' + encodeURIComponent(activityID))
-        .then(response => response.text())
-        .then(html => {
-          document.getElementById('modalBody').innerHTML = html;
-        });
-    }
-    function closeModal() {
-      document.getElementById('registerModal').style.display = 'none';
-    }
-    document.querySelectorAll('.register-btn').forEach(btn => {
-      btn.addEventListener('click', function() {
-        openModal(this.getAttribute('data-activity-id'));
-      });
-    });
-  </script>
-
 </body>
 </html>

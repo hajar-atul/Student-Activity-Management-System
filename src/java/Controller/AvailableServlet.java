@@ -41,8 +41,8 @@ public class AvailableServlet extends HttpServlet {
                 }
             }
 
-            // Revert: show all activities (not just approved)
-            List<ACTIVITY> availableActivities = ACTIVITY.getAllActivities();
+            // Show only approved and upcoming activities
+            List<ACTIVITY> availableActivities = ACTIVITY.getAvailableUpcomingActivities();
             request.setAttribute("availableActivities", availableActivities);
 
         } catch (Exception e) {

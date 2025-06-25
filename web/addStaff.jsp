@@ -222,7 +222,14 @@
 
     <!-- Sidebar -->
     <div class="sidebar">
-        <img src="image/staff.jpg" alt="Profile Picture">
+        <img src="<% 
+            Object sid = session.getAttribute("staffID");
+            if (sid != null) {
+                out.print("StaffImageServlet?staffID=" + sid);
+            } else {
+                out.print("image/staff.jpg");
+            }
+        %>" alt="Profile Picture">
         <h2>
             <%= session.getAttribute("staffName") %><br>
             <%= session.getAttribute("staffID") %>
@@ -241,7 +248,13 @@
         <div class="dashboard-title">ADD STAFF</div>
         <div class="top-icons">
             <img src="image/umpsa.png" alt="UMPSA" class="umpsa-icon">
-            <img src="image/staff.jpg" alt="Profile" class="profile-icon">
+            <img src="<% 
+                if (sid != null) {
+                    out.print("StaffImageServlet?staffID=" + sid);
+                } else {
+                    out.print("image/staff.jpg");
+                }
+            %>" alt="Profile" class="profile-icon">
         </div>
     </div>
  
@@ -264,7 +277,7 @@
                 </div>
             <% } %>
             
-            <form action="<%= request.getContextPath() %>/AddStaffServlet" method="post">
+            <form action="<%= request.getContextPath() %>/AddStaffServlet" method="post" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="staffID">Staff ID:</label>
                     <input type="number" id="staffID" name="staffID" required placeholder="Enter staff ID">
@@ -304,6 +317,10 @@
                 <div class="form-group">
                     <label for="staffPassword">Staff Password:</label>
                     <input type="password" id="staffPassword" name="staffPassword" required placeholder="Create a password">
+                </div>
+                <div class="form-group">
+                    <label>Profile Picture <span style='color:red'>*</span></label>
+                    <input type="file" name="profilePic" accept="image/png, image/jpeg" required>
                 </div>
                 
                 <button type="submit" class="submit-btn">Add Staff</button>

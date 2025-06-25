@@ -22,6 +22,8 @@ public class STAFF {
     private String staffPhone;
     private String staffDepartment;
     private String staffPassword;
+    private String profilePic;
+    private byte[] profilePicBlob;
     
     // Database connection details
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/student?useSSL=false&serverTimezone=UTC";
@@ -90,6 +92,20 @@ public class STAFF {
         return staffPassword;
     }
 
+    // Setter and Getter for profilePic
+    public String getProfilePic() {
+        return profilePic;
+    }
+    public void setProfilePic(String profilePic) {
+        this.profilePic = profilePic;
+    }
+    public byte[] getProfilePicBlob() {
+        return profilePicBlob;
+    }
+    public void setProfilePicBlob(byte[] profilePicBlob) {
+        this.profilePicBlob = profilePicBlob;
+    }
+
     // Get staff by ID
     public static STAFF getStaffById(int staffId) {
         String query = "SELECT * FROM staff WHERE staffID = ?";
@@ -105,6 +121,16 @@ public class STAFF {
                 staff.setStaffPhone(rs.getString("staffPhone"));
                 staff.setStaffDepartment(rs.getString("staffDep"));
                 staff.setStaffPassword(rs.getString("staffPassword"));
+                try {
+                    staff.setProfilePic(rs.getString("profilePic"));
+                } catch (SQLException e) {
+                    staff.setProfilePic(null);
+                }
+                try {
+                    staff.setProfilePicBlob(rs.getBytes("profilePicBlob"));
+                } catch (SQLException e) {
+                    staff.setProfilePicBlob(null);
+                }
                 return staff;
             }
         } catch (SQLException e) {
@@ -131,8 +157,8 @@ public class STAFF {
     }
 
     // Add new staff method
-    public static boolean addNewStaff(int staffID, String staffName, String staffEmail, String staffPhone, String staffDep, String staffPassword) {
-        String query = "INSERT INTO staff (staffID, staffName, staffEmail, staffPhone, staffDep, staffPassword) VALUES (?, ?, ?, ?, ?, ?)";
+    public static boolean addNewStaff(int staffID, String staffName, String staffEmail, String staffPhone, String staffDep, String staffPassword, String profilePic) {
+        String query = "INSERT INTO staff (staffID, staffName, staffEmail, staffPhone, staffDep, staffPassword, profilePic) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, staffID);
@@ -141,7 +167,27 @@ public class STAFF {
             pstmt.setString(4, staffPhone);
             pstmt.setString(5, staffDep);
             pstmt.setString(6, staffPassword);
-            
+            pstmt.setString(7, profilePic);
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // Add new staff with BLOB profile picture
+    public static boolean addNewStaffWithBlob(int staffID, String staffName, String staffEmail, String staffPhone, String staffDep, String staffPassword, byte[] profilePicBlob) {
+        String query = "INSERT INTO staff (staffID, staffName, staffEmail, staffPhone, staffDep, staffPassword, profilePicBlob) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, staffID);
+            pstmt.setString(2, staffName);
+            pstmt.setString(3, staffEmail);
+            pstmt.setString(4, staffPhone);
+            pstmt.setString(5, staffDep);
+            pstmt.setString(6, staffPassword);
+            pstmt.setBytes(7, profilePicBlob);
             int rowsAffected = pstmt.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {

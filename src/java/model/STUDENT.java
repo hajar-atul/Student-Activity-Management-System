@@ -32,6 +32,8 @@ public class STUDENT {
     private String muetStatus;
     private String advisor;
     private int adabPoint;
+    private String profilePic;
+    private byte[] profilePicBlob;
 
     // Database connection details
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/student?useSSL=false&serverTimezone=UTC";
@@ -83,6 +85,18 @@ public class STUDENT {
                     student.setAdabPoint(0);
                 }
                 
+                try {
+                    student.setProfilePic(rs.getString("profilePic"));
+                } catch (SQLException e) {
+                    student.setProfilePic(null);
+                }
+                
+                try {
+                    student.setProfilePicBlob(rs.getBytes("profilePicBlob"));
+                } catch (SQLException e) {
+                    student.setProfilePicBlob(null);
+                }
+                
                 return student;
             }
         } catch (SQLException e) {
@@ -118,13 +132,11 @@ public class STUDENT {
                 return "Password and Confirm Password do not match";
             }
 
-            String query = "INSERT INTO student (studID, studName, studEmail, studCourse, studSemester, " +
-                          "studNoPhone, studType, studPassword, dob, muetStatus, advisor) " +
-                          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO student (studID, studName, studEmail, studCourse, studSemester, studNoPhone, studType, studPassword, dob, muetStatus, advisor, adabPoint, profilePicBlob) " +
+                          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             
             try (Connection conn = getConnection();
                  PreparedStatement pstmt = conn.prepareStatement(query)) {
-                
                 pstmt.setInt(1, student.getStudID());
                 pstmt.setString(2, student.getStudName());
                 pstmt.setString(3, student.getStudEmail());
@@ -136,7 +148,8 @@ public class STUDENT {
                 pstmt.setString(9, student.getDob());
                 pstmt.setString(10, student.getMuetStatus());
                 pstmt.setString(11, student.getAdvisor());
-                
+                pstmt.setInt(12, student.getAdabPoint());
+                pstmt.setBytes(13, student.getProfilePicBlob());
                 int rows = pstmt.executeUpdate();
 
                 if (rows > 0) {
@@ -305,6 +318,22 @@ public class STUDENT {
 
     public int getAdabPoint() {
         return adabPoint;
+    }
+
+    public String getProfilePic() {
+        return profilePic;
+    }
+
+    public void setProfilePic(String profilePic) {
+        this.profilePic = profilePic;
+    }
+
+    public byte[] getProfilePicBlob() {
+        return profilePicBlob;
+    }
+
+    public void setProfilePicBlob(byte[] profilePicBlob) {
+        this.profilePicBlob = profilePicBlob;
     }
 
     // Update password

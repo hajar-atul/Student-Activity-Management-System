@@ -22,6 +22,8 @@ public class CLUB {
     private String clubEstablishedDate;
     private String clubPassword;
     private int studID;
+    private String profilePic;
+    private byte[] profilePicBlob;
     
     // Database connection details
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/student?useSSL=false&serverTimezone=UTC";
@@ -48,6 +50,16 @@ public class CLUB {
                     club.setClubStatus(rs.getString("clubStatus"));
                     club.setClubEstablishedDate(rs.getString("clubEstablishedDate"));
                     club.setClubPassword(rs.getString("clubPassword"));
+                    try {
+                        club.setProfilePic(rs.getString("profilePic"));
+                    } catch (SQLException e) {
+                        club.setProfilePic(null);
+                    }
+                    try {
+                        club.setProfilePicBlob(rs.getBytes("profilePicBlob"));
+                    } catch (SQLException e) {
+                        club.setProfilePicBlob(null);
+                    }
                 }
             }
         } catch (Exception e) {
@@ -109,14 +121,16 @@ public class CLUB {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
-                String query = "INSERT INTO club (clubName, clubContact, clubDesc, clubStatus, clubEstablishedDate, clubPassword) " +
-                             "VALUES (?, ?, ?, 'active', ?, ?)";
+                String query = "INSERT INTO club (clubName, clubContact, clubDesc, clubStatus, clubEstablishedDate, clubPassword, profilePic, profilePicBlob) " +
+                             "VALUES (?, ?, ?, 'active', ?, ?, ?, ?)";
                 PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
                 stmt.setString(1, this.clubName);
                 stmt.setString(2, this.clubContact);
                 stmt.setString(3, this.clubDesc);
                 stmt.setString(4, this.clubEstablishedDate);
                 stmt.setString(5, this.clubPassword);
+                stmt.setString(6, this.profilePic);
+                stmt.setBytes(7, this.profilePicBlob);
                 int affectedRows = stmt.executeUpdate();
                 if (affectedRows > 0) {
                     try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
@@ -397,5 +411,21 @@ public class CLUB {
 
     public int getStudId() {
         return studID;
+    }
+
+    public String getProfilePic() {
+        return profilePic;
+    }
+
+    public void setProfilePic(String profilePic) {
+        this.profilePic = profilePic;
+    }
+
+    public byte[] getProfilePicBlob() {
+        return profilePicBlob;
+    }
+
+    public void setProfilePicBlob(byte[] profilePicBlob) {
+        this.profilePicBlob = profilePicBlob;
     }
 }

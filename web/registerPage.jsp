@@ -167,7 +167,7 @@
   </div>
 
   <div class="container">
-    <form class="form-section" action="RegisterPageServlet" method="post">
+    <form class="form-section" action="RegisterPageServlet" method="post" enctype="multipart/form-data">
       <div class="form-column">
         <div class="form-group">
           <label>Student ID <span class="required">*</span></label>
@@ -236,6 +236,11 @@
         <div class="form-group">
           <label>Student Advisor <span class="required">*</span></label>
           <input type="text" name="advisor" placeholder="Enter your advisor's name" required>
+        </div>
+
+        <div class="form-group">
+          <label>Profile Picture <span class="required">*</span></label>
+          <input type="file" name="profilePic" accept="image/png, image/jpeg" required>
         </div>
 
         <!-- Remove the role selection dropdown and add hidden input for studType -->

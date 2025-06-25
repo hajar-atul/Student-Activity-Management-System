@@ -29,6 +29,9 @@ public class ACTIVITY {
        private static final String DB_USER = "root";
        private static final String DB_PASSWORD = "";
        
+       private static String lastError = null;
+       public static String getLastError() { return lastError; }
+       
         public void setActivityID(String activityID) {
         this.activityID = activityID;
     }
@@ -285,11 +288,12 @@ public class ACTIVITY {
 
     // Get all activities
     public static java.util.List<ACTIVITY> getAllActivities() {
+        lastError = null;
         java.util.List<ACTIVITY> activities = new java.util.ArrayList<>();
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             try (java.sql.Connection conn = java.sql.DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
-                String sql = "SELECT * FROM activity";
+                String sql = "SELECT * FROM activity WHERE activityStatus = 'Approved'";
                 java.sql.Statement stmt = conn.createStatement();
                 java.sql.ResultSet rs = stmt.executeQuery(sql);
                 while (rs.next()) {
@@ -310,6 +314,7 @@ public class ACTIVITY {
                 }
             }
         } catch (Exception e) {
+            lastError = e.toString();
             e.printStackTrace();
         }
         return activities;
@@ -655,6 +660,53 @@ public static int getAdabPointByActivityId(int activityID) {
         e.printStackTrace();
     }
     return adabPoint;
+}
+
+public static void updateActivityStatus(String activityID, String newStatus) {
+    try {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        try (java.sql.Connection conn = java.sql.DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "UPDATE activity SET activityStatus = ? WHERE activityID = ?";
+            java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, newStatus);
+            stmt.setString(2, activityID);
+            stmt.executeUpdate();
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+
+public static java.util.List<ACTIVITY> getActivitiesByStatus(String status) {
+    java.util.List<ACTIVITY> activities = new java.util.ArrayList<>();
+    try {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        try (java.sql.Connection conn = java.sql.DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "SELECT * FROM activity WHERE activityStatus = ?";
+            java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, status);
+            java.sql.ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                ACTIVITY activity = new ACTIVITY();
+                activity.setActivityID(rs.getString("activityID"));
+                activity.setActivityName(rs.getString("activityName"));
+                activity.setActivityType(rs.getString("activityType"));
+                activity.setActivityDesc(rs.getString("activityDesc"));
+                activity.setActivityDate(rs.getString("activityDate"));
+                activity.setActivityVenue(rs.getString("activityVenue"));
+                activity.setActivityStatus(rs.getString("activityStatus"));
+                activity.setActivityBudget(rs.getDouble("activityBudget"));
+                activity.setAdabPoint(rs.getInt("adabPoint"));
+                activity.setProposalFile(rs.getString("proposalFile"));
+                activity.setQrImage(rs.getString("qrImage"));
+                activity.setClubID(rs.getInt("clubID"));
+                activities.add(activity);
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return activities;
 }
 
 }

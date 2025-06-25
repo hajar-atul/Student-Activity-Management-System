@@ -5,6 +5,18 @@
 --%>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.util.List, model.ACTIVITY, model.CLUB" %>
+<%
+    CLUB club = (CLUB) session.getAttribute("club");
+    List<ACTIVITY> rejectedActivities = new java.util.ArrayList<ACTIVITY>();
+    if (club != null) {
+        for (ACTIVITY act : ACTIVITY.getActivitiesByClubId(club.getClubId())) {
+            if ("Rejected".equalsIgnoreCase(act.getActivityStatus())) {
+                rejectedActivities.add(act);
+            }
+        }
+    }
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,6 +32,8 @@
 
     body {
       font-family: 'Poppins', Arial, sans-serif;
+      height: 100vh;
+      overflow: hidden;
     }
 
     .sidebar {
@@ -91,6 +105,8 @@
     .main-content {
       margin-left: 270px;
       transition: margin-left 0.3s ease;
+      min-height: 100vh;
+      overflow: hidden;
     }
 
     .main-content.full-width {
@@ -448,7 +464,7 @@
 <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
 
 <div class="sidebar" id="sidebar">
-  <img src="image/Raccoon.gif" alt="User Profile Picture" class="profile-pic">
+  <img src="ClubImageServlet?clubID=<%= club != null ? club.getClubId() : 0 %>" alt="User Profile Picture" class="profile-pic">
   <h3><%= session.getAttribute("clubName") %></h3>
   <ul>
     <li><a href="clubDashboardPage.jsp" class="active">DASHBOARD</a></li>
@@ -469,7 +485,7 @@
       <button class="notification-btn" id="notificationBtn">
         <img src="image/bell.png" alt="Notifications" />
       </button>
-      <img src="image/Raccoon.gif" alt="User Avatar" class="profile-icon" />
+      <img src="ClubImageServlet?clubID=<%= club != null ? club.getClubId() : 0 %>" alt="User Avatar" class="profile-icon" />
     </div>
   </div>
 
@@ -533,6 +549,24 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 40px;">
+      <h2>Rejected Activities</h2>
+      <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+        <% if (!rejectedActivities.isEmpty()) {
+            for (ACTIVITY act : rejectedActivities) { %>
+              <div style="background: #f8d7da; border: 1px solid #f5c6cb; border-radius: 10px; padding: 20px; width: 300px;">
+                <h3><%= act.getActivityName() %></h3>
+                <p>Date: <%= act.getActivityDate() %></p>
+                <p>Venue: <%= act.getActivityVenue() %></p>
+                <p>Status: <span style="color: #721c24; font-weight: bold;">Rejected</span></p>
+              </div>
+        <%   }
+           } else { %>
+          <div style="color: #888;">No rejected activities.</div>
+        <% } %>
       </div>
     </div>
   </div>

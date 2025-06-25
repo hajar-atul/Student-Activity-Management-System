@@ -182,7 +182,7 @@
 
     <!-- Sidebar -->
     <div class="sidebar">
-        <img src="image/staff.jpg" alt="Profile Picture">
+        <img src="StudentImageServlet?studID=${studID}" alt="Profile Picture" class="profile-icon" id="profileBtn">
         <h2>
             <%= session.getAttribute("staffName") %><br>
             <%= session.getAttribute("staffID") %>
@@ -207,7 +207,7 @@
             <div class="notification-dropdown" id="notificationDropdown">
                 <p>No new notifications</p>
             </div>
-            <img src="image/staff.jpg" alt="Profile" class="profile-icon">
+            <img src="StaffImageServlet?staffID=${staffID}" alt="Profile Picture" style="width:80px; height:80px; border-radius:50%; object-fit:cover; border:3px solid #008b8b;">
         </div>
     </div>
  
@@ -222,7 +222,7 @@
     
         <!-- Welcome Card -->
         <div style="background:#fff; border-radius:16px; box-shadow:0 2px 12px rgba(0,0,0,0.07); padding:24px 40px; display:flex; align-items:center; gap:24px; max-width:900px; margin:0 auto 24px auto;">
-            <img src="image/staff.jpg" alt="Staff" style="width:80px; height:80px; border-radius:50%; object-fit:cover; border:3px solid #008b8b;">
+            <img src="StudentImageServlet?studID=${studID}" alt="Staff" class="profile-icon" id="profileBtn" style="width:80px; height:80px; border-radius:50%; object-fit:cover; border:3px solid #008b8b;">
             <div style="flex:1;">
                 <h2 style="margin:0 0 6px 0; font-size:1.5em; color:#008b8b;">Welcome, <%= session.getAttribute("staffName") != null ? session.getAttribute("staffName") : "Staff" %>!</h2>
                 <p style="margin:0; color:#444;">You can review, approve, or reject club proposals and booking requests here.</p>

@@ -1,9 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.List, model.PROPOSAL, model.CLUB, model.STUDENT" %>
+<%@ page import="java.util.List, model.ACTIVITY, model.CLUB, model.STUDENT" %>
 <%
-    List<PROPOSAL> pendingProposals = PROPOSAL.getPendingProposals();
+    List<ACTIVITY> pendingProposals = ACTIVITY.getActivitiesByStatus("Pending");
     int totalStudents = STUDENT.getTotalStudents();
     int totalClubs = CLUB.getTotalClubs();
+    String message = request.getParameter("message");
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -272,6 +273,11 @@
 
   <div class="activity-section">
     <h2>Proposal Requests</h2>
+    <% if (message != null) { %>
+      <div style="background: #c8f7c5; color: #218838; padding: 12px; margin-bottom: 20px; border-radius: 6px; text-align: center; font-weight: 500;">
+        <%= message.replace("+", " ") %>
+      </div>
+    <% } %>
     <table class="proposal-table">
       <thead>
         <tr>
@@ -283,18 +289,17 @@
       </thead>
       <tbody>
       <% if (pendingProposals != null && !pendingProposals.isEmpty()) {
-          for (PROPOSAL proposal : pendingProposals) {
+          for (ACTIVITY proposal : pendingProposals) {
               CLUB club = CLUB.getClubById(proposal.getClubID());
               String clubName = (club != null) ? club.getClubName() : "N/A";
       %>
       <tr>
-          <td><%= proposal.getProposalName() %></td>
+          <td><%= proposal.getActivityName() %></td>
           <td><%= clubName %></td>
-          <td><%= proposal.getSubmissionDate() %></td>
+          <td><%= proposal.getActivityDate() %></td>
           <td>
-              <a href="viewProposal.jsp?proposalId=<%= proposal.getProposalID() %>" class="action-btn view-btn">View</a>
-              <a href="handleProposal.jsp?action=approve&proposalId=<%= proposal.getProposalID() %>" class="action-btn approve-btn">Approve</a>
-              <a href="handleProposal.jsp?action=reject&proposalId=<%= proposal.getProposalID() %>" class="action-btn reject-btn">Reject</a>
+              <a href="handleProposal?action=approve&activityID=<%= proposal.getActivityID() %>" class="action-btn approve-btn">Approve</a>
+              <a href="handleProposal?action=reject&activityID=<%= proposal.getActivityID() %>" class="action-btn reject-btn">Reject</a>
           </td>
       </tr>
       <% } } else { %>
