@@ -1,4 +1,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.util.List, model.ACTIVITY, model.CLUB" %>
+<%
+    CLUB club = (CLUB) session.getAttribute("club");
+    List<ACTIVITY> rejectedActivities = new java.util.ArrayList<ACTIVITY>();
+    if (club != null) {
+        for (ACTIVITY act : ACTIVITY.getActivitiesByClubId(club.getClubId())) {
+            if ("Rejected".equalsIgnoreCase(act.getActivityStatus())) {
+                rejectedActivities.add(act);
+            }
+        }
+    }
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -141,7 +153,7 @@
     <div class="header-icons">
       <img src="image/umpsa.png" alt="UMPSA" />
       <img src="image/bell.png" alt="Notifications" />
-      <img src="image/Raccoon.gif" alt="Profile" />
+      <img src="ClubImageServlet?clubID=<%= club != null ? club.getClubId() : 0 %>" alt="User Avatar" class="profile-icon" />
     </div>
   </div>
   <div class="resource-form-container">

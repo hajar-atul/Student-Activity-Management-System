@@ -362,7 +362,7 @@
 
   <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
-    <img src="image/amin.jpg" alt="Profile" class="profile-pic" />
+    <<img src="StudentImageServlet?studID=${studID}" alt="Profile" class="profile-pic" />
     <h2>
       <%= session.getAttribute("studName") %><br>
       <%= session.getAttribute("studID") %>
@@ -400,7 +400,7 @@
       <div class="notification-dropdown" id="notificationDropdown">
         <p>No new notifications</p>
       </div>
-      <img src="image/amin.jpg" alt="Profile" class="profile-icon" id="profileBtn">
+      <img src="StudentImageServlet?studID=${studID}" alt="Profile" class="profile-icon" id="profileBtn">
       <div class="profile-dropdown" id="profileDropdown">
         <a href="profile.jsp">My Profile</a>
         <a href="logout.jsp">Logout</a>

@@ -218,7 +218,7 @@
 <body>
   <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
-    <img src="image/amin.jpg" alt="Profile" class="profile-pic" />
+    <img src="StudentImageServlet?studID=${studID}" alt="Profile" class="profile-pic" />
     <h2>
       <%= session.getAttribute("studName") %><br>
       <%= session.getAttribute("studID") %>

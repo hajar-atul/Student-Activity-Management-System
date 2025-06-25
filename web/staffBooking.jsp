@@ -295,7 +295,14 @@
 
     <!-- Sidebar -->
     <div class="sidebar">
-        <img src="image/staff.jpg" alt="Profile Picture">
+        <img src="<% 
+            Object sid = session.getAttribute("staffID");
+            if (sid != null) {
+                out.print("StaffImageServlet?staffID=" + sid);
+            } else {
+                out.print("image/staff.jpg");
+            }
+        %>" alt="Profile Picture">
         <h2>
             <%= session.getAttribute("staffName") %><br>
             <%= session.getAttribute("staffID") %>
@@ -320,7 +327,13 @@
             <div class="notification-dropdown" id="notificationDropdown">
                 <p>No new notifications</p>
             </div>
-            <img src="image/staff.jpg" alt="Profile" class="profile-icon">
+            <img src="<% 
+                if (sid != null) {
+                    out.print("StaffImageServlet?staffID=" + sid);
+                } else {
+                    out.print("image/staff.jpg");
+                }
+            %>" alt="Profile" class="profile-icon">
         </div>
     </div>
  

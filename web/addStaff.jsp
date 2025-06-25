@@ -200,6 +200,17 @@
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
+        .notification-btn {
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            position: relative;
+        }
+        .notification-btn img {
+            width: 32px;
+            height: 32px;
+        }
     </style>
 </head>
 <body>
@@ -248,6 +259,9 @@
         <div class="dashboard-title">ADD STAFF</div>
         <div class="top-icons">
             <img src="image/umpsa.png" alt="UMPSA" class="umpsa-icon">
+            <button class="notification-btn" id="notificationBtn">
+                <img src="image/bell.png" alt="Notification">
+            </button>
             <img src="<% 
                 if (sid != null) {
                     out.print("StaffImageServlet?staffID=" + sid);

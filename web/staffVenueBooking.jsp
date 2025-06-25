@@ -144,7 +144,7 @@
 <body>
     <!-- Sidebar -->
     <div class="sidebar">
-        <img src="image/staff.jpg" alt="Profile Picture">
+        <img src="StaffImageServlet?staffID=${staffID}" alt="Profile Picture" class="profile-icon" id="profileBtn">
         <h2>
             <%= session.getAttribute("staffName") %><br>
             <%= session.getAttribute("staffID") %>
