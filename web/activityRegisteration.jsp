@@ -222,7 +222,7 @@
 
   <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
-    <img src="image/amin.jpg" alt="Profile Picture" class="profile-pic">
+    <img src="StudentImageServlet?studID=${studID}" alt="Profile Picture" class="profile-pic">
     <h2>
         <%= session.getAttribute("studName") %><br>
         <%= session.getAttribute("studID") %>
@@ -232,7 +232,7 @@
         <a href="studentDashboardPage.jsp">DASHBOARD</a>
         <a href="activities.jsp">ACTIVITIES</a>
         <a href="studentClub.jsp">CLUBS</a>
-        <a href="settings.jsp">SETTINGS</a>
+        <a href="SettingsServlet">SETTINGS</a>
     </div>
   </div>
 
@@ -245,7 +245,7 @@
         <button class="notification-btn" id="notificationBtn">
           <img src="image/bell.png" alt="Notifications" />
         </button>
-        <img src="image/amin.jpg" alt="User Avatar" class="profile-icon" />
+        <img src="StudentImageServlet?studID=${studID}" alt="User Avatar" class="profile-icon" />
       </div>
     </div>
       
@@ -268,7 +268,7 @@
         <div style="margin-bottom:10px;"><b>Date:</b> <%= activity.getActivityDate() %></div>
         <div style="margin-bottom:10px;"><b>Venue:</b> <%= activity.getActivityVenue() %></div>
         <div style="margin-bottom:10px;"><b>Adab Point:</b> <%= activity.getAdabPoint() %></div>
-        <% if ("paid".equalsIgnoreCase(activity.getActivityType()) && activity.getQrImage() != null && !activity.getQrImage().isEmpty()) { %>
+        <% if ("paid".equalsIgnoreCase(activity.getActivityType()) && activity.getQrImage() != null && activity.getQrImage().length > 0) { %>
           <div style="margin-bottom:10px;"><b>Payment QR:</b><br>
             <img src="<%= activity.getQrImage() %>" alt="QR Code" style="max-width:200px;max-height:200px;display:block;margin:auto;" />
           </div>

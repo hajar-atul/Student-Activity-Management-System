@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import model.ACTIVITY;
 import model.CLUB;
+import java.io.InputStream;
 
 @WebServlet("/CreateActivityServlet")
 @MultipartConfig(
@@ -117,24 +118,29 @@ public class CreateActivityServlet extends HttpServlet {
                 return;
             }
             
-            // Handle proposal file upload
+            // Handle proposal file upload (BLOB)
             Part proposalFilePart = request.getPart("proposalFile");
-            String proposalFileName = null;
+            byte[] proposalFileBytes = null;
             if (proposalFilePart != null && proposalFilePart.getSize() > 0) {
-                proposalFileName = getSubmittedFileName(proposalFilePart);
-                // You can save the file to a specific directory here if needed
+                proposalFileBytes = getFileBytes(proposalFilePart);
             }
             
-            // Handle QR image upload (only for paid activities)
+            // Handle poster image upload (BLOB)
+            Part posterImagePart = request.getPart("posterImage");
+            byte[] posterImageBytes = null;
+            if (posterImagePart != null && posterImagePart.getSize() > 0) {
+                posterImageBytes = getFileBytes(posterImagePart);
+            }
+            
+            // Handle QR image upload (BLOB) - only for paid activities
             Part qrImagePart = request.getPart("qrImage");
-            String qrImageName = null;
+            byte[] qrImageBytes = null;
             if (activityType.equals("Paid")) {
                 if (qrImagePart == null || qrImagePart.getSize() == 0) {
                     response.sendRedirect("createActivity.jsp?error=QR+image+is+required+for+paid+activities");
                     return;
                 }
-                qrImageName = getSubmittedFileName(qrImagePart);
-                // You can save the file to a specific directory here if needed
+                qrImageBytes = getFileBytes(qrImagePart);
             }
             
             // Create activity object
@@ -146,13 +152,14 @@ public class CreateActivityServlet extends HttpServlet {
             activity.setActivityVenue(venueName.trim());
             activity.setActivityBudget(proposedBudget);
             activity.setAdabPoint(adabPoint);
-            activity.setProposalFile(proposalFileName);
-            activity.setQrImage(qrImageName);
+            activity.setProposalFile(proposalFileBytes);
+            activity.setQrImage(qrImageBytes);
+            activity.setPosterImage(posterImageBytes);
             activity.setActivityStatus("Pending"); // Default status for admin approval
             activity.setClubID(club.getClubId());
             
-            // Save to database using the simpler method
-            String generatedActivityId = activity.saveAndReturnIdSimple();
+            // Save to database using the BLOB method
+            String generatedActivityId = activity.saveAndReturnId();
             
             if (generatedActivityId != null && !generatedActivityId.isEmpty()) {
                 // Success - redirect to activities page with success message
@@ -170,6 +177,19 @@ public class CreateActivityServlet extends HttpServlet {
             // Handle other unexpected exceptions
             e.printStackTrace();
             response.sendRedirect("createActivity.jsp?error=An+unexpected+error+occurred.+Please+try+again.");
+        }
+    }
+    
+    // Helper method to convert Part to byte array
+    private byte[] getFileBytes(Part part) throws IOException {
+        if (part == null || part.getSize() == 0) {
+            return null;
+        }
+        
+        try (InputStream inputStream = part.getInputStream()) {
+            byte[] bytes = new byte[(int) part.getSize()];
+            inputStream.read(bytes);
+            return bytes;
         }
     }
     

@@ -20,8 +20,9 @@ public class ACTIVITY {
        private String activityStatus;
        private double activityBudget;
        private int adabPoint;
-       private String proposalFile;
-       private String qrImage;
+       private byte[] proposalFile;
+       private byte[] qrImage;
+       private byte[] posterImage;
        private int clubID;
        
        // JDBC connection details
@@ -104,20 +105,28 @@ public class ACTIVITY {
         return adabPoint;
     }
     
-    public void setProposalFile(String proposalFile) {
+    public void setProposalFile(byte[] proposalFile) {
         this.proposalFile = proposalFile;
     }
 
-    public String getProposalFile() {
+    public byte[] getProposalFile() {
         return proposalFile;
     }
     
-    public void setQrImage(String qrImage) {
+    public void setQrImage(byte[] qrImage) {
         this.qrImage = qrImage;
     }
 
-    public String getQrImage() {
+    public byte[] getQrImage() {
         return qrImage;
+    }
+    
+    public void setPosterImage(byte[] posterImage) {
+        this.posterImage = posterImage;
+    }
+
+    public byte[] getPosterImage() {
+        return posterImage;
     }
 
     public void setClubID(int clubID) {
@@ -141,59 +150,34 @@ public class ACTIVITY {
             // Disable auto-commit to manage transaction manually
             conn.setAutoCommit(false);
             
-            // Since we're using a trigger to generate the ID, we don't need RETURN_GENERATED_KEYS
-            String sql = "INSERT INTO activity (activityName, activityType, activityDesc, activityDate, activityVenue, activityStatus, activityBudget, proposalFile, qrImage, clubID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            // Generate the next ID in Java
+            generatedId = generateNextActivityId(conn);
+            
+            // Insert with the generated ID and BLOB support
+            String sql = "INSERT INTO activity (activityID, activityName, activityType, activityDesc, activityDate, activityVenue, activityStatus, activityBudget, adabPoint, proposalFile, qrImage, posterImage, clubID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             stmt = conn.prepareStatement(sql);
             
             // Set parameters with null checks
-            stmt.setString(1, this.activityName != null ? this.activityName.trim() : "");
-            stmt.setString(2, this.activityType != null ? this.activityType : "General");
-            stmt.setString(3, this.activityDesc != null ? this.activityDesc.trim() : "");
-            stmt.setString(4, this.activityDate != null ? this.activityDate : "");
-            stmt.setString(5, this.activityVenue != null ? this.activityVenue.trim() : "");
-            stmt.setString(6, this.activityStatus != null ? this.activityStatus : "Pending");
-            stmt.setDouble(7, this.activityBudget);
-            stmt.setString(8, this.proposalFile);
-            stmt.setString(9, this.qrImage);
-            stmt.setInt(10, this.clubID);
+            stmt.setString(1, generatedId);
+            stmt.setString(2, this.activityName != null ? this.activityName.trim() : "");
+            stmt.setString(3, this.activityType != null ? this.activityType : "General");
+            stmt.setString(4, this.activityDesc != null ? this.activityDesc.trim() : "");
+            stmt.setString(5, this.activityDate != null ? this.activityDate : "");
+            stmt.setString(6, this.activityVenue != null ? this.activityVenue.trim() : "");
+            stmt.setString(7, this.activityStatus != null ? this.activityStatus : "Pending");
+            stmt.setDouble(8, this.activityBudget);
+            stmt.setInt(9, this.adabPoint);
+            stmt.setBytes(10, this.proposalFile);
+            stmt.setBytes(11, this.qrImage);
+            stmt.setBytes(12, this.posterImage);
+            stmt.setInt(13, this.clubID);
             
             int affectedRows = stmt.executeUpdate();
             
             if (affectedRows > 0) {
-                // Since the trigger generates the ID, we need to get it from the database
-                // Get the last inserted ID for this connection
-                try (java.sql.Statement idStmt = conn.createStatement();
-                     java.sql.ResultSet rs = idStmt.executeQuery("SELECT LAST_INSERT_ID()")) {
-                    
-                    if (rs.next()) {
-                        // This won't work with VARCHAR IDs, so let's get the actual generated ID
-                        // Get the maximum activityID which should be our newly inserted one
-                        try (java.sql.Statement maxStmt = conn.createStatement();
-                             java.sql.ResultSet maxRs = maxStmt.executeQuery("SELECT MAX(activityID) as maxID FROM activity")) {
-                            
-                            if (maxRs.next()) {
-                                generatedId = maxRs.getString("maxID");
-                                if (generatedId != null && !generatedId.trim().isEmpty()) {
-                                    this.activityID = generatedId;
-                                    // Commit the transaction
-                                    conn.commit();
-                                } else {
-                                    // Rollback if no valid ID was found
-                                    conn.rollback();
-                                    throw new RuntimeException("Failed to retrieve generated activity ID");
-                                }
-                            } else {
-                                // Rollback if no ID was found
-                                conn.rollback();
-                                throw new RuntimeException("No activity ID found after insertion");
-                            }
-                        }
-                    } else {
-                        // Rollback if no last insert ID
-                        conn.rollback();
-                        throw new RuntimeException("No last insert ID returned");
-                    }
-                }
+                this.activityID = generatedId;
+                // Commit the transaction
+                conn.commit();
             } else {
                 // Rollback if no rows were affected
                 conn.rollback();
@@ -275,8 +259,9 @@ public class ACTIVITY {
                     activity.setActivityStatus(rs.getString("activityStatus"));
                     activity.setActivityBudget(rs.getDouble("activityBudget"));
                     activity.setAdabPoint(rs.getInt("adabPoint"));
-                    activity.setProposalFile(rs.getString("proposalFile"));
-                    activity.setQrImage(rs.getString("qrImage"));
+                    activity.setProposalFile(rs.getBytes("proposalFile"));
+                    activity.setQrImage(rs.getBytes("qrImage"));
+                    activity.setPosterImage(rs.getBytes("posterImage"));
                     activity.setClubID(rs.getInt("clubID"));
                 }
             }
@@ -307,8 +292,9 @@ public class ACTIVITY {
                     activity.setActivityStatus(rs.getString("activityStatus"));
                     activity.setActivityBudget(rs.getDouble("activityBudget"));
                     activity.setAdabPoint(rs.getInt("adabPoint"));
-                    activity.setProposalFile(rs.getString("proposalFile"));
-                    activity.setQrImage(rs.getString("qrImage"));
+                    activity.setProposalFile(rs.getBytes("proposalFile"));
+                    activity.setQrImage(rs.getBytes("qrImage"));
+                    activity.setPosterImage(rs.getBytes("posterImage"));
                     activity.setClubID(rs.getInt("clubID"));
                     activities.add(activity);
                 }
@@ -341,8 +327,9 @@ public class ACTIVITY {
                     activity.setActivityStatus(rs.getString("activityStatus"));
                     activity.setActivityBudget(rs.getDouble("activityBudget"));
                     activity.setAdabPoint(rs.getInt("adabPoint"));
-                    activity.setProposalFile(rs.getString("proposalFile"));
-                    activity.setQrImage(rs.getString("qrImage"));
+                    activity.setProposalFile(rs.getBytes("proposalFile"));
+                    activity.setQrImage(rs.getBytes("qrImage"));
+                    activity.setPosterImage(rs.getBytes("posterImage"));
                     activity.setClubID(rs.getInt("clubID"));
                     activities.add(activity);
                 }
@@ -360,7 +347,7 @@ public class ACTIVITY {
             Class.forName("com.mysql.cj.jdbc.Driver");
             try (java.sql.Connection conn = java.sql.DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
                 String sql = "SELECT s.* FROM student s " +
-                           "INNER JOIN registeration r ON s.studID = r.studID " +
+                           "INNER JOIN registration r ON s.studID = r.studID " +
                            "WHERE r.activityID = ?";
                 java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
                 stmt.setString(1, activityId);
@@ -392,7 +379,7 @@ public class ACTIVITY {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             try (java.sql.Connection conn = java.sql.DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
-                String sql = "SELECT COUNT(*) FROM registeration WHERE activityID = ?";
+                String sql = "SELECT COUNT(*) FROM registration WHERE activityID = ?";
                 java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
                 stmt.setString(1, activityId);
                 java.sql.ResultSet rs = stmt.executeQuery();
@@ -422,8 +409,8 @@ public class ACTIVITY {
             // Generate the next ID in Java
             generatedId = generateNextActivityId(conn);
             
-            // Insert with the generated ID
-            String sql = "INSERT INTO activity (activityID, activityName, activityType, activityDesc, activityDate, activityVenue, activityStatus, activityBudget, adabPoint, proposalFile, qrImage, clubID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            // Insert with the generated ID and BLOB support
+            String sql = "INSERT INTO activity (activityID, activityName, activityType, activityDesc, activityDate, activityVenue, activityStatus, activityBudget, adabPoint, proposalFile, qrImage, posterImage, clubID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             stmt = conn.prepareStatement(sql);
             
             // Set parameters with null checks
@@ -436,9 +423,10 @@ public class ACTIVITY {
             stmt.setString(7, this.activityStatus != null ? this.activityStatus : "Pending");
             stmt.setDouble(8, this.activityBudget);
             stmt.setInt(9, this.adabPoint);
-            stmt.setString(10, this.proposalFile);
-            stmt.setString(11, this.qrImage);
-            stmt.setInt(12, this.clubID);
+            stmt.setBytes(10, this.proposalFile);
+            stmt.setBytes(11, this.qrImage);
+            stmt.setBytes(12, this.posterImage);
+            stmt.setInt(13, this.clubID);
             
             int affectedRows = stmt.executeUpdate();
             
@@ -514,8 +502,9 @@ public static java.util.List<ACTIVITY> getAvailableActivities() {
                 activity.setActivityStatus(rs.getString("activityStatus"));
                 activity.setActivityBudget(rs.getDouble("activityBudget"));
                 activity.setAdabPoint(rs.getInt("adabPoint"));
-                activity.setProposalFile(rs.getString("proposalFile"));
-                activity.setQrImage(rs.getString("qrImage"));
+                activity.setProposalFile(rs.getBytes("proposalFile"));
+                activity.setQrImage(rs.getBytes("qrImage"));
+                activity.setPosterImage(rs.getBytes("posterImage"));
                 activity.setClubID(rs.getInt("clubID"));
                 activities.add(activity);
             }
@@ -526,7 +515,47 @@ public static java.util.List<ACTIVITY> getAvailableActivities() {
     return activities;
 }
 
-// Get available future activities (status = 'approved' AND date >= today)
+// Get available upcoming activities that the student hasn't registered for yet
+public static java.util.List<ACTIVITY> getAvailableUpcomingActivitiesForStudent(String studID) {
+    java.util.List<ACTIVITY> activities = new java.util.ArrayList<>();
+    try {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        try (java.sql.Connection conn = java.sql.DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "SELECT a.* FROM activity a " +
+                        "WHERE LOWER(TRIM(a.activityStatus)) = 'approved' " +
+                        "AND a.activityDate >= CURDATE() " +
+                        "AND a.activityID NOT IN (SELECT r.activityID FROM registration r WHERE r.studID = ?) " +
+                        "ORDER BY a.activityDate ASC";
+            try (java.sql.PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, studID);
+                try (java.sql.ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        ACTIVITY activity = new ACTIVITY();
+                        activity.setActivityID(rs.getString("activityID"));
+                        activity.setActivityName(rs.getString("activityName"));
+                        activity.setActivityType(rs.getString("activityType"));
+                        activity.setActivityDesc(rs.getString("activityDesc"));
+                        activity.setActivityDate(rs.getString("activityDate"));
+                        activity.setActivityVenue(rs.getString("activityVenue"));
+                        activity.setActivityStatus(rs.getString("activityStatus"));
+                        activity.setActivityBudget(rs.getDouble("activityBudget"));
+                        activity.setAdabPoint(rs.getInt("adabPoint"));
+                        activity.setProposalFile(rs.getBytes("proposalFile"));
+                        activity.setQrImage(rs.getBytes("qrImage"));
+                        activity.setPosterImage(rs.getBytes("posterImage"));
+                        activity.setClubID(rs.getInt("clubID"));
+                        activities.add(activity);
+                    }
+                }
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return activities;
+}
+
+// Get available future activities (status = 'approved' AND date >= today) - for backward compatibility
 public static java.util.List<ACTIVITY> getAvailableUpcomingActivities() {
     java.util.List<ACTIVITY> activities = new java.util.ArrayList<>();
     try {
@@ -547,8 +576,9 @@ public static java.util.List<ACTIVITY> getAvailableUpcomingActivities() {
                     activity.setActivityStatus(rs.getString("activityStatus"));
                     activity.setActivityBudget(rs.getDouble("activityBudget"));
                     activity.setAdabPoint(rs.getInt("adabPoint"));
-                    activity.setProposalFile(rs.getString("proposalFile"));
-                    activity.setQrImage(rs.getString("qrImage"));
+                    activity.setProposalFile(rs.getBytes("proposalFile"));
+                    activity.setQrImage(rs.getBytes("qrImage"));
+                    activity.setPosterImage(rs.getBytes("posterImage"));
                     activity.setClubID(rs.getInt("clubID"));
                     activities.add(activity);
                 }
@@ -580,8 +610,9 @@ public static java.util.List<ACTIVITY> getCurrentActivities() {
                     activity.setActivityStatus(rs.getString("activityStatus"));
                     activity.setActivityBudget(rs.getDouble("activityBudget"));
                     activity.setAdabPoint(rs.getInt("adabPoint"));
-                    activity.setProposalFile(rs.getString("proposalFile"));
-                    activity.setQrImage(rs.getString("qrImage"));
+                    activity.setProposalFile(rs.getBytes("proposalFile"));
+                    activity.setQrImage(rs.getBytes("qrImage"));
+                    activity.setPosterImage(rs.getBytes("posterImage"));
                     activity.setClubID(rs.getInt("clubID"));
                     activities.add(activity);
                 }
@@ -599,7 +630,7 @@ public static java.util.List<ACTIVITY> getActivitiesByStudentId(String studID) {
     try {
         Class.forName("com.mysql.cj.jdbc.Driver");
         try (java.sql.Connection conn = java.sql.DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
-            String sql = "SELECT a.* FROM activity a INNER JOIN registeration r ON a.activityID = r.activityID WHERE r.studID = ?";
+            String sql = "SELECT a.* FROM activity a INNER JOIN registration r ON a.activityID = r.activityID WHERE r.studID = ?";
             try (java.sql.PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setString(1, studID);
                 try (java.sql.ResultSet rs = stmt.executeQuery()) {
@@ -607,8 +638,92 @@ public static java.util.List<ACTIVITY> getActivitiesByStudentId(String studID) {
                         ACTIVITY activity = new ACTIVITY();
                         activity.setActivityID(rs.getString("activityID"));
                         activity.setActivityName(rs.getString("activityName"));
+                        activity.setActivityType(rs.getString("activityType"));
+                        activity.setActivityDesc(rs.getString("activityDesc"));
                         activity.setActivityDate(rs.getString("activityDate"));
+                        activity.setActivityVenue(rs.getString("activityVenue"));
                         activity.setActivityStatus(rs.getString("activityStatus"));
+                        activity.setActivityBudget(rs.getDouble("activityBudget"));
+                        activity.setAdabPoint(rs.getInt("adabPoint"));
+                        activity.setProposalFile(rs.getBytes("proposalFile"));
+                        activity.setQrImage(rs.getBytes("qrImage"));
+                        activity.setPosterImage(rs.getBytes("posterImage"));
+                        activity.setClubID(rs.getInt("clubID"));
+                        activities.add(activity);
+                    }
+                }
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return activities;
+}
+
+// Get registered activities for a student that are upcoming (current and future)
+public static java.util.List<ACTIVITY> getRegisteredUpcomingActivities(String studID) {
+    java.util.List<ACTIVITY> activities = new java.util.ArrayList<>();
+    try {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        try (java.sql.Connection conn = java.sql.DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "SELECT a.* FROM activity a INNER JOIN registration r ON a.activityID = r.activityID " +
+                        "WHERE r.studID = ? AND a.activityDate >= CURDATE() " +
+                        "ORDER BY a.activityDate ASC";
+            try (java.sql.PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, studID);
+                try (java.sql.ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        ACTIVITY activity = new ACTIVITY();
+                        activity.setActivityID(rs.getString("activityID"));
+                        activity.setActivityName(rs.getString("activityName"));
+                        activity.setActivityType(rs.getString("activityType"));
+                        activity.setActivityDesc(rs.getString("activityDesc"));
+                        activity.setActivityDate(rs.getString("activityDate"));
+                        activity.setActivityVenue(rs.getString("activityVenue"));
+                        activity.setActivityStatus(rs.getString("activityStatus"));
+                        activity.setActivityBudget(rs.getDouble("activityBudget"));
+                        activity.setAdabPoint(rs.getInt("adabPoint"));
+                        activity.setProposalFile(rs.getBytes("proposalFile"));
+                        activity.setQrImage(rs.getBytes("qrImage"));
+                        activity.setPosterImage(rs.getBytes("posterImage"));
+                        activity.setClubID(rs.getInt("clubID"));
+                        activities.add(activity);
+                    }
+                }
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return activities;
+}
+
+// Get registered activities for a student that are past (completed)
+public static java.util.List<ACTIVITY> getRegisteredPastActivities(String studID) {
+    java.util.List<ACTIVITY> activities = new java.util.ArrayList<>();
+    try {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        try (java.sql.Connection conn = java.sql.DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "SELECT a.* FROM activity a INNER JOIN registration r ON a.activityID = r.activityID " +
+                        "WHERE r.studID = ? AND a.activityDate < CURDATE() " +
+                        "ORDER BY a.activityDate DESC";
+            try (java.sql.PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, studID);
+                try (java.sql.ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        ACTIVITY activity = new ACTIVITY();
+                        activity.setActivityID(rs.getString("activityID"));
+                        activity.setActivityName(rs.getString("activityName"));
+                        activity.setActivityType(rs.getString("activityType"));
+                        activity.setActivityDesc(rs.getString("activityDesc"));
+                        activity.setActivityDate(rs.getString("activityDate"));
+                        activity.setActivityVenue(rs.getString("activityVenue"));
+                        activity.setActivityStatus(rs.getString("activityStatus"));
+                        activity.setActivityBudget(rs.getDouble("activityBudget"));
+                        activity.setAdabPoint(rs.getInt("adabPoint"));
+                        activity.setProposalFile(rs.getBytes("proposalFile"));
+                        activity.setQrImage(rs.getBytes("qrImage"));
+                        activity.setPosterImage(rs.getBytes("posterImage"));
                         activity.setClubID(rs.getInt("clubID"));
                         activities.add(activity);
                     }
@@ -627,7 +742,7 @@ public static int getClubCountByStudentId(String studID) {
     try {
         Class.forName("com.mysql.cj.jdbc.Driver");
         try (java.sql.Connection conn = java.sql.DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
-            String sql = "SELECT COUNT(DISTINCT a.clubID) FROM activity a INNER JOIN registeration r ON a.activityID = r.activityID WHERE r.studID = ?";
+            String sql = "SELECT COUNT(DISTINCT a.clubID) FROM activity a INNER JOIN registration r ON a.activityID = r.activityID WHERE r.studID = ?";
             try (java.sql.PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setString(1, studID);
                 try (java.sql.ResultSet rs = stmt.executeQuery()) {
@@ -697,8 +812,9 @@ public static java.util.List<ACTIVITY> getActivitiesByStatus(String status) {
                 activity.setActivityStatus(rs.getString("activityStatus"));
                 activity.setActivityBudget(rs.getDouble("activityBudget"));
                 activity.setAdabPoint(rs.getInt("adabPoint"));
-                activity.setProposalFile(rs.getString("proposalFile"));
-                activity.setQrImage(rs.getString("qrImage"));
+                activity.setProposalFile(rs.getBytes("proposalFile"));
+                activity.setQrImage(rs.getBytes("qrImage"));
+                activity.setPosterImage(rs.getBytes("posterImage"));
                 activity.setClubID(rs.getInt("clubID"));
                 activities.add(activity);
             }

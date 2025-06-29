@@ -5,6 +5,14 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import="java.util.List, model.ACTIVITY, model.CLUB" %>
+<%
+    List<ACTIVITY> registeredActivities = (List<ACTIVITY>) request.getAttribute("registeredActivities");
+    if (registeredActivities == null) {
+        registeredActivities = new java.util.ArrayList<ACTIVITY>();
+    }
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -271,6 +279,16 @@
       background-color: #f9f9f9;
     }
 
+    .status-upcoming {
+      color: #2196F3;
+      font-weight: bold;
+    }
+
+    .status-today {
+      color: #FF9800;
+      font-weight: bold;
+    }
+
     /* Back Button */
     .back-btn {
       background-color: #008b8b;
@@ -310,7 +328,7 @@
       <a href="activities.jsp">ACTIVITIES</a>
       <a href="studentClub.jsp">CLUBS</a>
       <a href="achievements.jsp">ACHIEVEMENTS</a>
-      <a href="settings.jsp">SETTINGS</a>
+      <a href="SettingsServlet">SETTINGS</a>
     </div>
 
     <!-- Logout button fixed at the bottom -->
@@ -352,43 +370,60 @@
   
   <!-- Activity Section -->
   <div class="activity-section" style="flex-grow: 1;">
-    <h2>ACTIVITY LIST</h2>
+    <h2>MY REGISTERED ACTIVITIES</h2>
     <div class="table-wrapper">
-      <div class="title-bar">My Activities</div>
+      <div class="title-bar">Upcoming Activities</div>
       <table>
         <thead>
           <tr style="background-color: #f0f0f0;">
             <th>ACTIVITY</th>
             <th>DATE</th>
+            <th>VENUE</th>
             <th>STATUS</th>
-            <th>ROLE</th>
+            <th>ADAB POINTS</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Flood Rescue Volunteer</td>
-            <td>12 Jan 2026</td>
-            <td>Upcoming</td>
-            <td>Participant</td>
-          </tr>
-          <tr>
-            <td>Basketball Clinic</td>
-            <td>8 Sep 2025</td>
-            <td>Upcoming</td>
-            <td>Participant</td>
-          </tr>
-          <tr>
-            <td>Elder Care Visit</td>
-            <td>23 March 2025</td>
-            <td>Upcoming</td>
-            <td>Participant</td>
-          </tr>
-          <tr>
-            <td>Biodiversity Seminar</td>
-            <td>22 May 2026</td>
-            <td>Upcoming</td>
-            <td>Participant</td>
-          </tr>
+          <% if (registeredActivities.isEmpty()) { %>
+            <tr>
+              <td colspan="5" style="text-align: center; padding: 20px; color: #666;">
+                No registered activities found. <a href="AvailableServlet" style="color: #008b8b;">Browse available activities</a>
+              </td>
+            </tr>
+          <% } else { %>
+            <% for (ACTIVITY activity : registeredActivities) { 
+                 CLUB club = CLUB.getClubById(activity.getClubID());
+                 String clubName = (club != null) ? club.getClubName() : "N/A";
+                 
+                 // Determine status based on date
+                 String status = "Upcoming";
+                 String statusClass = "status-upcoming";
+                 
+                 // Check if activity is today
+                 java.time.LocalDate today = java.time.LocalDate.now();
+                 java.time.LocalDate activityDate = null;
+                 try {
+                     activityDate = java.time.LocalDate.parse(activity.getActivityDate());
+                     if (activityDate.equals(today)) {
+                         status = "Today";
+                         statusClass = "status-today";
+                     }
+                 } catch (Exception e) {
+                     // If date parsing fails, keep as "Upcoming"
+                 }
+            %>
+            <tr>
+              <td>
+                <strong><%= activity.getActivityName() %></strong><br>
+                <small style="color: #666;">Organized by: <%= clubName %></small>
+              </td>
+              <td><%= activity.getActivityDate() %></td>
+              <td><%= activity.getActivityVenue() %></td>
+              <td class="<%= statusClass %>"><%= status %></td>
+              <td><%= activity.getAdabPoint() %></td>
+            </tr>
+            <% } %>
+          <% } %>
         </tbody>
       </table>
     </div>

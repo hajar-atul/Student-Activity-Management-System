@@ -318,7 +318,7 @@
     <a href="studentDashboardPage.jsp">DASHBOARD</a>
     <a href="activities.jsp">ACTIVITIES</a>
     <a href="studentClub.jsp">CLUBS</a>
-    <a href="settings.jsp">SETTINGS</a>
+    <a href="SettingsServlet">SETTINGS</a>
   </div>
 
   <!-- ✅ Logout button fixed at the bottom -->
@@ -358,9 +358,9 @@
 <div class="content" id="content">
   <div class="activity-container">
     <div class="activity-buttons">
-      <button class="activity-btn" onclick="location.href='currentActivityList.jsp'">Current Activity List</button>
-      <button class="activity-btn" onclick="location.href='availableActivityList.jsp'">Join Activity</button>
-      <button class="activity-btn" onclick="location.href='pastActivityList.jsp'">View Past Activities</button>
+      <button class="activity-btn" onclick="location.href='CurrentServlet'">Current Activity List</button>
+      <button class="activity-btn" onclick="location.href='AvailableServlet'">Join Activity</button>
+      <button class="activity-btn" onclick="location.href='PastServlet'">View Past Activities</button>
     </div>
 
     <div class="activity-images">

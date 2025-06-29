@@ -6,6 +6,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.WebServlet;
 import model.ACTIVITY;
+import model.CLUB;
 import java.util.List;
 
 @WebServlet("/CurrentServlet")
@@ -44,9 +45,9 @@ public class CurrentServlet extends HttpServlet {
             e.printStackTrace();
         }
 
-        // Fetch current activities and set as request attribute
-        List<ACTIVITY> currentActivities = ACTIVITY.getCurrentActivities();
-        request.setAttribute("currentActivities", currentActivities);
+        // Fetch registered upcoming activities for the current student
+        List<ACTIVITY> registeredActivities = ACTIVITY.getRegisteredUpcomingActivities(studID);
+        request.setAttribute("registeredActivities", registeredActivities);
 
         request.setAttribute("studName", studName);
         request.setAttribute("studID", studID);
