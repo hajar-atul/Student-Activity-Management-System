@@ -38,7 +38,10 @@ public class AdminDashboardServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // Fetch pending activities from the database
+        java.util.List<model.ACTIVITY> pendingActivities = model.ADMIN.getPendingActivities();
+        request.setAttribute("pendingActivities", pendingActivities);
         // Forward to JSP
-        request.getRequestDispatcher("AdminDashboard.jsp").forward(request, response);
+        request.getRequestDispatcher("adminDashboardPage.jsp").forward(request, response);
     }
 }

@@ -5,11 +5,41 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page import="model.ACTIVITY, model.STUDENT, model.CLUB" %>
+<%
+    String activityID = request.getParameter("activityID");
+    ACTIVITY activity = null;
+    STUDENT student = null;
+    CLUB club = null;
+    
+    if (activityID != null) {
+        activity = ACTIVITY.getActivityById(activityID);
+        if (activity != null) {
+            String studIDStr = (String) session.getAttribute("studID");
+            if (studIDStr != null) {
+                int studID = Integer.parseInt(studIDStr);
+                student = STUDENT.getStudentById(studID);
+                club = CLUB.getClubById(activity.getClubID());
+            }
+        }
+    }
+    
+    if (activity == null || student == null) {
+        response.sendRedirect("availableActivityList.jsp?error=Invalid+activity+or+student+data");
+        return;
+    }
+    
+    // Check if activity is paid
+    if (!"Paid".equals(activity.getActivityType())) {
+        response.sendRedirect("availableActivityList.jsp?error=This+is+a+free+activity.+Please+use+the+free+registration+page.");
+        return;
+    }
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Student Activity - IT Workshop</title>
+  <title>Payment - <%= activity.getActivityName() %></title>
   <link href="https://fonts.googleapis.com/css2?family=Arial&display=swap" rel="stylesheet">
   <style>
     * {
@@ -220,47 +250,91 @@
     }
 
     .content {
-  margin-left: 250px;
-  height: calc(100vh - 80px); /* 80px = topbar height */
-  transition: margin-left 0.3s ease;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  padding: 100px 30px 20px 30px; /* ← TOLAK ke bawah dari topbar */
-  box-sizing: border-box;
-}
-
+      margin-left: 250px;
+      height: calc(100vh - 80px);
+      transition: margin-left 0.3s ease;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: 100px 30px 20px 30px;
+      box-sizing: border-box;
+    }
 
     .sidebar.closed ~ .content {
       margin-left: 0;
     }
 
-    .payment-header h1 {
+    .payment-container {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      padding: 32px;
+      max-width: 500px;
+      width: 100%;
+      margin: 20px;
+    }
+
+    .activity-title {
       text-align: center;
-      padding: 40px 0;
+      color: #008b8b;
+      font-size: 1.8em;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .activity-info {
+      margin-bottom: 20px;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 0.9em;
+    }
+
+    .info-label {
+      font-weight: bold;
+      color: #00796B;
+    }
+
+    .info-value {
+      color: #333;
     }
 
     .qr-section {
       text-align: center;
-      margin-top: 30px;
+      margin: 20px 0;
     }
 
     .qr-section img {
       width: 250px;
-      margin-bottom: 20px;
+      max-width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .student-info {
+      margin: 20px 0;
+      padding: 15px;
+      background: #e3f2fd;
+      border-radius: 8px;
     }
 
     .form {
-      max-width: 400px;
-      margin: 0 auto;
-      text-align: left;
+      margin-top: 20px;
     }
 
     .form label {
       display: block;
       margin: 10px 0 5px;
+      font-weight: bold;
+      color: #00796B;
     }
 
     .form input[type="text"],
@@ -269,7 +343,13 @@
       padding: 10px;
       border-radius: 5px;
       border: 1px solid #ccc;
+      background-color: #f9f9f9;
+      margin-bottom: 10px;
+    }
+
+    .form input[type="text"] {
       background-color: #eee;
+      color: #666;
     }
 
     .submit-button {
@@ -278,15 +358,21 @@
     }
 
     .submit-button button {
-      padding: 10px 20px;
+      padding: 12px 24px;
       background-color: #00796B;
       color: white;
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      transition: background-color 0.2s;
     }
 
-    /* Back Button */
+    .submit-button button:hover {
+      background-color: #005a4f;
+    }
+
     .back-btn {
       background-color: #008b8b;
       color: white;
@@ -296,16 +382,33 @@
       cursor: pointer;
       margin-bottom: 20px;
       font-size: 16px;
+      transition: background-color 0.2s;
     }
 
     .back-btn:hover {
       background-color: #006d6d;
     }
 
-    /* Responsive */
+    .paid-badge {
+      background: #ff9800;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 0.9em;
+      font-weight: bold;
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+
     @media (max-width: 768px) {
       .content {
         margin-left: 0;
+        padding: 100px 15px 20px 15px;
+      }
+      
+      .payment-container {
+        margin: 10px;
+        padding: 20px;
       }
     }
   </style>
@@ -314,7 +417,7 @@
 
    <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
-    <img src="image/amin.jpg" alt="Profile" class="profile-pic" />
+    <img src="StudentImageServlet?studID=${studID}" alt="Profile" class="profile-pic" />
     <h2>
       <%= session.getAttribute("studName") %><br>
       <%= session.getAttribute("studID") %>
@@ -323,7 +426,7 @@
       <a href="studentDashboardPage.jsp">DASHBOARD</a>
       <a href="activities.jsp">ACTIVITIES</a>
       <a href="studentClub.jsp">CLUBS</a>
-      <a href="settings.jsp">SETTINGS</a>
+      <a href="SettingsServlet">SETTINGS</a>
     </div>
 
     <!-- Logout button fixed at the bottom -->
@@ -343,7 +446,7 @@
       <input type="text" placeholder="Search..." />
       <button class="search-btn">X</button>
     </div>
-    <div class="dashboard-title">ACTIVITIES</div>
+    <div class="dashboard-title">PAYMENT</div>
     <div class="top-icons">
       <img src="image/umpsa.png" class="umpsa-icon" alt="UMPSA">
       <button class="notification-btn" id="notificationBtn">
@@ -352,7 +455,7 @@
       <div class="notification-dropdown" id="notificationDropdown">
         <p>No new notifications</p>
       </div>
-      <img src="image/amin.jpg" alt="Profile" class="profile-icon" id="profileBtn">
+      <img src="StudentImageServlet?studID=${studID}" alt="Profile" class="profile-icon" id="profileBtn">
       <div class="profile-dropdown" id="profileDropdown">
         <a href="profile.jsp">My Profile</a>
         <a href="logout.jsp">Logout</a>
@@ -361,29 +464,91 @@
   </div>
 
   <!-- Content -->
-  <div class="content" id="content" style="display: flex; flex-direction: column; justify-content: space-between; align-items: center; height: calc(100vh - 80px); margin-left: 250px; padding: 100px 30px 20px 30px; overflow: hidden; box-sizing: border-box;">
-
-  <div style="text-align: center;">
-    <h1 style="margin-bottom: 10px;">IT WORKSHOP</h1>
-    <img src="image/qr_zahwa.jfif" alt="QR Code" style="width: 200px; margin-bottom: 10px;">
-    <form id="receiptForm" enctype="multipart/form-data" style="max-width: 300px; text-align: left;">
-      <label for="paymentType">Payment Method:</label>
-      <input type="text" id="paymentType" name="paymentType" value="QR payment" readonly style="width: 100%; margin-bottom: 10px; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background-color: #eee;">
-
-      <label for="receipt">Provide receipt:</label>
-      <input type="file" id="receipt" name="receipt" accept=".jpg,.jpeg,.png,.pdf" style="width: 100%; margin-bottom: 10px; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background-color: #eee;">
-
-      <div style="text-align: center;">
-        <button type="submit" style="padding: 8px 16px; background-color: #00796B; color: white; border: none; border-radius: 5px;">Submit Receipt</button>
+  <div class="content" id="content">
+    <div class="payment-container">
+      <div class="activity-title"><%= activity.getActivityName() %></div>
+      <div class="paid-badge">PAID ACTIVITY</div>
+      
+      <div class="activity-info">
+        <div class="info-row">
+          <span class="info-label">Organized by:</span>
+          <span class="info-value"><%= club != null ? club.getClubName() : "N/A" %></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Date:</span>
+          <span class="info-value"><%= activity.getActivityDate() %></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Venue:</span>
+          <span class="info-value"><%= activity.getActivityVenue() %></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Adab Points:</span>
+          <span class="info-value"><%= activity.getAdabPoint() %></span>
+        </div>
       </div>
-    </form>
-  </div>
 
-  <!-- BACK BUTTON BAWAH KIRI -->
-  <div style="align-self: flex-start;">
-    <button class="back-btn" onclick="location.href='availableActivityList.jsp'">← Back</button>
+      <% if (activity.getQrImage() != null && activity.getQrImage().length > 0) { %>
+        <div class="qr-section">
+          <h3>Payment QR Code</h3>
+          <img src="ActivityImageServlet?activityID=<%= activity.getActivityID() %>&type=qr" alt="QR Code" />
+        </div>
+      <% } else { %>
+        <div class="qr-section">
+          <h3>Payment QR Code</h3>
+          <p style="color: #666;">QR code not available</p>
+        </div>
+      <% } %>
+
+      <div class="student-info">
+        <h3>Student Information</h3>
+        <div class="info-row">
+          <span class="info-label">Name:</span>
+          <span class="info-value"><%= student.getStudName() %></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">ID:</span>
+          <span class="info-value"><%= student.getStudID() %></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Email:</span>
+          <span class="info-value"><%= student.getStudEmail() %></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Course:</span>
+          <span class="info-value"><%= student.getStudCourse() %></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Semester:</span>
+          <span class="info-value"><%= student.getStudSemester() %></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Phone:</span>
+          <span class="info-value"><%= student.getStudNoPhone() %></span>
+        </div>
+      </div>
+
+      <form id="receiptForm" enctype="multipart/form-data" class="form" action="PaidActivityRegistrationServlet" method="post">
+        <input type="hidden" name="activityID" value="<%= activity.getActivityID() %>" />
+        
+        <label for="paymentType">Payment Method:</label>
+        <input type="text" id="paymentType" name="paymentType" value="QR Payment" readonly />
+
+        <label for="receipt">Upload Payment Receipt:</label>
+        <input type="file" id="receipt" name="receipt" accept=".jpg,.jpeg,.png,.pdf" required />
+        <small style="color: #666; font-size: 0.8em;">Please upload your payment receipt (JPG, PNG, or PDF)</small>
+
+        <div class="submit-button">
+          <button type="submit">Submit Receipt & Register</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- BACK BUTTON -->
+    <div style="align-self: flex-start;">
+      <button class="back-btn" onclick="location.href='availableActivityList.jsp'">← Back to Activities</button>
+    </div>
   </div>
-</div>
 
   <script>
     const sidebar = document.getElementById('sidebar');
@@ -415,13 +580,17 @@
     });
 
     document.getElementById('receiptForm').addEventListener('submit', function (e) {
-      e.preventDefault();
       const fileInput = document.getElementById('receipt');
       if (fileInput.files.length === 0) {
         alert("Please select a receipt file.");
+        e.preventDefault();
         return;
       }
-      alert('Receipt submitted successfully!');
+      
+      if (!confirm("Are you sure you want to submit your receipt and register for this activity? You will receive <%= activity.getAdabPoint() %> Adab Points upon successful registration.")) {
+        e.preventDefault();
+        return;
+      }
     });
   </script>
 

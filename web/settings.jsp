@@ -4,19 +4,6 @@
     Author     : User
 --%>
 
-<%@page import="model.STUDENT"%>
-<%
-    STUDENT student = (STUDENT) session.getAttribute("student");
-    if (student == null) {
-        response.sendRedirect("index.jsp");
-        return;
-    }
-    
-    // Get messages from request parameters
-    String message = request.getParameter("message");
-    String error = request.getParameter("error");
-%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -273,6 +260,61 @@
             color: #666;
         }
 
+        .profile-picture-section {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 2px dashed #ddd;
+            border-radius: 10px;
+            background-color: #fafafa;
+        }
+
+        .current-profile-pic {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 15px;
+            display: block;
+            border: 3px solid #008b8b;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .file-input-container {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .file-input-container input[type="file"] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-input-label {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #008b8b;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .file-input-label:hover {
+            background-color: #006d6d;
+        }
+
+        .file-info {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #666;
+        }
+
         .submit-section {
             text-align: center;
             margin-top: 20px;
@@ -406,7 +448,7 @@
 <body>
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
-        <img src="image/amin.jpg" alt="Profile" class="profile-pic" />
+        <img src="StudentImageServlet?studID=${studID}" alt="Profile" class="profile-pic" />
         <h2>
             <%= session.getAttribute("studName") %><br>
             <%= session.getAttribute("studID") %>
@@ -415,7 +457,7 @@
             <a href="studentDashboardPage.jsp">DASHBOARD</a>
             <a href="activities.jsp">ACTIVITIES</a>
             <a href="studentClub.jsp">CLUBS</a>
-            <a href="settings.jsp">SETTINGS</a>
+            <a href="SettingsServlet">SETTINGS</a>
         </div>
         <div style="position: absolute; bottom: 20px; width: 80%; left: 10%;">
             <form action="index.jsp">
@@ -442,7 +484,7 @@
             <div class="notification-dropdown" id="notificationDropdown">
                 <p>No new notifications</p>
             </div>
-            <img src="image/amin.jpg" alt="Profile" class="profile-icon" id="profileBtn">
+            <img src="StudentImageServlet?studID=${studID}" alt="Profile" class="profile-icon" id="profileBtn">
             <div class="profile-dropdown" id="profileDropdown">
                 <a href="profile.jsp">My Profile</a>
                 <a href="logout.jsp">Logout</a>
@@ -453,69 +495,82 @@
     <!-- Content -->
     <div class="content" id="content">
         <div class="settings-container">
-            <form class="form-section" action="UpdateStudentServlet" method="post">
+            <form class="form-section" action="UpdateStudentServlet" method="post" enctype="multipart/form-data">
+                <!-- Profile Picture Section -->
+                <div class="profile-picture-section">
+                    <h3 style="margin-bottom: 20px; color: #008b8b;">Profile Picture</h3>
+                    <img src="StudentImageServlet?studID=${studID}" alt="Current Profile" class="current-profile-pic" id="currentProfilePic" />
+                    <div class="file-input-container">
+                        <input type="file" name="profilePicture" id="profilePicture" accept="image/*" onchange="previewImage(this)" />
+                        <label for="profilePicture" class="file-input-label">Choose New Profile Picture</label>
+                    </div>
+                    <div class="file-info">
+                        Supported formats: JPG, PNG, GIF (Max size: 5MB)
+                    </div>
+                </div>
+
                 <div class="form-row">
                     <div class="form-group">
                         <label>Student ID</label>
-                        <input type="text" name="studID" value="<%= student.getStudID() %>" readonly />
+                        <input type="text" name="studID" value="<%= session.getAttribute("studID") %>" readonly />
                     </div>
                     <div class="form-group">
                         <label>Student Name</label>
-                        <input type="text" name="studName" value="<%= student.getStudName() %>" required />
+                        <input type="text" name="studName" value="<%= session.getAttribute("studName") %>" required />
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
                         <label>Email</label>
-                        <input type="email" name="studEmail" value="<%= student.getStudEmail() %>" required />
+                        <input type="email" name="studEmail" value="<%= session.getAttribute("studEmail") %>" required />
                     </div>
                     <div class="form-group">
                         <label>Phone Number</label>
-                        <input type="text" name="studNoPhone" value="<%= student.getStudNoPhone() %>" required />
+                        <input type="text" name="studNoPhone" value="<%= session.getAttribute("studNoPhone") %>" required />
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
                         <label>Course</label>
-                        <input type="text" name="studCourse" value="<%= student.getStudCourse() %>" required />
+                        <input type="text" name="studCourse" value="<%= session.getAttribute("studCourse") %>" required />
                     </div>
                     <div class="form-group">
                         <label>Semester</label>
                         <select name="studSemester" required>
-                            <option value="1" <%= "1".equals(student.getStudSemester()) ? "selected" : "" %>>Semester 1</option>
-                            <option value="2" <%= "2".equals(student.getStudSemester()) ? "selected" : "" %>>Semester 2</option>
-                            <option value="3" <%= "3".equals(student.getStudSemester()) ? "selected" : "" %>>Semester 3</option>
-                            <option value="4" <%= "4".equals(student.getStudSemester()) ? "selected" : "" %>>Semester 4</option>
-                            <option value="5" <%= "5".equals(student.getStudSemester()) ? "selected" : "" %>>Semester 5</option>
-                            <option value="6" <%= "6".equals(student.getStudSemester()) ? "selected" : "" %>>Semester 6</option>
-                            <option value="7" <%= "7".equals(student.getStudSemester()) ? "selected" : "" %>>Semester 7</option>
-                            <option value="8" <%= "8".equals(student.getStudSemester()) ? "selected" : "" %>>Semester 8</option>
+                            <option value="1" <%= "1".equals(session.getAttribute("studSemester")) ? "selected" : "" %>>Semester 1</option>
+                            <option value="2" <%= "2".equals(session.getAttribute("studSemester")) ? "selected" : "" %>>Semester 2</option>
+                            <option value="3" <%= "3".equals(session.getAttribute("studSemester")) ? "selected" : "" %>>Semester 3</option>
+                            <option value="4" <%= "4".equals(session.getAttribute("studSemester")) ? "selected" : "" %>>Semester 4</option>
+                            <option value="5" <%= "5".equals(session.getAttribute("studSemester")) ? "selected" : "" %>>Semester 5</option>
+                            <option value="6" <%= "6".equals(session.getAttribute("studSemester")) ? "selected" : "" %>>Semester 6</option>
+                            <option value="7" <%= "7".equals(session.getAttribute("studSemester")) ? "selected" : "" %>>Semester 7</option>
+                            <option value="8" <%= "8".equals(session.getAttribute("studSemester")) ? "selected" : "" %>>Semester 8</option>
                         </select>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
                         <label>Date of Birth</label>
-                        <input type="date" name="dob" value="<%= student.getDob() %>" required />
+                        <input type="date" name="dob" value="<%= session.getAttribute("dob") %>" required />
                     </div>
                     <div class="form-group">
                         <label>MUET Status</label>
                         <select name="muetStatus" required>
-                            <option value="Not Taken" <%= "Not Taken".equals(student.getMuetStatus()) ? "selected" : "" %>>Not Taken</option>
-                            <option value="Band 3" <%= "Band 3".equals(student.getMuetStatus()) ? "selected" : "" %>>Band 3</option>
-                            <option value="Band 3.5" <%= "Band 3.5".equals(student.getMuetStatus()) ? "selected" : "" %>>Band 3.5</option>
-                            <option value="Band 4" <%= "Band 4".equals(student.getMuetStatus()) ? "selected" : "" %>>Band 4</option>
-                            <option value="Band 4.5" <%= "Band 4.5".equals(student.getMuetStatus()) ? "selected" : "" %>>Band 4.5</option>
-                            <option value="Band 5" <%= "Band 5".equals(student.getMuetStatus()) ? "selected" : "" %>>Band 5</option>
-                            <option value="Band 5.5" <%= "Band 5.5".equals(student.getMuetStatus()) ? "selected" : "" %>>Band 5.5</option>
-                            <option value="Band 6" <%= "Band 6".equals(student.getMuetStatus()) ? "selected" : "" %>>Band 6</option>
+                            <option value="Not Taken" <%= "Not Taken".equals(session.getAttribute("muetStatus")) ? "selected" : "" %>>Not Taken</option>
+                            <option value="Band 3" <%= "Band 3".equals(session.getAttribute("muetStatus")) ? "selected" : "" %>>Band 3</option>
+                            <option value="Band 3.5" <%= "Band 3.5".equals(session.getAttribute("muetStatus")) ? "selected" : "" %>>Band 3.5</option>
+                            <option value="Band 4" <%= "Band 4".equals(session.getAttribute("muetStatus")) ? "selected" : "" %>>Band 4</option>
+                            <option value="Band 4.5" <%= "Band 4.5".equals(session.getAttribute("muetStatus")) ? "selected" : "" %>>Band 4.5</option>
+                            <option value="Band 5" <%= "Band 5".equals(session.getAttribute("muetStatus")) ? "selected" : "" %>>Band 5</option>
+                            <option value="Band 5.5" <%= "Band 5.5".equals(session.getAttribute("muetStatus")) ? "selected" : "" %>>Band 5.5</option>
+                            <option value="Band 6" <%= "Band 6".equals(session.getAttribute("muetStatus")) ? "selected" : "" %>>Band 6</option>
                         </select>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
                         <label>Advisor</label>
-                        <input type="text" name="advisor" value="<%= student.getAdvisor() %>" required />
+                        <input type="text" name="advisor" value="<%= session.getAttribute("advisor") %>" required />
                     </div>
                 </div>
                 <div class="submit-section">
@@ -524,8 +579,8 @@
             </form>
             
             <!-- Hidden fields for messages -->
-            <input type="hidden" id="successMsg" value="<%= message != null ? message : "" %>">
-            <input type="hidden" id="errorMsg" value="<%= error != null ? error : "" %>">
+            <input type="hidden" id="successMsg" value="<%= request.getParameter("message") != null ? request.getParameter("message") : "" %>">
+            <input type="hidden" id="errorMsg" value="<%= request.getParameter("error") != null ? request.getParameter("error") : "" %>">
         </div>
     </div>
     
@@ -595,18 +650,29 @@
             errorPopup.style.display = 'none';
         }
         
-        function togglePassword() {
-            const passwordField = document.getElementById('newPassword');
-            const toggleButton = document.getElementById('passwordToggle');
-            
-            if (passwordField.type === 'password') {
-                passwordField.type = 'text';
-                toggleButton.textContent = '🙈';
-                toggleButton.title = 'Hide password';
-            } else {
-                passwordField.type = 'password';
-                toggleButton.textContent = '👁️';
-                toggleButton.title = 'Show password';
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                
+                // Check file size (5MB limit)
+                if (file.size > 5 * 1024 * 1024) {
+                    showPopup('error', 'File size must be less than 5MB');
+                    input.value = '';
+                    return;
+                }
+                
+                // Check file type
+                if (!file.type.match('image.*')) {
+                    showPopup('error', 'Please select an image file');
+                    input.value = '';
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('currentProfilePic').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
             }
         }
         
@@ -631,12 +697,23 @@
         
         // Form validation
         document.querySelector('form').addEventListener('submit', function(e) {
-            const newPassword = document.getElementById('newPassword').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            
-            if (newPassword && newPassword !== confirmPassword) {
-                e.preventDefault();
-                showPopup('error', 'New password and confirm password do not match!');
+            const fileInput = document.getElementById('profilePicture');
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                
+                // Check file size again on submit
+                if (file.size > 5 * 1024 * 1024) {
+                    e.preventDefault();
+                    showPopup('error', 'File size must be less than 5MB');
+                    return;
+                }
+                
+                // Check file type again on submit
+                if (!file.type.match('image.*')) {
+                    e.preventDefault();
+                    showPopup('error', 'Please select an image file');
+                    return;
+                }
             }
         });
     </script>

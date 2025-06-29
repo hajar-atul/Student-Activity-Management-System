@@ -379,7 +379,7 @@
                 <a href="studentDashboardPage.jsp">DASHBOARD</a>
                 <a href="activities.jsp">ACTIVITIES</a>
                 <a href="studentClub.jsp">CLUBS</a>
-                <a href="settings.jsp">SETTINGS</a>
+                <a href="SettingsServlet">SETTINGS</a>
             </div>
             <div style="position: absolute; bottom: 20px; width: 80%; left: 10%;">
                 <form action="index.jsp">
