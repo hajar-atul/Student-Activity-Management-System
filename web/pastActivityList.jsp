@@ -5,6 +5,20 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import="java.util.List, model.ACTIVITY, model.CLUB" %>
+<%
+    List<ACTIVITY> pastActivities = (List<ACTIVITY>) request.getAttribute("pastActivities");
+    if (pastActivities == null) {
+        pastActivities = new java.util.ArrayList<ACTIVITY>();
+    }
+    
+    String studID = (String) session.getAttribute("studID");
+    // Get counts for summary cards
+    List<ACTIVITY> allRegisteredActivities = ACTIVITY.getActivitiesByStudentId(studID);
+    int totalActivities = allRegisteredActivities != null ? allRegisteredActivities.size() : 0;
+    int clubCount = ACTIVITY.getClubCountByStudentId(studID);
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -327,6 +341,11 @@
       transform: scale(1.02);
     }
 
+    .status-attended {
+      color: #4CAF50;
+      font-weight: bold;
+    }
+
     /* Back Button */
     .back-btn {
       background-color: #008b8b;
@@ -362,7 +381,7 @@
 
   <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
-    <<img src="StudentImageServlet?studID=${studID}" alt="Profile" class="profile-pic" />
+    <img src="StudentImageServlet?studID=${studID}" alt="Profile" class="profile-pic" />
     <h2>
       <%= session.getAttribute("studName") %><br>
       <%= session.getAttribute("studID") %>
@@ -371,7 +390,7 @@
       <a href="studentDashboardPage.jsp">DASHBOARD</a>
       <a href="activities.jsp">ACTIVITIES</a>
       <a href="studentClub.jsp">CLUBS</a>
-      <a href="settings.jsp">SETTINGS</a>
+      <a href="SettingsServlet">SETTINGS</a>
     </div>
 
     <!-- Logout button fixed at the bottom -->
@@ -420,7 +439,7 @@
           </div>
           <div class="summary-text">
             <h3>TOTAL ACTIVITIES JOINED</h3>
-            <p>8</p>
+            <p><%= totalActivities %></p>
           </div>
         </div>
         <div class="summary-card">
@@ -429,7 +448,7 @@
           </div>
           <div class="summary-text">
             <h3>CLUBS PARTICIPATED</h3>
-            <p>3</p>
+            <p><%= clubCount %></p>
           </div>
         </div>
         <div class="summary-card">
@@ -445,50 +464,46 @@
 
       <!-- Table -->
       <div class="table-wrapper">
-        <div class="title-bar">My Activities</div>
+        <div class="title-bar">My Past Activities</div>
         <table>
           <thead>
             <tr style="background-color: #f0f0f0;">
               <th>ACTIVITY</th>
               <th>DATE</th>
+              <th>VENUE</th>
               <th>STATUS</th>
-              <th>ROLE</th>
-              <th></th>
+              <th>ADAB POINTS</th>
+              <th>ACTIONS</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>HACKATHON FACULTY</td>
-              <td>12 Apr 2025</td>
-              <td>Attended</td>
-              <td>Participant</td>
-              <td><button onclick="location.href='feedback.jsp'">Feedback →</button>
-                  <button style="margin-left:8px;background:#bdbdbd;color:#222;" onclick="location.href='viewResponse.jsp'">View Response</button></td>
-            </tr>
-            <tr>
-              <td>BADMINTON LEAGUE</td>
-              <td>8 Apr 2025</td>
-              <td>Attended</td>
-              <td>Participant</td>
-              <td><button onclick="location.href='feedback.jsp'">Feedback →</button>
-                  <button style="margin-left:8px;background:#bdbdbd;color:#222;" onclick="location.href='viewResponse.jsp'">View Response</button></td>
-            </tr>
-            <tr>
-              <td>ACADEMIC CONFERENCE</td>
-              <td>23 March 2025</td>
-              <td>Attended</td>
-              <td>Participant</td>
-              <td><button onclick="location.href='feedback.jsp'">Feedback →</button>
-                  <button style="margin-left:8px;background:#bdbdbd;color:#222;" onclick="location.href='viewResponse.jsp'">View Response</button></td>
-            </tr>
-            <tr>
-              <td>VISIT TO ORPHANAGE</td>
-              <td>22 Feb 2025</td>
-              <td>Attended</td>
-              <td>Participant</td>
-              <td><button onclick="location.href='feedback.jsp'">Feedback →</button>
-                  <button style="margin-left:8px;background:#bdbdbd;color:#222;" onclick="location.href='viewResponse.jsp'">View Response</button></td>
-            </tr>
+            <% if (pastActivities.isEmpty()) { %>
+              <tr>
+                <td colspan="6" style="text-align: center; padding: 20px; color: #666;">
+                  No past activities found. <a href="AvailableServlet" style="color: #008b8b;">Browse available activities</a>
+                </td>
+              </tr>
+            <% } else { %>
+              <% for (ACTIVITY activity : pastActivities) { 
+                   CLUB club = CLUB.getClubById(activity.getClubID());
+                   String clubName = (club != null) ? club.getClubName() : "N/A";
+              %>
+              <tr>
+                <td>
+                  <strong><%= activity.getActivityName() %></strong><br>
+                  <small style="color: #666;">Organized by: <%= clubName %></small>
+                </td>
+                <td><%= activity.getActivityDate() %></td>
+                <td><%= activity.getActivityVenue() %></td>
+                <td class="status-attended">Attended</td>
+                <td><%= activity.getAdabPoint() %></td>
+                <td>
+                  <button onclick="location.href='feedback.jsp?activityID=<%= activity.getActivityID() %>'">Feedback →</button>
+                  <button style="margin-left:8px;background:#bdbdbd;color:#222;" onclick="location.href='viewResponse.jsp?activityID=<%= activity.getActivityID() %>'">View Response</button>
+                </td>
+              </tr>
+              <% } %>
+            <% } %>
           </tbody>
         </table>
       </div>

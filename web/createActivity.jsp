@@ -104,6 +104,12 @@
       font-size: 0.95em;
       margin-left: 8px;
     }
+    .required-note {
+      color: #f44336;
+      font-size: 0.9em;
+      margin-top: 4px;
+      font-weight: 500;
+    }
     .remarks-group {
       flex: 1 1 100%;
       max-width: 100%;
@@ -206,12 +212,18 @@
       <div class="form-group">
         <label for="adabPoint">Adab Points (Merit)</label>
         <input type="number" id="adabPoint" name="adabPoint" min="0" max="1000" placeholder="0" required />
-        <small style="color: #666; font-size: 0.8em;">Points given to students who join this activity (0-100)</small>
+        <small style="color: #666; font-size: 0.8em;">Points given to students who join this activity (0-1000)</small>
+      </div>
+      <div class="form-group">
+        <label for="posterImage">Poster Image:</label>
+        <input type="file" id="posterImage" name="posterImage" accept=".jpg,.jpeg,.png" />
+        <span class="file-note">*Upload poster image for the activity (JPG, JPEG, PNG only)</span>
       </div>
       <div class="form-group" id="qrImageGroup" style="display: none;">
         <label for="qrImage">QR Code / Banking Details Image:</label>
         <input type="file" id="qrImage" name="qrImage" accept=".jpg,.jpeg,.png" />
         <span class="file-note">*Upload QR code or banking details image for paid activities</span>
+        <div class="required-note" id="qrRequiredNote" style="display: none;">⚠️ QR image is required for paid activities</div>
       </div>
       <div class="form-group">
         <label for="description">Description</label>
@@ -236,13 +248,16 @@
       const activityType = document.getElementById('activityType').value;
       const qrImageGroup = document.getElementById('qrImageGroup');
       const qrImageInput = document.getElementById('qrImage');
+      const qrRequiredNote = document.getElementById('qrRequiredNote');
       
       if (activityType === 'Paid') {
         qrImageGroup.style.display = 'flex';
         qrImageInput.required = true;
+        qrRequiredNote.style.display = 'block';
       } else {
         qrImageGroup.style.display = 'none';
         qrImageInput.required = false;
+        qrRequiredNote.style.display = 'none';
         qrImageInput.value = ''; // Clear the input when hidden
       }
     }

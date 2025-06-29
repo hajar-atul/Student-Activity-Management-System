@@ -4,13 +4,10 @@ import java.io.IOException;
 import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
-import java.sql.*;
 import model.STUDENT;
-import model.ACTIVITY;
-import java.util.List;
 
-@WebServlet("/StudentDashboardServlet")
-public class StudentDashboardServlet extends HttpServlet {
+@WebServlet("/SettingsServlet")
+public class SettingsServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -46,32 +43,16 @@ public class StudentDashboardServlet extends HttpServlet {
                 // Set profile image URL for BLOB
                 session.setAttribute("profilePicUrl", "StudentImageServlet?studID=" + studID);
 
-                // Get days until next registered event
-                int daysUntilEvent = STUDENT.getDaysUntilNextActivity(Integer.parseInt(studID));
-                session.setAttribute("daysUntilEvent", daysUntilEvent >= 0 ? daysUntilEvent : null);
-
-                // Get registered activities count for dashboard
-                List<ACTIVITY> registeredActivities = ACTIVITY.getActivitiesByStudentId(studID);
-                int totalActivities = registeredActivities != null ? registeredActivities.size() : 0;
-                session.setAttribute("totalActivities", totalActivities);
-
-                // Get unique clubs count
-                int clubCount = ACTIVITY.getClubCountByStudentId(studID);
-                session.setAttribute("clubCount", clubCount);
-
                 // Optional logs
-                System.out.println("DOB: " + student.getDob());
-                System.out.println("ADAB POINT: " + student.getAdabPoint());
-                System.out.println("Event Countdown: " + daysUntilEvent);
-                System.out.println("Total Activities: " + totalActivities);
-                System.out.println("Club Count: " + clubCount);
+                System.out.println("Settings - Student loaded: " + student.getStudName());
+                System.out.println("Settings - Profile picture available: " + (student.getProfilePicBlob() != null));
             } else {
                 response.sendRedirect("errorStudent.jsp");
                 return;
             }
 
             // Forward to JSP
-            RequestDispatcher dispatcher = request.getRequestDispatcher("studentDashboardPage.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("settings.jsp");
             dispatcher.forward(request, response);
 
         } catch (Exception e) {
@@ -84,4 +65,4 @@ public class StudentDashboardServlet extends HttpServlet {
             throws ServletException, IOException {
         doGet(request, response);
     }
-}
+} 

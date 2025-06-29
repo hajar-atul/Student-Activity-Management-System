@@ -1,11 +1,30 @@
 package Controller;
 
 import java.io.IOException;
+import java.io.InputStream;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.*;
 import model.STUDENT;
 
+@MultipartConfig(
+    fileSizeThreshold = 1024 * 1024, // 1 MB
+    maxFileSize = 1024 * 1024 * 5,   // 5 MB
+    maxRequestSize = 1024 * 1024 * 10 // 10 MB
+)
 public class UpdateStudentServlet extends HttpServlet {
+
+    // Utility method for Java 8 compatibility
+    private static byte[] toByteArray(InputStream in) throws IOException {
+        java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream();
+        int nRead;
+        byte[] data = new byte[4096];
+        while ((nRead = in.read(data, 0, data.length)) != -1) {
+            buffer.write(data, 0, nRead);
+        }
+        buffer.flush();
+        return buffer.toByteArray();
+    }
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -33,13 +52,38 @@ public class UpdateStudentServlet extends HttpServlet {
 
             // Validate that the student is updating their own profile
             if (studID != currentStudent.getStudID()) {
-                response.sendRedirect("settings.jsp?error=unauthorized_access");
+                response.sendRedirect("SettingsServlet?error=unauthorized_access");
                 return;
             }
 
-            // Update student information using the new method
-            boolean updateSuccess = STUDENT.updateStudentFromSettings(studID, studName, studEmail, 
-                    studNoPhone, studCourse, studSemester, dob, muetStatus, advisor);
+            // Handle profile picture upload
+            byte[] profilePicBlob = null;
+            Part filePart = request.getPart("profilePicture");
+            if (filePart != null && filePart.getSize() > 0) {
+                // Validate file type
+                String contentType = filePart.getContentType();
+                if (contentType != null && contentType.startsWith("image/")) {
+                    // Read the file into a byte array (Java 8 compatible)
+                    InputStream inputStream = filePart.getInputStream();
+                    profilePicBlob = toByteArray(inputStream);
+                    inputStream.close();
+                } else {
+                    response.sendRedirect("SettingsServlet?error=invalid_file_type");
+                    return;
+                }
+            }
+
+            // Update student information including profile picture
+            boolean updateSuccess;
+            if (profilePicBlob != null) {
+                // Update with new profile picture
+                updateSuccess = STUDENT.updateStudentWithProfilePicture(studID, studName, studEmail, 
+                        studNoPhone, studCourse, studSemester, dob, muetStatus, advisor, profilePicBlob);
+            } else {
+                // Update without changing profile picture
+                updateSuccess = STUDENT.updateStudentFromSettings(studID, studName, studEmail, 
+                        studNoPhone, studCourse, studSemester, dob, muetStatus, advisor);
+            }
 
             if (updateSuccess) {
                 // Update session attributes
@@ -56,14 +100,15 @@ public class UpdateStudentServlet extends HttpServlet {
                     session.setAttribute("student", updatedStudent);
                 }
                 
-                response.sendRedirect("settings.jsp?message=profile_updated_successfully");
+                String message = profilePicBlob != null ? "profile_and_picture_updated_successfully" : "profile_updated_successfully";
+                response.sendRedirect("SettingsServlet?message=" + message);
             } else {
-                response.sendRedirect("settings.jsp?error=update_failed");
+                response.sendRedirect("SettingsServlet?error=update_failed");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect("settings.jsp?error=system_error");
+            response.sendRedirect("SettingsServlet?error=system_error");
         }
     }
 
@@ -81,6 +126,6 @@ public class UpdateStudentServlet extends HttpServlet {
 
     @Override
     public String getServletInfo() {
-        return "Update Student Servlet - Handles student profile updates";
+        return "Update Student Servlet - Handles student profile updates with image upload";
     }
 } 

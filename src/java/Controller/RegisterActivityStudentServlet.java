@@ -34,12 +34,31 @@ public class RegisterActivityStudentServlet extends HttpServlet {
                 response.sendRedirect("AvailableServlet?error=Activity+not+found");
                 return;
             }
+            
+            // Check if activity is approved
+            if (!"Approved".equalsIgnoreCase(activity.getActivityStatus())) {
+                response.sendRedirect("AvailableServlet?error=Activity+is+not+available+for+registration");
+                return;
+            }
+            
+            // Check if activity type is Free
+            if (!"Free".equals(activity.getActivityType())) {
+                response.sendRedirect("AvailableServlet?error=This+is+a+paid+activity.+Please+use+the+payment+page.");
+                return;
+            }
+            
+            // Check if student is already registered for this activity
+            if (REGISTERATION.isStudentRegistered(studID, activityID)) {
+                response.sendRedirect("AvailableServlet?error=You+are+already+registered+for+this+activity.");
+                return;
+            }
+            
             STUDENT student = STUDENT.getStudentById(studID);
             CLUB club = CLUB.getClubById(activity.getClubID());
             request.setAttribute("activity", activity);
             request.setAttribute("student", student);
             request.setAttribute("club", club);
-            request.getRequestDispatcher("activityRegisteration.jsp").forward(request, response);
+            request.getRequestDispatcher("registerActivity.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
             response.sendRedirect("AvailableServlet?error=Error+loading+registration+form");
@@ -65,15 +84,34 @@ public class RegisterActivityStudentServlet extends HttpServlet {
                 response.sendRedirect("AvailableServlet?error=Activity+not+found");
                 return;
             }
+            
+            // Check if activity is approved
+            if (!"Approved".equalsIgnoreCase(activity.getActivityStatus())) {
+                response.sendRedirect("AvailableServlet?error=Activity+is+not+available+for+registration");
+                return;
+            }
+            
+            // Check if activity type is Free
+            if (!"Free".equals(activity.getActivityType())) {
+                response.sendRedirect("AvailableServlet?error=This+is+a+paid+activity.+Please+use+the+payment+page.");
+                return;
+            }
+            
+            // Check if student is already registered for this activity
+            if (REGISTERATION.isStudentRegistered(studID, activityID)) {
+                response.sendRedirect("AvailableServlet?error=You+are+already+registered+for+this+activity.");
+                return;
+            }
+            
             boolean registered = REGISTERATION.registerStudentForActivity(studID, activityID);
             if (registered) {
                 int adabPoint = activity.getAdabPoint();
                 STUDENT.incrementAdabPoint(studID, adabPoint);
                 session.setAttribute("adabPoint", STUDENT.getAdabPointByStudentId(studID));
                 session.setAttribute("registrationMessage", "You have been registered");
-                response.sendRedirect("AvailableServlet");
+                response.sendRedirect("AvailableServlet?success=Registration+successful!+You+have+been+registered+for+the+activity.");
             } else {
-                response.sendRedirect("AvailableServlet?error=Registration+failed");
+                response.sendRedirect("AvailableServlet?error=Registration+failed.+You+may+already+be+registered+for+this+activity.");
             }
         } catch (Exception e) {
             e.printStackTrace();

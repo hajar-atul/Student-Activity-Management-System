@@ -6,6 +6,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.WebServlet;
 import model.ACTIVITY;
+import model.CLUB;
 import java.util.List;
 
 @WebServlet("/PastServlet")
@@ -20,7 +21,8 @@ public class PastServlet extends HttpServlet {
         
         HttpSession session = request.getSession();
         String studID = (String) session.getAttribute("studID");
-        
+        String studName = null;
+
         if (studID == null) {
             response.sendRedirect("index.jsp");
             return;
@@ -35,21 +37,20 @@ public class PastServlet extends HttpServlet {
                 ResultSet rs = pstmt.executeQuery();
 
                 if (rs.next()) {
-                    String studName = rs.getString("studName");
-                    request.setAttribute("studName", studName);
-                    request.setAttribute("studID", studID);
+                    studName = rs.getString("studName");
+                    session.setAttribute("studName", studName);
                 }
             }
-            // Fetch joined activities and club count
-            List<ACTIVITY> joinedActivities = ACTIVITY.getActivitiesByStudentId(studID);
-            int clubCount = ACTIVITY.getClubCountByStudentId(studID);
-            request.setAttribute("joinedActivities", joinedActivities);
-            request.setAttribute("totalActivities", joinedActivities.size());
-            request.setAttribute("clubCount", clubCount);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+        // Fetch registered past activities for the current student
+        List<ACTIVITY> pastActivities = ACTIVITY.getRegisteredPastActivities(studID);
+        request.setAttribute("pastActivities", pastActivities);
+
+        request.setAttribute("studName", studName);
+        request.setAttribute("studID", studID);
         request.getRequestDispatcher("pastActivityList.jsp").forward(request, response);
     }
 } 

@@ -18,8 +18,9 @@ import java.util.List;
  */
 public class REGISTERATION {
     private int studID;
-    private int activityID;
+    private String activityID;
     private String regDate;
+    private byte[] receiptFile;
     
     // Database connection details
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/student?useSSL=false&serverTimezone=UTC";
@@ -34,11 +35,11 @@ public class REGISTERATION {
         return studID;
     }
     
-    public void setActivityID(int activityID) {
+    public void setActivityID(String activityID) {
         this.activityID = activityID;
     }
 
-    public int getActivityID() {
+    public String getActivityID() {
         return activityID;
     }
     
@@ -50,61 +51,124 @@ public class REGISTERATION {
         return regDate;
     }
     
-    public static int getStudentCountForActivity(String activityID) {
-        int count = 0;
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
-                String query = "SELECT COUNT(*) FROM registeration WHERE activityID = ?";
-                PreparedStatement stmt = conn.prepareStatement(query);
-                stmt.setString(1, activityID);
-                ResultSet rs = stmt.executeQuery();
-                if (rs.next()) {
-                    count = rs.getInt(1);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return count;
+    public void setReceiptFile(byte[] receiptFile) {
+        this.receiptFile = receiptFile;
     }
 
-    public static List<STUDENT> getStudentsByActivityId(String activityID) {
-        List<STUDENT> students = new ArrayList<>();
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
-                String query = "SELECT s.* FROM student s JOIN registeration r ON s.studID = r.studID WHERE r.activityID = ?";
-                PreparedStatement stmt = conn.prepareStatement(query);
-                stmt.setString(1, activityID);
-                ResultSet rs = stmt.executeQuery();
-                while (rs.next()) {
-                    STUDENT student = new STUDENT();
-                    student.setStudID(rs.getInt("studID"));
-                    student.setStudName(rs.getString("studName"));
-                    student.setStudEmail(rs.getString("studEmail"));
-                    student.setStudCourse(rs.getString("studCourse"));
-                    student.setStudSemester(rs.getString("studSemester"));
-                    student.setStudNoPhone(rs.getString("studNoPhone"));
-                    students.add(student);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return students;
+    public byte[] getReceiptFile() {
+        return receiptFile;
     }
 
-    public static boolean registerStudentForActivity(int studID,String activityID) {
-        String sql = "INSERT INTO registeration (studID, activityID, regDate) VALUES (?, ?, CURDATE())";
+    // Register student for free activity
+    public static boolean registerStudentForActivity(int studID, String activityID) {
+        String query = "INSERT INTO registration (studID, activityID, regDate) VALUES (?, ?, CURDATE())";
         try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, studID);
             pstmt.setString(2, activityID);
-            return pstmt.executeUpdate() > 0;
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    // Register student for paid activity with receipt
+    public static boolean registerStudentForPaidActivity(int studID, String activityID, byte[] receiptFile) {
+        String query = "INSERT INTO registration (studID, activityID, regDate, receiptFile) VALUES (?, ?, CURDATE(), ?)";
+        try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, studID);
+            pstmt.setString(2, activityID);
+            pstmt.setBytes(3, receiptFile);
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    // Check if student is already registered for an activity
+    public static boolean isStudentRegistered(int studID, String activityID) {
+        String query = "SELECT COUNT(*) FROM registration WHERE studID = ? AND activityID = ?";
+        try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, studID);
+            pstmt.setString(2, activityID);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
+    }
+    
+    // Get registration by ID
+    public static REGISTERATION getRegistrationById(int regID) {
+        String query = "SELECT * FROM registration WHERE regID = ?";
+        try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, regID);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                REGISTERATION registration = new REGISTERATION();
+                registration.setStudID(rs.getInt("studID"));
+                registration.setActivityID(rs.getString("activityID"));
+                registration.setRegDate(rs.getString("regDate"));
+                registration.setReceiptFile(rs.getBytes("receiptFile"));
+                return registration;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    // Get all registrations for a student
+    public static List<REGISTERATION> getRegistrationsByStudentId(int studID) {
+        List<REGISTERATION> registrations = new ArrayList<>();
+        String query = "SELECT * FROM registration WHERE studID = ? ORDER BY regDate DESC";
+        try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, studID);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                REGISTERATION registration = new REGISTERATION();
+                registration.setStudID(rs.getInt("studID"));
+                registration.setActivityID(rs.getString("activityID"));
+                registration.setRegDate(rs.getString("regDate"));
+                registration.setReceiptFile(rs.getBytes("receiptFile"));
+                registrations.add(registration);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return registrations;
+    }
+    
+    // Get all registrations for an activity
+    public static List<REGISTERATION> getRegistrationsByActivityId(String activityID) {
+        List<REGISTERATION> registrations = new ArrayList<>();
+        String query = "SELECT * FROM registration WHERE activityID = ? ORDER BY regDate DESC";
+        try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, activityID);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                REGISTERATION registration = new REGISTERATION();
+                registration.setStudID(rs.getInt("studID"));
+                registration.setActivityID(rs.getString("activityID"));
+                registration.setRegDate(rs.getString("regDate"));
+                registration.setReceiptFile(rs.getBytes("receiptFile"));
+                registrations.add(registration);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return registrations;
     }
 }

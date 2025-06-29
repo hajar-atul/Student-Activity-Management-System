@@ -288,7 +288,7 @@
         <a href="studentDashboardPage.jsp">DASHBOARD</a>
         <a href="activities.jsp">ACTIVITIES</a>
         <a href="studentClub.jsp">CLUBS</a>
-        <a href="settings.jsp">SETTINGS</a>
+        <a href="SettingsServlet">SETTINGS</a>
     </div>
     <div class="logout-container">
         <form action="index.jsp">
@@ -334,12 +334,12 @@
             <table>
                 <tr><td>STUDENT ID</td><td><%= session.getAttribute("studID") %></td></tr>
                 <tr><td>NAME</td><td><%= session.getAttribute("studName") %></td></tr>
-                <tr><td>DATE OF BIRTH</td><td><%= session.getAttribute("dob") %></td></tr>
-                <tr><td>PROGRAM</td><td><%= session.getAttribute("studCourse") %></td></tr>
-                <tr><td>MOBILE NUMBER</td><td><%= session.getAttribute("studNoPhone") %></td></tr>
-                <tr><td>CURRENT EMAIL</td><td><%= session.getAttribute("studEmail") %></td></tr>
-                <tr><td>MUET STATUS</td><td><%= session.getAttribute("muetStatus") %></td></tr>
-                <tr><td>ADVISOR</td><td><%= session.getAttribute("advisor") %></td></tr>
+                <tr><td>DATE OF BIRTH</td><td><%= session.getAttribute("dob") != null ? session.getAttribute("dob") : "N/A" %></td></tr>
+                <tr><td>PROGRAM</td><td><%= session.getAttribute("studCourse") != null ? session.getAttribute("studCourse") : "N/A" %></td></tr>
+                <tr><td>MOBILE NUMBER</td><td><%= session.getAttribute("studNoPhone") != null ? session.getAttribute("studNoPhone") : "N/A" %></td></tr>
+                <tr><td>CURRENT EMAIL</td><td><%= session.getAttribute("studEmail") != null ? session.getAttribute("studEmail") : "N/A" %></td></tr>
+                <tr><td>MUET STATUS</td><td><%= session.getAttribute("muetStatus") != null ? session.getAttribute("muetStatus") : "N/A" %></td></tr>
+                <tr><td>ADVISOR</td><td><%= session.getAttribute("advisor") != null ? session.getAttribute("advisor") : "N/A" %></td></tr>
             </table>
         </div>
 
@@ -370,6 +370,19 @@
                         }
                     %>
                 </p>
+            </div>
+
+            <!-- Activity Summary -->
+            <div class="profile-box" style="background: #e8f5e8; border-left: 6px solid #4caf50;">
+                <h2 style="color: #2e7d32;">ACTIVITY SUMMARY</h2>
+                <div style="margin-top: 10px;">
+                    <p style="font-size: 16px; margin: 5px 0;">
+                        <strong>Total Activities:</strong> <%= session.getAttribute("totalActivities") != null ? session.getAttribute("totalActivities") : "0" %>
+                    </p>
+                    <p style="font-size: 16px; margin: 5px 0;">
+                        <strong>Clubs Joined:</strong> <%= session.getAttribute("clubCount") != null ? session.getAttribute("clubCount") : "0" %>
+                    </p>
+                </div>
             </div>
 
         </div>

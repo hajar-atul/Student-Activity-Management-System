@@ -6,6 +6,8 @@
 package model;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -103,6 +105,36 @@ public class ADMIN {
             e.printStackTrace();
         }
         return false;
+    }
+
+    // Get all pending activities submitted by clubs
+    public static List<ACTIVITY> getPendingActivities() {
+        List<ACTIVITY> pending = new ArrayList<>();
+        String sql = "SELECT * FROM activity WHERE LOWER(TRIM(activityStatus)) = 'pending'";
+        try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+            while (rs.next()) {
+                ACTIVITY activity = new ACTIVITY();
+                activity.setActivityID(rs.getString("activityID"));
+                activity.setActivityName(rs.getString("activityName"));
+                activity.setActivityType(rs.getString("activityType"));
+                activity.setActivityDesc(rs.getString("activityDesc"));
+                activity.setActivityDate(rs.getString("activityDate"));
+                activity.setActivityVenue(rs.getString("activityVenue"));
+                activity.setActivityStatus(rs.getString("activityStatus"));
+                activity.setActivityBudget(rs.getDouble("activityBudget"));
+                activity.setAdabPoint(rs.getInt("adabPoint"));
+                activity.setProposalFile(rs.getBytes("proposalFile"));
+                activity.setQrImage(rs.getBytes("qrImage"));
+                activity.setPosterImage(rs.getBytes("posterImage"));
+                activity.setClubID(rs.getInt("clubID"));
+                pending.add(activity);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return pending;
     }
 
     public void setStudId(int studID) {

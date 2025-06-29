@@ -41,8 +41,8 @@ public class AvailableServlet extends HttpServlet {
                 }
             }
 
-            // Show only approved and upcoming activities
-            List<ACTIVITY> availableActivities = ACTIVITY.getAvailableUpcomingActivities();
+            // Show only approved and upcoming activities that the student hasn't registered for yet
+            List<ACTIVITY> availableActivities = ACTIVITY.getAvailableUpcomingActivitiesForStudent(studID);
             request.setAttribute("availableActivities", availableActivities);
 
         } catch (Exception e) {

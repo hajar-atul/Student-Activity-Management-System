@@ -393,6 +393,32 @@ public class STUDENT {
         }
     }
 
+    // Update student information including profile picture
+    public static boolean updateStudentWithProfilePicture(int studID, String studName, String studEmail, 
+            String studNoPhone, String studCourse, String studSemester, String dob, 
+            String muetStatus, String advisor, byte[] profilePicBlob) {
+        String sql = "UPDATE student SET studName = ?, studEmail = ?, studNoPhone = ?, " +
+                    "studCourse = ?, studSemester = ?, dob = ?, muetStatus = ?, " +
+                    "advisor = ?, profilePicBlob = ? WHERE studID = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, studName);
+            pstmt.setString(2, studEmail);
+            pstmt.setString(3, studNoPhone);
+            pstmt.setString(4, studCourse);
+            pstmt.setString(5, studSemester);
+            pstmt.setString(6, dob);
+            pstmt.setString(7, muetStatus);
+            pstmt.setString(8, advisor);
+            pstmt.setBytes(9, profilePicBlob);
+            pstmt.setInt(10, studID);
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     // Get adabPoint by student ID
     public static int getAdabPointByStudentId(int studID) {
         String query = "SELECT adabPoint FROM student WHERE studID = ?";
@@ -426,7 +452,7 @@ public class STUDENT {
     public static int getDaysUntilNextActivity(int studID) {
         String query = "SELECT MIN(DATEDIFF(a.activityDate, CURDATE())) AS daysUntil " +
                        "FROM activity a " +
-                       "JOIN registeration r ON a.activityID = r.activityID " +
+                       "JOIN registration r ON a.activityID = r.activityID " +
                        "WHERE r.studID = ? AND a.activityDate >= CURDATE()";
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
