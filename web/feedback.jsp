@@ -20,9 +20,11 @@
 
     html, body {
       height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', Arial, sans-serif;
+      background: linear-gradient(135deg, #e0f7fa 0%, #f0f0f0 100%);
       overflow: hidden;
-      font-family: Arial, sans-serif;
-      background-color: #f0f0f0;
     }
 
     .sidebar {
@@ -220,111 +222,107 @@
     }
 
     .content {
-  padding-top: 100px;
-  margin-left: 250px;
-  height: calc(100vh - 100px);
-  overflow: hidden; /* ❌ Scroll off! */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 0;
+      padding: 0;
+    }
 
     .sidebar.closed ~ .content {
       margin-left: 0;
     }
 
     /* Feedback Section */
-    .feedback-container {
-  background-color: #ffffff;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-    .feedback-container h1 {
-      padding: 40px;
-    }
-
-    .feedback-box {
-  background-color: #f0f0f0;
-  padding: 20px;
-  border-radius: 20px;
-  width: 60%;
-  max-width: 700px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-
-    .feedback-box label {
-      display: block;
-      font-size: 18px;
-      margin-bottom: 10px;
-    }
-
-    .feedback-box textarea {
+    .feedback-card {
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+      padding: 36px 32px 32px 32px;
+      max-width: 400px;
       width: 100%;
-      height: 150px;
-      padding: 15px;
-      font-size: 16px;
-      border-radius: 12px;
-      border: 1px solid #ccc;
-      resize: none;
-      font-family: Arial, sans-serif;
-    }
-
-    .feedback-box .buttons {
-      margin-top: 20px;
       display: flex;
-      justify-content: center;
-      gap: 15px;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
     }
 
-    .feedback-box button {
-      padding: 10px 25px;
-      border: none;
+    .feedback-card h1 {
+      color: #009b9d;
+      font-size: 2em;
+      font-weight: bold;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .feedback-card label {
+      font-weight: bold;
+      color: #009b9d;
+      margin-bottom: 6px;
+      align-self: flex-start;
+      font-size: 1.1em;
+    }
+
+    .feedback-card select, .feedback-card textarea {
+      width: 100%;
+      padding: 10px;
       border-radius: 8px;
-      font-size: 16px;
+      border: 1px solid #b2dfdb;
+      background: #e0ffff;
+      font-size: 1em;
+      margin-bottom: 10px;
+      font-family: inherit;
+    }
+
+    .feedback-card textarea {
+      min-height: 70px;
+      resize: none;
+    }
+
+    .star-rating {
+      display: flex;
+      flex-direction: row;
+      font-size: 2.2em;
+      margin-bottom: 10px;
       cursor: pointer;
-      transition: background 0.3s ease;
+      user-select: none;
     }
 
-    .feedback-box button.submit {
-      background-color: #00796B;
-      color: white;
+    .star {
+      color: #ccc;
+      transition: color 0.2s;
     }
 
-    .feedback-box button.view {
-      background-color: #ccc;
-      color: #333;
+    .star.selected, .star.hovered {
+      color: #ffb400;
     }
 
-    /* Back Button */
-    .back-btn {
-      background-color: #008b8b;
-      color: white;
+    .feedback-card button[type="submit"] {
+      width: 100%;
+      background: #009b9d;
+      color: #fff;
+      font-weight: bold;
       border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
+      border-radius: 10px;
+      padding: 14px 0;
+      font-size: 1.2em;
+      margin-top: 10px;
       cursor: pointer;
-      margin-bottom: 20px;
-      font-size: 16px;
+      transition: background 0.2s;
     }
 
-    .back-btn:hover {
-      background-color: #006d6d;
+    .feedback-card button[type="submit"]:hover {
+      background: #00796b;
     }
 
-    /* Responsive */
-    @media (max-width: 768px) {
-      .content {
-        margin-left: 0;
+    @media (max-width: 600px) {
+      .feedback-card {
+        padding: 18px 6px 18px 6px;
+        max-width: 98vw;
+      }
+      .feedback-card h1 {
+        font-size: 1.3em;
       }
     }
   </style>
@@ -380,25 +378,33 @@
   </div>
 
   <!-- Content -->
-<div class="content" id="content">
-  <div class="feedback-container">
-    <div class="feedback-box">
-      <h1 style="text-align: center;">FEEDBACK</h1>
-      <label for="comments">Comments:</label>
-      <textarea id="comments" placeholder="Your Feedback..." style="height: 100px;"></textarea>
-      <div class="buttons">
-        <button class="submit">Submit Feedback</button>
-        <button class="view">View Response</button>
+  <div class="content">
+    <form class="feedback-card" action="FeedbackServlet" method="post">
+      <h1>Activity Feedback</h1>
+      <label for="club">Select Club</label>
+      <select id="club" name="club" required>
+        <option value="">-- Select Club --</option>
+        <!-- TODO: Populate with club options from backend -->
+      </select>
+      <label for="activity">Select Activity</label>
+      <select id="activity" name="activity" required>
+        <option value="">-- Select Activity --</option>
+        <!-- TODO: Populate with activity options from backend -->
+      </select>
+      <label>Rate Activity</label>
+      <div class="star-rating" id="starRating">
+        <span class="star" data-value="1">&#9733;</span>
+        <span class="star" data-value="2">&#9733;</span>
+        <span class="star" data-value="3">&#9733;</span>
+        <span class="star" data-value="4">&#9733;</span>
+        <span class="star" data-value="5">&#9733;</span>
       </div>
-    </div>
-
-    <!-- Back button kiri bawah -->
-    <div style="align-self: flex-start; margin-top: 20px; margin-left: 10px;">
-      <button class="back-btn" onclick="location.href='pastActivityList.jsp'">← Back</button>
-    </div>
+      <input type="hidden" name="rating" id="ratingInput" value="0">
+      <label for="comments">Comments</label>
+      <textarea id="comments" name="comments" placeholder="Your feedback..." required></textarea>
+      <button type="submit">Submit Feedback</button>
+    </form>
   </div>
-</div>
-
 
   <!-- Script -->
   <script>
@@ -428,6 +434,30 @@
     window.addEventListener('click', function () {
       notificationDropdown.classList.remove('show');
       profileDropdown.classList.remove('show');
+    });
+
+    // Interactive star rating
+    const stars = document.querySelectorAll('.star-rating .star');
+    const ratingInput = document.getElementById('ratingInput');
+    let selectedRating = 0;
+    stars.forEach((star, idx) => {
+      star.addEventListener('mouseover', () => {
+        stars.forEach((s, i) => {
+          s.classList.toggle('hovered', i <= idx);
+        });
+      });
+      star.addEventListener('mouseout', () => {
+        stars.forEach((s, i) => {
+          s.classList.toggle('hovered', false);
+        });
+      });
+      star.addEventListener('click', () => {
+        selectedRating = idx + 1;
+        ratingInput.value = selectedRating;
+        stars.forEach((s, i) => {
+          s.classList.toggle('selected', i < selectedRating);
+        });
+      });
     });
   </script>
 
