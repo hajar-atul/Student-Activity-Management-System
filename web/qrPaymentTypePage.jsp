@@ -49,8 +49,8 @@
     }
 
     html, body {
-      height: 100%;
-      overflow: hidden;
+      height: 100vh;
+      overflow: auto;
       font-family: Arial, sans-serif;
       background-color: #f0f0f0;
     }
@@ -253,10 +253,10 @@
       margin-left: 250px;
       height: calc(100vh - 80px);
       transition: margin-left 0.3s ease;
-      overflow: hidden;
+      overflow-y: auto;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      justify-content: flex-start;
       align-items: center;
       padding: 100px 30px 20px 30px;
       box-sizing: border-box;
