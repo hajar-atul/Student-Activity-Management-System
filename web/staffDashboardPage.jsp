@@ -313,20 +313,13 @@
  
     
     <div class="content">
-        <!-- Error Message Display -->
-        <% if (request.getAttribute("dashboardError") != null) { %>
-            <div style="background:#ffdddd; border:1px solid #ff0000; color:#d8000c; padding:15px; margin:0 auto 24px auto; max-width:900px; border-radius:8px;">
-                <strong>Error:</strong> <%= request.getAttribute("dashboardError") %>
-            </div>
-        <% } %>
-    
-        <!-- Welcome Card -->
+        <!-- Remove Error Message Display -->
+        <!-- Remove profile image from Welcome Card -->
         <div style="background:#fff; border-radius:16px; box-shadow:0 2px 12px rgba(0,0,0,0.07); padding:24px 40px; display:flex; align-items:center; gap:24px; max-width:900px; margin:0 auto 24px auto;">
-            <img src="StudentImageServlet?studID=${studID}" alt="Staff" class="profile-icon" id="profileBtn" style="width:80px; height:80px; border-radius:50%; object-fit:cover; border:3px solid #008b8b;">
             <div style="flex:1;">
                 <h2 style="margin:0 0 6px 0; font-size:1.5em; color:#008b8b;">Welcome, <%= session.getAttribute("staffName") != null ? session.getAttribute("staffName") : "Staff" %>!</h2>
                 <p style="margin:0; color:#444;">You can review, approve, or reject club proposals and booking requests here.</p>
-                 <p style="margin:0; color:#444;">You can assign ADAB evaluation to student.</p>
+                <p style="margin:0; color:#444;">You can assign ADAB evaluation to student.</p>
             </div>
         </div>
         

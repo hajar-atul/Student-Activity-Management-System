@@ -24,7 +24,7 @@
         }
         .content {
             flex-grow: 1;
-            padding: 100px 0 0 0;
+            padding: 0;
             margin-left: 250px;
             height: 100vh;
             box-sizing: border-box;
@@ -38,45 +38,43 @@
             background: #fff;
             border-radius: 16px;
             box-shadow: 0 2px 12px rgba(0,0,0,0.07);
-            padding: 24px 24px 24px 24px;
-            /* Make sure the form fits in the viewport */
-            max-height: calc(100vh - 120px);
-            overflow-y: auto;
+            padding: 12px 12px 12px 12px;
+            height: 95vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
         }
         .form-header {
             text-align: center;
-            margin-bottom: 18px;
+            margin-bottom: 10px;
         }
         .form-header img {
-            width: 70px;
-            height: 70px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
         .form-header h1 {
             margin: 0;
-            font-size: 1.3em;
+            font-size: 1.1em;
             color: #008b8b;
         }
         .form-group {
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }
         .form-group label {
             display: block;
             font-weight: bold;
-            margin-bottom: 4px;
-            font-size: 1em;
+            margin-bottom: 2px;
+            font-size: 0.98em;
         }
         .form-group input,
         .form-group select {
             width: 100%;
-            padding: 8px;
+            padding: 6px;
             border: 1px solid #ccc;
             border-radius: 6px;
-            font-size: 1em;
+            font-size: 0.98em;
             background: #e0ffff;
         }
         .form-group input[type="file"] {
@@ -90,10 +88,10 @@
             font-weight: bold;
             border: none;
             border-radius: 8px;
-            padding: 10px;
+            padding: 8px;
             font-size: 1em;
             cursor: pointer;
-            margin-top: 8px;
+            margin-top: 6px;
             transition: background 0.2s;
         }
         .submit-btn:hover {
@@ -103,46 +101,48 @@
             background: #d4edda;
             color: #155724;
             border: 1px solid #c3e6cb;
-            padding: 8px;
+            padding: 6px;
             border-radius: 6px;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
             text-align: center;
-            font-size: 0.95em;
+            font-size: 0.93em;
         }
         .message.error {
             background: #f8d7da;
             color: #721c24;
             border: 1px solid #f5c6cb;
-            padding: 8px;
+            padding: 6px;
             border-radius: 6px;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
             text-align: center;
-            font-size: 0.95em;
+            font-size: 0.93em;
         }
         @media (max-width: 900px) {
             .container {
                 max-width: 95vw;
-                padding: 10px;
+                padding: 6px;
+                height: 98vh;
             }
             .content {
-                padding: 80px 0 0 0;
+                padding: 0;
             }
         }
         @media (max-width: 600px) {
             .container {
                 max-width: 100vw;
-                padding: 4px;
+                padding: 2px;
+                height: 99vh;
             }
             .form-header h1 {
-                font-size: 1em;
+                font-size: 0.98em;
             }
             .form-group label {
-                font-size: 0.95em;
+                font-size: 0.93em;
             }
             .form-group input,
             .form-group select {
-                font-size: 0.95em;
-                padding: 6px;
+                font-size: 0.93em;
+                padding: 4px;
             }
         }
         /* --- Sidebar/Topbar CSS from staffDashboardPage.jsp (copy as needed, but do not override .container or .form-group) --- */
