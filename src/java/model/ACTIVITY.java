@@ -797,9 +797,9 @@ public static java.util.List<ACTIVITY> getActivitiesByStatus(String status) {
     try {
         Class.forName("com.mysql.cj.jdbc.Driver");
         try (java.sql.Connection conn = java.sql.DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
-            String sql = "SELECT * FROM activity WHERE activityStatus = ?";
+            String sql = "SELECT * FROM activity WHERE TRIM(LOWER(activityStatus)) = ?";
             java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, status);
+            stmt.setString(1, status.trim().toLowerCase());
             java.sql.ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 ACTIVITY activity = new ACTIVITY();
