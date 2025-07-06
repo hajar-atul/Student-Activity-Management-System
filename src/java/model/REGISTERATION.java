@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import util.DBConnection;
 
 /**
  *
@@ -170,5 +171,21 @@ public class REGISTERATION {
             e.printStackTrace();
         }
         return registrations;
+    }
+
+    public static int getStudentCountForActivity(String activityID) {
+        int count = 0;
+        String query = "SELECT COUNT(*) FROM registration WHERE activityID = ?";
+        try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, activityID);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return count;
     }
 }

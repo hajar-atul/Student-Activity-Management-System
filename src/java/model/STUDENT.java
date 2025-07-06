@@ -469,5 +469,54 @@ public class STUDENT {
         }
         return -1; // No upcoming events
     }
+
+    public static List<STUDENT> getAllStudents() {
+        List<STUDENT> students = new ArrayList<>();
+        String query = "SELECT * FROM student";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                STUDENT student = new STUDENT();
+                student.setStudID(rs.getInt("studID"));
+                student.setStudName(rs.getString("studName"));
+                student.setStudEmail(rs.getString("studEmail"));
+                student.setStudCourse(rs.getString("studCourse"));
+                student.setStudSemester(rs.getString("studSemester"));
+                student.setStudNoPhone(rs.getString("studNoPhone"));
+                student.setStudType(rs.getString("studType"));
+                student.setStudPassword(rs.getString("studPassword"));
+                student.setDob(rs.getString("dob"));
+                student.setMuetStatus(rs.getString("muetStatus"));
+                student.setAdvisor(rs.getString("advisor"));
+                try { student.setAdabPoint(rs.getInt("adabPoint")); } catch (Exception e) { student.setAdabPoint(0); }
+                try { student.setProfilePic(rs.getString("profilePic")); } catch (Exception e) { student.setProfilePic(null); }
+                try { student.setProfilePicBlob(rs.getBytes("profilePicBlob")); } catch (Exception e) { student.setProfilePicBlob(null); }
+                students.add(student);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return students;
+    }
+
+    public static List<STUDENT> getAllForAdabPoint() {
+        List<STUDENT> students = new ArrayList<>();
+        String query = "SELECT studID, studName, adabPoint FROM student";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                STUDENT student = new STUDENT();
+                student.setStudID(rs.getInt("studID"));
+                student.setStudName(rs.getString("studName"));
+                student.setAdabPoint(rs.getInt("adabPoint"));
+                students.add(student);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return students;
+    }
 }
 

@@ -5,6 +5,8 @@
 --%>
 
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ page import="java.util.List" %>
+<%@ page import="Controller.StaffAdabPointServlet.StudentAdabInfo" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -156,8 +158,13 @@
 
         .content {
             flex-grow: 1;
-            padding: 100px 40px 40px 40px;
-            margin-left: 250px;
+            padding: 60px 0 10px 0;
+            margin-left: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
             transition: margin-left 0.3s;
         }
 
@@ -246,30 +253,98 @@
             color: #0a6d6d;
         }
 
-        .profile-box {
-            background-color: #b3e0e0;
+        .adab-table-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
             padding: 20px;
-            border-radius: 10px;
-            width: 650px;
         }
 
-        .profile-box h2 {
+        .adab-table-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 24px;
+            letter-spacing: 1px;
+            color: #222;
+            text-align: center;
+        }
+
+        .filter-buttons {
             margin-bottom: 20px;
-            font-size: 18px;
+            text-align: center;
         }
 
-        .profile-box table {
+        .filter-btn {
+            background: #008b8b;
+            color: #fff;
+            border: none;
+            border-radius: 22px;
+            padding: 10px 20px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 0 10px;
+            transition: background 0.2s;
+        }
+
+        .filter-btn:hover {
+            background: #0a6d6d;
+        }
+
+        .filter-btn.active {
+            background: #0a6d6d;
+        }
+
+        table.adab-table {
             width: 100%;
             border-collapse: collapse;
+            font-size: 1em;
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
         }
 
-        .profile-box td {
+        table.adab-table thead th {
+            background: #eaf6f4;
+            color: #222;
+            font-weight: 700;
+            padding: 14px 8px;
+            border-bottom: 2px solid #008b8b;
+            text-align: center;
+        }
+
+        table.adab-table tbody td {
+            padding: 12px 8px;
+            border-bottom: 1px solid #e0e0e0;
+            text-align: center;
+        }
+
+        table.adab-table tbody tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        table.adab-table td:first-child,
+        table.adab-table th:first-child {
+            text-align: left;
+        }
+
+        .no-data {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 20px;
+        }
+
+        .debug-info {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
             padding: 10px;
-        }
-
-        .profile-box td:first-child {
-            font-weight: bold;
-            width: 200px;
+            margin-bottom: 20px;
+            font-family: monospace;
+            font-size: 0.9em;
+            display: none; /* Hide in production */
         }
     </style>
 </head>
@@ -301,7 +376,7 @@
         </form>
     </div>
         
- <!-- Top Navigation Bar -->
+    <!-- Top Navigation Bar -->
     <div class="topbar">
         <div class="dashboard-title">ADAB POINT EVALUATION</div>
         <div class="top-icons">
@@ -315,187 +390,145 @@
             <img src="StaffImageServlet?staffID=<%= session.getAttribute("staffID") %>" class="profile-icon" id="profileBtn">
         </div>
     </div>
- 
- <style>
-     
-.content {
-    flex-grow: 1;
-    padding: 60px 0 10px 0;
-    margin-left: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-    box-sizing: border-box;
-}
-
-.adab-table-title {
-    font-size: 28px;
-    font-weight: bold;
-    margin-bottom: 24px;
-    letter-spacing: 1px;
-    color: #222;
-}
-
-table.adab-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 1em;
-    background: #fff;
-}
-
-table.adab-table thead th {
-    background: #eaf6f4;
-    color: #222;
-    font-weight: 700;
-    padding: 14px 8px;
-    border-bottom: 2px solid #008b8b;
-    text-align: center;
-}
-
-table.adab-table tbody td {
-    padding: 12px 8px;
-    border-bottom: 1px solid #e0e0e0;
-    text-align: center;
-}
-
-table.adab-table td:first-child,
-table.adab-table th:first-child {
-    text-align: left;
-}
-
-.badge {
-    display: inline-block;
-    padding: 4px 18px;
-    border-radius: 16px;
-    font-weight: 600;
-    font-size: 1em;
-    color: #fff;
-}
-
-.badge.yes {
-    background: #008b8b;
-}
-
-.badge.no {
-    background: #e74c3c;
-}
-
-.more-btn {
-    margin-top: 5px;
-    background: #008b8b;
-    color: #fff;
-    border: none;
-    border-radius: 22px;
-    padding: 10px 32px;
-    font-size: 1.1em;
-    font-weight: 600;
-    cursor: pointer;
-    float: left;
-    transition: background 0.2s;
-}
-
-.more-btn:hover {
-    background: #0a6d6d;
-}
-</style>
 
     <!-- Main Content -->
     <div class="content">
         <div class="adab-table-container">
-            <div class="adab-table-title">ADAB POINT EVALUTION</div>
+            <div class="adab-table-title">ADAB POINT EVALUATION</div>
+            
+            <!-- Debug Info (remove in production) -->
+            <div class="debug-info">
+                <%
+                    List<StudentAdabInfo> studentInfos = (List<StudentAdabInfo>) request.getAttribute("studentInfos");
+                    out.println("DEBUG: studentInfos is null: " + (studentInfos == null));
+                    if (studentInfos != null) {
+                        out.println("<br>DEBUG: studentInfos size: " + studentInfos.size());
+                    }
+                %>
+            </div>
+
+            <!-- Filter Buttons -->
+            <div class="filter-buttons">
+                <button class="filter-btn active" id="btnShowAll">Show All</button>
+                <button class="filter-btn" id="btnMostActivities">Most Activities</button>
+                <button class="filter-btn" id="btnNoActivities">No Activities</button>
+            </div>
+
+            <!-- Table -->
             <table class="adab-table">
                 <thead>
                     <tr>
                         <th>STUDENT NAME</th>
                         <th>MATRIC NUMBER</th>
                         <th>TOTAL ACTIVITIES JOINED</th>
-                        <th>UNIFORM BODY</th>
                         <th>ADAB POINT</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>Muhammad Aniq Faris Bin Samsudin</td>
-                        <td>2023436188</td>
-                        <td>10</td>
-                        <td><span class="badge yes">Yes</span></td>
-                        <td>6</td>
+                <tbody id="studentTableBody">
+                <%
+                    if (studentInfos == null || studentInfos.isEmpty()) {
+                %>
+                    <tr><td colspan="4" class="no-data">No students found.</td></tr>
+                <%
+                    } else {
+                        for (StudentAdabInfo s : studentInfos) {
+                %>
+                    <tr data-activities="<%= s.getTotalActivities() %>" data-points="<%= s.getAdabPoint() %>">
+                        <td><%= s.getStudName() %></td>
+                        <td><%= s.getStudID() %></td>
+                        <td><%= s.getTotalActivities() %></td>
+                        <td><%= s.getAdabPoint() %></td>
                     </tr>
-                    <tr>
-                        <td>Muhammad Aminuddin Bin Hasan</td>
-                        <td>2023896726</td>
-                        <td>7</td>
-                        <td><span class="badge yes">Yes</span></td>
-                        <td>4</td>
-                    </tr>
-                    <tr>
-                        <td>Muhammad Aidil Imran Bin Norizan</td>
-                        <td>2023463732</td>
-                        <td>10</td>
-                        <td><span class="badge yes">Yes</span></td>
-                        <td>6</td>
-                    </tr>
-                    <tr>
-                        <td>NurIn Danisa Binti Suhaimi Arif</td>
-                        <td>2023985574</td>
-                        <td>9</td>
-                        <td><span class="badge yes">Yes</span></td>
-                        <td>5.5</td>
-                    </tr>
-                    <tr>
-                        <td>Nor Iztatul Fitrah Binti Roslan</td>
-                        <td>2023678402</td>
-                        <td>5</td>
-                        <td><span class="badge no">No</span></td>
-                        <td>4</td>
-                    </tr>
-                    <tr>
-                        <td>Nur Hajiratul Asma Binti Shaari</td>
-                        <td>2023121904</td>
-                        <td>7</td>
-                        <td><span class="badge no">No</span></td>
-                        <td>4</td>
-                    </tr>
-                    <tr>
-                        <td>Siti Farhana Binti Abd Malik</td>
-                        <td>2023441820</td>
-                        <td>5</td>
-                        <td><span class="badge no">No</span></td>
-                        <td>2</td>
-                    </tr>
-                    <tr>
-                        <td>Wan Adelin Sabrina Binti Wan Zaidi</td>
-                        <td>2023778001</td>
-                        <td>3</td>
-                        <td><span class="badge yes">Yes</span></td>
-                        <td>1.2</td>
-                    </tr>
-                    <tr>
-                        <td>Zahwa Faqihah Binti Harizuan</td>
-                        <td>2023288954</td>
-                        <td>4</td>
-                        <td><span class="badge no">No</span></td>
-                        <td>3.5</td>
-                    </tr>
-                    <tr>
-                        <td>Zuhairi Ikhwan Bin Zubir</td>
-                        <td>2023448964</td>
-                        <td>4</td>
-                        <td><span class="badge no">No</span></td>
-                        <td>1.2</td>
-                    </tr>
+                <%
+                        }
+                    }
+                %>
                 </tbody>
             </table>
-            <button class="more-btn">More Student &rarr;</button>
         </div>
     </div>
-    </html>
-<script>
-    const sidebar = document.getElementById('sidebar');
-    const toggleBtn = document.getElementById('sidebarToggle');
-    toggleBtn.addEventListener('click', function() {
-        sidebar.classList.toggle('collapsed');
-        document.body.classList.toggle('sidebar-collapsed');
-    });
-</script>
+
+    <script>
+        // Sidebar toggle functionality
+        const sidebar = document.getElementById('sidebar');
+        const toggleBtn = document.getElementById('sidebarToggle');
+        toggleBtn.addEventListener('click', function() {
+            sidebar.classList.toggle('collapsed');
+            document.body.classList.toggle('sidebar-collapsed');
+        });
+
+        // Notification dropdown functionality
+        const notificationBtn = document.getElementById('notificationBtn');
+        const notificationDropdown = document.getElementById('notificationDropdown');
+        
+        notificationBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            notificationDropdown.classList.toggle('show');
+        });
+
+        document.addEventListener('click', function() {
+            notificationDropdown.classList.remove('show');
+        });
+
+        // Filter functionality
+        const allRows = Array.from(document.querySelectorAll('#studentTableBody tr'));
+        const filterButtons = document.querySelectorAll('.filter-btn');
+
+        function showRows(rows) {
+            const tbody = document.getElementById('studentTableBody');
+            tbody.innerHTML = '';
+            
+            if (rows.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="no-data">No students found matching the filter.</td></tr>';
+            } else {
+                rows.forEach(row => tbody.appendChild(row.cloneNode(true)));
+            }
+        }
+
+        function setActiveButton(activeBtn) {
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            activeBtn.classList.add('active');
+        }
+
+        document.getElementById('btnShowAll').addEventListener('click', function() {
+            showRows(allRows);
+            setActiveButton(this);
+        });
+
+        document.getElementById('btnMostActivities').addEventListener('click', function() {
+            if (allRows.length === 0) return;
+            
+            const maxActivities = Math.max(...allRows.map(row => 
+                parseInt(row.getAttribute('data-activities') || '0')
+            ));
+            
+            const mostActiveRows = allRows.filter(row => 
+                parseInt(row.getAttribute('data-activities') || '0') === maxActivities && maxActivities > 0
+            );
+            
+            showRows(mostActiveRows);
+            setActiveButton(this);
+        });
+
+        document.getElementById('btnNoActivities').addEventListener('click', function() {
+            const noActivityRows = allRows.filter(row => 
+                parseInt(row.getAttribute('data-activities') || '0') === 0
+            );
+            
+            showRows(noActivityRows);
+            setActiveButton(this);
+        });
+
+        // Debug: Log table data on page load
+        console.log('Page loaded. Total rows:', allRows.length);
+        allRows.forEach((row, index) => {
+            console.log(`Row ${index}:`, {
+                name: row.cells[0]?.textContent,
+                matric: row.cells[1]?.textContent,
+                activities: row.getAttribute('data-activities'),
+                points: row.getAttribute('data-points')
+            });
+        });
+    </script>
+</body>
+</html>

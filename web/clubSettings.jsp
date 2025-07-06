@@ -1,4 +1,4 @@
-<%-- 
+<%--
     Document   : clubSettings
     Created on : Jun 11, 2025, 1:52:51 AM
     Author     : aniqf
@@ -24,6 +24,7 @@
     <meta charset="UTF-8">
     <title>Club Settings</title>
     <style>
+        /* Existing CSS */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Poppins', Arial, sans-serif;
@@ -64,10 +65,11 @@
             max-width: 800px;
             width: 100%;
         }
+        /* Changed .form-group to allow it to be full width when not in a row */
         .form-group {
             flex: 1;
             min-width: 0;
-            margin-bottom: 0;
+            margin-bottom: 20px; /* Added margin-bottom here for consistent spacing */
         }
         .form-group label {
             font-weight: bold;
@@ -119,6 +121,21 @@
             gap: 20px;
             margin-bottom: 20px;
         }
+        /* New or modified styles for responsive/single column behavior */
+        .form-row:last-of-type { /* Adjust margin for the last row */
+            margin-bottom: 0;
+        }
+
+        /* If a form-group is the only child of form-section, make it full width */
+        .form-section > .form-group {
+            width: 100%;
+        }
+        /* For the password container specifically if it's in its own row */
+        .form-section .form-group.password-group { /* Added this class for specific targeting */
+            width: 100%; /* Ensure it takes full width when alone */
+        }
+
+
         .popup {
             position: fixed;
             top: 50%;
@@ -221,16 +238,11 @@
                     <input type="text" name="clubEstablishedDate" value="<%= club.getClubEstablishedDate() %>" readonly disabled />
                 </div>
             </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Password</label>
-                    <div class="password-container">
-                        <input type="password" name="clubPassword" id="clubPassword" value="<%= club.getClubPassword() %>" required class="password-field" />
-                        <button type="button" class="password-toggle" onclick="togglePassword()" id="passwordToggle">👁️</button>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <!-- Empty space for balance -->
+            <div class="form-group password-group"> <%-- Added a specific class for targeting --%>
+                <label>Password</label>
+                <div class="password-container">
+                    <input type="password" name="clubPassword" id="clubPassword" value="<%= club.getClubPassword() %>" required class="password-field" />
+                    <button type="button" class="password-toggle" onclick="togglePassword()" id="passwordToggle">👁️</button>
                 </div>
             </div>
             <div class="submit-section">
@@ -238,22 +250,18 @@
             </div>
         </form>
         
-        <!-- Hidden fields for messages -->
         <input type="hidden" id="successMsg" value="<%= message != null ? message : "" %>">
         <input type="hidden" id="errorMsg" value="<%= error != null ? error : "" %>">
     </div>
     
-    <!-- Popup Overlay -->
     <div class="popup-overlay" id="popupOverlay"></div>
     
-    <!-- Success Popup -->
     <div class="popup success" id="successPopup">
         <h3>Success!</h3>
         <p id="successMessage"></p>
         <button onclick="closePopup()">OK</button>
     </div>
     
-    <!-- Error Popup -->
     <div class="popup error" id="errorPopup">
         <h3>Error!</h3>
         <p id="errorMessage"></p>
