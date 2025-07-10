@@ -551,24 +551,6 @@
         </div>
       </div>
     </div>
-
-    <div style="margin-top: 40px;">
-      <h2>Rejected Activities</h2>
-      <div style="display: flex; gap: 20px; flex-wrap: wrap;">
-        <% if (!rejectedActivities.isEmpty()) {
-            for (ACTIVITY act : rejectedActivities) { %>
-              <div style="background: #f8d7da; border: 1px solid #f5c6cb; border-radius: 10px; padding: 20px; width: 300px;">
-                <h3><%= act.getActivityName() %></h3>
-                <p>Date: <%= act.getActivityDate() %></p>
-                <p>Venue: <%= act.getActivityVenue() %></p>
-                <p>Status: <span style="color: #721c24; font-weight: bold;">Rejected</span></p>
-              </div>
-        <%   }
-           } else { %>
-          <div style="color: #888;">No rejected activities.</div>
-        <% } %>
-      </div>
-    </div>
   </div>
 </div>
 

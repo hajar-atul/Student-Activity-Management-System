@@ -218,6 +218,7 @@
                 </tbody>
             </table>
         </div>
+        <button onclick="window.location.href='staffBooking.jsp'" style="background-color:#008b8b;color:white;border:none;padding:10px 24px;border-radius:6px;cursor:pointer;font-size:16px;margin-top:32px;">← Back</button>
     </div>
 </body>
 </html> 

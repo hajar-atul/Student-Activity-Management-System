@@ -21,37 +21,117 @@
             width: 250px;
             background-color: #008b8b;
             color: white;
-            padding: 20px;
+            padding: 20px 0 0 0;
             height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            transition: width 0.3s;
+            z-index: 2001;
         }
 
-        .sidebar img {
-            border-radius: 50%;
-            width: 150px;
-            height: 150px;
+        .sidebar.collapsed {
+            width: 60px;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .sidebar.collapsed .sidebar-header h2,
+        .sidebar.collapsed .sidebar-header img,
+        .sidebar.collapsed .menu,
+        .sidebar.collapsed form {
+            display: none;
+        }
+
+        .sidebar-header {
+            position: relative;
+            margin-bottom: 18px;
+        }
+
+        #sidebarToggle {
+            margin-top: 4px;
+            margin-bottom: 4px;
+            z-index: 2002;
+            width: 28px;
+            height: 28px;
+            left: 8px;
+            top: 8px;
+            padding: 0;
+        }
+
+        #sidebarToggle span {
             display: block;
-            margin: 0 auto;
+            width: 20px;
+            height: 3px;
+            background: #fff;
+            margin: 4px 0;
+            border-radius: 2px;
         }
 
-        .sidebar h2 {
-            text-align: center;
-            font-size: 14px;
-            margin: 10px 0 0;
+        .sidebar-header img.profile-icon {
+            width: 110px;
+            height: 110px;
+            margin-top: 18px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .sidebar-header h2 {
+            margin-top: 8px;
+            font-size: 1.1em;
         }
 
         .menu {
-            margin-top: 30px;
+            margin-top: 10px;
         }
 
         .menu a {
             display: block;
-            padding: 10px;
+            padding: 6px 0;
             background-color: #0a6d6d;
-            margin-top: 10px;
+            margin: 8px 24px 0 24px;
             text-decoration: none;
             color: white;
-            border-radius: 5px;
+            border-radius: 6px;
             text-align: center;
+            font-size: 1em;
+            height: 38px;
+            line-height: 24px;
+            transition: background 0.2s;
+        }
+
+        .menu a:hover {
+            background-color: #007b7b;
+        }
+
+        .sidebar form {
+            position: absolute;
+            bottom: 60px;
+            left: 0;
+            width: 100%;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .sidebar form button {
+            width: 90%;
+            background: #c0392b;
+            color: #fff;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            padding: 0;
+            height: 44px;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin-bottom: 0;
+            transition: background 0.2s;
+            display: block;
+        }
+
+        .sidebar form button:hover {
+            background: #a93226;
         }
 
         .topbar {
@@ -67,31 +147,22 @@
             justify-content: space-between;
             padding: 0 20px;
             z-index: 1000;
+            transition: left 0.3s;
         }
 
-        .search-container {
-            display: flex;
-            align-items: center;
-            margin-left: 30px;
+        body.sidebar-collapsed .topbar {
+            left: 60px;
         }
 
-        .search-container input {
-            padding: 6px 10px;
-            border-radius: 20px;
-            border: none;
-            outline: none;
-            width: 180px;
+        .content {
+            flex-grow: 1;
+            padding: 100px 40px 40px 40px;
+            margin-left: 250px;
+            transition: margin-left 0.3s;
         }
 
-        .search-btn {
-            background: white;
-            border: none;
-            margin-left: -30px;
-            cursor: pointer;
-            font-weight: bold;
-            border-radius: 50%;
-            padding: 4px 8px;
-            color: #009B9D;
+        body.sidebar-collapsed .content {
+            margin-left: 60px;
         }
 
         .dashboard-title {
@@ -124,9 +195,14 @@
         }
 
         .profile-icon {
-            width: 40px;
-            height: 40px;
+            width: 110px;
+            height: 110px;
             border-radius: 50%;
+            object-fit: cover;
+            margin-top: 18px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .notification-dropdown {
@@ -163,12 +239,6 @@
             padding: 0;
             cursor: pointer;
             position: relative;
-        }
-
-        .content {
-            flex-grow: 1;
-            padding: 100px 40px 40px 40px;
-            margin-left: 250px;
         }
 
         .content h1 {
@@ -289,24 +359,42 @@
         .btn.reject:hover {
             background: #c0392b;
         }
+
+        .more-request-btn {
+            margin-top: 30px;
+            background: #1a8a7c;
+            color: #fff;
+            border: none;
+            border-radius: 22px;
+            padding: 10px 32px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            float: left;
+            transition: background 0.2s;
+        }
+
+        .more-request-btn:hover {
+            background: #15796b;
+        }
     </style>
 </head>
 <body>
 
     <!-- Sidebar -->
-    <div class="sidebar">
-        <img src="<% 
-            Object sid = session.getAttribute("staffID");
-            if (sid != null) {
-                out.print("StaffImageServlet?staffID=" + sid);
-            } else {
-                out.print("image/staff.jpg");
-            }
-        %>" alt="Profile Picture">
-        <h2>
-            <%= session.getAttribute("staffName") %><br>
-            <%= session.getAttribute("staffID") %>
-        </h2>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header" style="text-align:center; position:relative;">
+            <button id="sidebarToggle" style="background:none; border:none; position:absolute; left:8px; top:8px; cursor:pointer; outline:none; width:28px; height:28px; padding:0;">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <img src="StaffImageServlet?staffID=<%= session.getAttribute("staffID") %>" alt="Profile Picture" class="profile-icon">
+            <h2 style="margin-top:8px;">
+                <%= session.getAttribute("staffName") %><br>
+                <%= session.getAttribute("staffID") %>
+            </h2>
+        </div>
         <div class="menu">
             <a href="<%= request.getContextPath() %>/StaffDashboardServlet">HOME</a>
             <a href="<%= request.getContextPath() %>/staffBooking.jsp">BOOKING</a>
@@ -314,9 +402,12 @@
             <a href="<%= request.getContextPath() %>/addClub.jsp">CLUB REGISTRATION</a>
             <a href="<%= request.getContextPath() %>/addStaff.jsp">ADD STAFF</a>
         </div>
+        <form action="index.jsp" method="get">
+            <button type="submit">Logout</button>
+        </form>
     </div>
         
- <!-- Top Navigation Bar -->
+    <!-- Top Navigation Bar -->
     <div class="topbar">
         <div class="dashboard-title">BOOKING REQUEST</div>
         <div class="top-icons">
@@ -327,103 +418,205 @@
             <div class="notification-dropdown" id="notificationDropdown">
                 <p>No new notifications</p>
             </div>
-            <img src="<% 
-                if (sid != null) {
-                    out.print("StaffImageServlet?staffID=" + sid);
-                } else {
-                    out.print("image/staff.jpg");
-                }
-            %>" alt="Profile" class="profile-icon">
+            <img src="StaffImageServlet?staffID=<%= session.getAttribute("staffID") %>" class="profile-icon" id="profileBtn">
         </div>
     </div>
  
- <style>
+    <style>
+        /* Copy all sidebar/topbar CSS from staffDashboardPage.jsp here */
+        .sidebar {
+            width: 250px;
+            background-color: #008b8b;
+            color: white;
+            padding: 20px 0 0 0;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            transition: width 0.3s;
+            z-index: 2001;
+        }
+        .sidebar.collapsed {
+            width: 60px;
+            padding-left: 0;
+            padding-right: 0;
+        }
+        .sidebar.collapsed .sidebar-header h2,
+        .sidebar.collapsed .sidebar-header img,
+        .sidebar.collapsed .menu,
+        .sidebar.collapsed form {
+            display: none;
+        }
+        .sidebar-header {
+            position: relative;
+            margin-bottom: 18px;
+        }
+        #sidebarToggle {
+            margin-top: 4px;
+            margin-bottom: 4px;
+            z-index: 2002;
+            width: 28px;
+            height: 28px;
+            left: 8px;
+            top: 8px;
+            padding: 0;
+        }
+        #sidebarToggle span {
+            display: block;
+            width: 20px;
+            height: 3px;
+            background: #fff;
+            margin: 4px 0;
+            border-radius: 2px;
+        }
+        .sidebar-header img.profile-icon {
+            width: 110px;
+            height: 110px;
+            margin-top: 18px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .sidebar-header h2 {
+            margin-top: 8px;
+            font-size: 1.1em;
+        }
+        .menu {
+            margin-top: 10px;
+        }
+        .menu a {
+            display: block;
+            padding: 6px 0;
+            background-color: #0a6d6d;
+            margin: 8px 24px 0 24px;
+            text-decoration: none;
+            color: white;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 1em;
+            height: 38px;
+            line-height: 24px;
+            transition: background 0.2s;
+        }
+        .menu a:hover {
+            background-color: #007b7b;
+        }
+        .sidebar form {
+            position: absolute;
+            bottom: 60px;
+            left: 0;
+            width: 100%;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+        .sidebar form button {
+            width: 90%;
+            background: #c0392b;
+            color: #fff;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            padding: 0;
+            height: 44px;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin-bottom: 0;
+            transition: background 0.2s;
+            display: block;
+        }
+        .sidebar form button:hover {
+            background: #a93226;
+        }
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 250px;
+            right: 0;
+            height: 60px;
+            background-color: #008b8b;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 1000;
+            transition: left 0.3s;
+        }
+        body.sidebar-collapsed .topbar {
+            left: 60px;
+        }
+        .dashboard-title {
+            font-size: 22px;
+            font-weight: bold;
+            flex-grow: 1;
+            text-align: center;
+            margin-left: 50px;
+        }
+        .top-icons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .top-icons img {
+            width: 24px;
+            height: 24px;
+        }
+        .top-icons img.umpsa-icon {
+            width: 36px;
+            height: 36px;
+        }
+        .notification-btn img {
+            width: 32px;
+            height: 32px;
+        }
+        .profile-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+        .notification-dropdown {
+            display: none;
+            position: absolute;
+            top: 50px;
+            right: 50px;
+            background: white;
+            min-width: 250px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            z-index: 2000;
+            padding: 10px 0;
+            border-radius: 8px;
+            color: #333;
+        }
+        .notification-dropdown.show {
+            display: block;
+        }
+        .notification-dropdown p {
+            margin: 0;
+            padding: 10px 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .notification-dropdown p:last-child {
+            border-bottom: none;
+        }
+        .notification-btn {
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            position: relative;
+        }
+        .content {
+            flex-grow: 1;
+            padding: 100px 40px 40px 40px;
+            margin-left: 250px;
+            transition: margin-left 0.3s;
+        }
+        body.sidebar-collapsed .content {
+            margin-left: 60px;
+        }
+    </style>
    
-
-.booking-table-title {
-    font-size: 28px;
-    font-weight: bold;
-    margin-bottom: 24px;
-    letter-spacing: 1px;
-    color: #222;
-}
-
-table.booking-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 1em;
-    background: #fff;
-}
-
-table.booking-table thead th {
-    background: #eaf6f4;
-    color: #222;
-    font-weight: 700;
-    padding: 14px 8px;
-    border: 2px solid #222;
-    text-align: center;
-}
-
-table.booking-table tbody td {
-    padding: 12px 8px;
-    border: 2px solid #222;
-    text-align: center;
-}
-
-.btn {
-    border: none;
-    border-radius: 16px;
-    padding: 6px 18px;
-    font-weight: 600;
-    font-size: 1em;
-    margin-right: 6px;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.btn.view {
-    background: #1a8a7c;
-    color: #fff;
-}
-
-.btn.approve {
-    background: #1a8a7c;
-    color: #fff;
-}
-
-.btn.reject {
-    background: #e74c3c;
-    color: #fff;
-}
-
-.btn.view:hover, .btn.approve:hover {
-    background: #15796b;
-}
-
-.btn.reject:hover {
-    background: #c0392b;
-}
-
-.more-request-btn {
-    margin-top: 30px;
-    background: #1a8a7c;
-    color: #fff;
-    border: none;
-    border-radius: 22px;
-    padding: 10px 32px;
-    font-size: 1.1em;
-    font-weight: 600;
-    cursor: pointer;
-    float: left;
-    transition: background 0.2s;
-}
-
-.more-request-btn:hover {
-    background: #15796b;
-} 
-   </style>
-   
-       <!-- Main Content -->
+    <!-- Main Content -->
     <div class="content">
         <div class="booking-table-container">
             <div class="booking-table-title">OVERALL BOOKING REQUEST</div>
@@ -534,3 +727,11 @@ table.booking-table tbody td {
         </div>
     </div>
 </html>
+<script>
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('sidebarToggle');
+    toggleBtn.addEventListener('click', function() {
+        sidebar.classList.toggle('collapsed');
+        document.body.classList.toggle('sidebar-collapsed');
+    });
+</script>
