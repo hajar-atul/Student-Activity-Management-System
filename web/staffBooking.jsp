@@ -398,7 +398,7 @@
         <div class="menu">
             <a href="<%= request.getContextPath() %>/StaffDashboardServlet">HOME</a>
             <a href="<%= request.getContextPath() %>/staffBooking.jsp">BOOKING</a>
-            <a href="<%= request.getContextPath() %>/staffAdabPoint.jsp">ADAB POINT</a>
+            <a href="<%= request.getContextPath() %>/StaffAdabPointServlet">ADAB POINT</a>
             <a href="<%= request.getContextPath() %>/addClub.jsp">CLUB REGISTRATION</a>
             <a href="<%= request.getContextPath() %>/addStaff.jsp">ADD STAFF</a>
         </div>
