@@ -271,6 +271,7 @@
     <li><a href="venueBooking.jsp">VENUE BOOKING</a></li>
     <li><a href="resourceReq.jsp">RESOURCE BOOKING</a></li>
     <li><a href="clubFeedback.jsp">FEEDBACK</a></li>
+    <li><a href="clubReport.jsp">REPORT</a></li>
     <li><a href="clubSettings.jsp">SETTINGS</a></li>
     </ul>
   </div>
@@ -328,7 +329,7 @@
         <form method="get" style="display:inline;">
           <button type="submit" name="status" value="All" class="dashboard-btn">All</button>
           <button type="submit" name="status" value="Approved" class="dashboard-btn">Approve</button>
-          <button type="submit" name="status" value="Reject" class="dashboard-btn">Reject</button>
+          <button type="submit" name="status" value="Reject" class="dashboard-btn">Rejected</button>
           <button type="submit" name="status" value="Pending" class="dashboard-btn">Pending</button>
         </form>
       </div>
@@ -355,8 +356,12 @@
                 java.util.Iterator<model.ACTIVITY> it = activities.iterator();
                 while (it.hasNext()) {
                   model.ACTIVITY act = it.next();
-                  if (!act.getActivityStatus().equalsIgnoreCase(filterStatus)) {
-                    it.remove();
+                  if ("Reject".equalsIgnoreCase(filterStatus) || "Rejected".equalsIgnoreCase(filterStatus)) {
+                      if (!("Rejected".equalsIgnoreCase(act.getActivityStatus()) || "Reject".equalsIgnoreCase(act.getActivityStatus()))) {
+                          it.remove();
+                      }
+                  } else if (!act.getActivityStatus().equalsIgnoreCase(filterStatus)) {
+                      it.remove();
                   }
                 }
               }
@@ -373,8 +378,8 @@
                 <span style="background:#c8f7c5; color:#218838; padding:4px 12px; border-radius:12px; font-weight:500;">Approved</span>
               <% } else if ("Pending".equalsIgnoreCase(act.getActivityStatus())) { %>
                 <span style="background:#fff3cd; color:#856404; padding:4px 12px; border-radius:12px; font-weight:500;">Pending</span>
-              <% } else if ("Reject".equalsIgnoreCase(act.getActivityStatus())) { %>
-                <span style="background:#f8d7da; color:#721c24; padding:4px 12px; border-radius:12px; font-weight:500;">Reject</span>
+              <% } else if ("Rejected".equalsIgnoreCase(act.getActivityStatus()) || "Reject".equalsIgnoreCase(act.getActivityStatus())) { %>
+                <span style="background:#f8d7da; color:#721c24; padding:4px 12px; border-radius:12px; font-weight:500;">Rejected</span>
               <% } else { %>
                 <span style="background:#e2e3e5; color:#383d41; padding:4px 12px; border-radius:12px; font-weight:500;"><%= act.getActivityStatus() %></span>
               <% } %>

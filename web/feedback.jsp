@@ -5,6 +5,20 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page import="model.ACTIVITY, model.CLUB" %>
+<%
+    String activityID = request.getParameter("activityID");
+    ACTIVITY activity = null;
+    CLUB club = null;
+    if (activityID != null && !activityID.isEmpty()) {
+        activity = ACTIVITY.getActivityById(activityID);
+        if (activity != null) {
+            club = CLUB.getClubById(activity.getClubID());
+        }
+    }
+    String message = request.getParameter("message");
+    String error = request.getParameter("error");
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -224,10 +238,11 @@
     .content {
       min-height: 100vh;
       display: flex;
-      align-items: center;
-      justify-content: center;
+      align-items: flex-start;      /* Aligns content to the top */
+      justify-content: center;      /* Centers horizontally */
       margin-left: 0;
-      padding: 0;
+      padding-top: 100px;           /* Pushes content below the header */
+      background: none;
     }
 
     .sidebar.closed ~ .content {
@@ -235,95 +250,112 @@
     }
 
     /* Feedback Section */
+    .feedback-form-wrapper {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;          /* Centers the form horizontally */
+      justify-content: flex-start;
+      background: none;
+    }
     .feedback-card {
       background: #fff;
       border-radius: 24px;
-      box-shadow: 0 2px 16px rgba(0,0,0,0.08);
-      padding: 36px 32px 32px 32px;
-      max-width: 400px;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.10);
+      padding: 48px 48px 40px 48px;
       width: 100%;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      gap: 18px;
+      align-items: stretch;
+      gap: 28px;
+      margin-top: 0;
     }
-
-    .feedback-card h1 {
-      color: #009b9d;
-      font-size: 2em;
-      font-weight: bold;
-      margin-bottom: 10px;
+    .activity-box {
+      background: #e0f7fa;
+      border: 2px solid #009b9d;
+      border-radius: 14px;
+      padding: 22px 28px;
+      font-size: 1.35em;
+      font-weight: 600;
+      color: #00796b;
       text-align: center;
-    }
-
-    .feedback-card label {
-      font-weight: bold;
-      color: #009b9d;
-      margin-bottom: 6px;
-      align-self: flex-start;
-      font-size: 1.1em;
-    }
-
-    .feedback-card select, .feedback-card textarea {
-      width: 100%;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #b2dfdb;
-      background: #e0ffff;
-      font-size: 1em;
       margin-bottom: 10px;
+      letter-spacing: 0.5px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .form-field-box {
+      background: #e0ffff;
+      border: 1.5px solid #b2dfdb;
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 0;
+      font-size: 1.1em;
+      color: #222;
       font-family: inherit;
+      width: 100%;
+      box-sizing: border-box;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.03);
     }
-
-    .feedback-card textarea {
-      min-height: 70px;
-      resize: none;
+    .feedback-card label {
+      font-weight: 600;
+      color: #009b9d;
+      margin-bottom: 8px;
+      font-size: 1.13em;
+      letter-spacing: 0.2px;
+      align-self: flex-start;
     }
-
     .star-rating {
       display: flex;
       flex-direction: row;
-      font-size: 2.2em;
-      margin-bottom: 10px;
+      font-size: 2.5em;
+      margin-bottom: 0;
+      margin-top: 2px;
       cursor: pointer;
       user-select: none;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
     }
-
     .star {
-      color: #ccc;
+      color: #b2dfdb;
       transition: color 0.2s;
+      font-size: 1.1em;
     }
-
     .star.selected, .star.hovered {
       color: #ffb400;
     }
-
     .feedback-card button[type="submit"] {
       width: 100%;
-      background: #009b9d;
+      background: linear-gradient(90deg, #009b9d 60%, #00bfae 100%);
       color: #fff;
       font-weight: bold;
       border: none;
-      border-radius: 10px;
-      padding: 14px 0;
-      font-size: 1.2em;
+      border-radius: 12px;
+      padding: 18px 0;
+      font-size: 1.25em;
       margin-top: 10px;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: background 0.2s, box-shadow 0.2s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      letter-spacing: 0.5px;
     }
-
     .feedback-card button[type="submit"]:hover {
-      background: #00796b;
+      background: linear-gradient(90deg, #00796b 60%, #009b9d 100%);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.10);
     }
-
+    .feedback-card textarea.form-field-box {
+      min-height: 110px;
+      resize: vertical;
+    }
+    @media (max-width: 900px) {
+      .feedback-form-wrapper { max-width: 98vw; }
+      .feedback-card { padding: 28px 8vw 24px 8vw; }
+    }
     @media (max-width: 600px) {
-      .feedback-card {
-        padding: 18px 6px 18px 6px;
-        max-width: 98vw;
-      }
-      .feedback-card h1 {
-        font-size: 1.3em;
-      }
+      .feedback-card { padding: 16px 2vw 12px 2vw; }
+      .activity-box { padding: 12px 6px; font-size: 1em; }
     }
   </style>
 </head>
@@ -379,33 +411,40 @@
 
   <!-- Content -->
   <div class="content">
-    <form class="feedback-card" action="FeedbackServlet" method="post">
-      <h1>Activity Feedback</h1>
-      <label for="club">Select Club</label>
-      <select id="club" name="club" required>
-        <option value="">-- Select Club --</option>
-        <!-- TODO: Populate with club options from backend -->
-      </select>
-      <label for="activity">Select Activity</label>
-      <select id="activity" name="activity" required>
-        <option value="">-- Select Activity --</option>
-        <!-- TODO: Populate with activity options from backend -->
-      </select>
-      <label>Rate Activity</label>
-      <div class="star-rating" id="starRating">
-        <span class="star" data-value="1">&#9733;</span>
-        <span class="star" data-value="2">&#9733;</span>
-        <span class="star" data-value="3">&#9733;</span>
-        <span class="star" data-value="4">&#9733;</span>
-        <span class="star" data-value="5">&#9733;</span>
-      </div>
-      <input type="hidden" name="rating" id="ratingInput" value="0">
-      <label for="comments">Comments</label>
-      <textarea id="comments" name="comments" placeholder="Your feedback..." required></textarea>
-      <button type="submit">Submit Feedback</button>
-    </form>
+    <div class="feedback-form-wrapper">
+      <% if (message != null) { %>
+        <div style="background:#e0ffe0; color:#00796b; border:1.5px solid #009b9d; border-radius:8px; padding:10px 16px; margin-bottom:24px; text-align:center; font-weight:bold; max-width:600px; width:100%; margin-left:auto; margin-right:auto;">
+          Feedback submitted.
+        </div>
+      <% } %>
+      <form class="feedback-card" action="FeedbackServlet" method="post">
+        <h1 style="text-align: center;">Activity Feedback</h1>
+        <% if (activity != null && club != null) { %>
+          <div class="activity-box"><%= activity.getActivityName() %></div>
+          <input type="hidden" name="activityID" value="<%= activityID %>" />
+          <label>Organizer</label>
+          <input type="text" value="<%= club.getClubName() %>" readonly class="form-field-box" />
+          <input type="hidden" name="clubID" value="<%= club.getClubId() %>" />
+        <% } else { %>
+          <div style="color:#b71c1c; font-weight:bold;">Invalid activity. Please return to your activity list.</div>
+        <% } %>
+        <label>Rate Activity</label>
+        <div class="form-field-box" style="background:#fffbe7; display:flex; align-items:center; justify-content:center; gap:10px;">
+          <div class="star-rating" id="starRating">
+            <span class="star" data-value="1">&#9733;</span>
+            <span class="star" data-value="2">&#9733;</span>
+            <span class="star" data-value="3">&#9733;</span>
+            <span class="star" data-value="4">&#9733;</span>
+            <span class="star" data-value="5">&#9733;</span>
+          </div>
+        </div>
+        <input type="hidden" name="rating" id="ratingInput" value="0">
+        <label for="comments">Comments</label>
+        <textarea id="comments" name="comments" placeholder="Your feedback..." required class="form-field-box"></textarea>
+        <button type="submit" <% if (activity == null || club == null) { %>disabled<% } %>>Submit Feedback</button>
+      </form>
+    </div>
   </div>
-
   <!-- Script -->
   <script>
     const sidebar = document.getElementById('sidebar');

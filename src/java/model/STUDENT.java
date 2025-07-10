@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import util.DBConnection;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -51,7 +52,7 @@ public class STUDENT {
 
     // Get database connection
     private static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
+        return DBConnection.getConnection();
     }
 
     // Get student by ID

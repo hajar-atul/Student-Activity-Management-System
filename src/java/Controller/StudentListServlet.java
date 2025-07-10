@@ -31,6 +31,6 @@ public class StudentListServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setAttribute("activities", getActivities());
-        request.getRequestDispatcher("StudentList.jsp").forward(request, response);
+        request.getRequestDispatcher("studentList.jsp").forward(request, response);
     }
 }

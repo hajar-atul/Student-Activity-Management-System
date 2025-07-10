@@ -11,12 +11,9 @@
         response.sendRedirect("index.jsp");
         return;
     }
-    
-    // Get messages from request parameters
     String message = request.getParameter("message");
     String error = request.getParameter("error");
 %>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -28,7 +25,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Poppins', Arial, sans-serif;
-            background-color: #ffffff;
+            background-color: #f0f0f0;
             height: 100vh;
             overflow: hidden;
         }
@@ -49,27 +46,75 @@
             font-size: 32px;
             margin-right: 40px;
         }
-        .container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: calc(100vh - 100px);
-            padding: 20px;
+        .settings-container {
+            max-width: 800px;
+            margin: 40px auto;
         }
         .form-section {
-            background-color: #f8f8f8;
+            background-color: white;
             padding: 30px 40px;
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            min-width: 350px;
-            max-width: 800px;
+            margin-bottom: 20px;
+        }
+        .profile-picture-section {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 2px dashed #ddd;
+            border-radius: 10px;
+            background-color: #fafafa;
+        }
+        .current-profile-pic {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 15px;
+            display: block;
+            border: 3px solid #0a8079;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .file-input-container {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .file-input-container input[type="file"] {
+            position: absolute;
+            opacity: 0;
             width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        .file-input-label {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #0a8079;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .file-input-label:hover {
+            background-color: #086e68;
+        }
+        .file-info {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #666;
+        }
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
         }
         /* Changed .form-group to allow it to be full width when not in a row */
         .form-group {
             flex: 1;
             min-width: 0;
-            margin-bottom: 20px; /* Added margin-bottom here for consistent spacing */
+            margin-bottom: 20px;
         }
         .form-group label {
             font-weight: bold;
@@ -94,8 +139,33 @@
             outline: none;
         }
         .form-group textarea {
-            min-height: 40px;
+            min-height: 80px;
             resize: vertical;
+        }
+        .form-group input[readonly] {
+            background-color: #f5f5f5;
+            color: #666;
+        }
+        .password-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #666;
+            font-size: 14px;
+            padding: 5px;
+        }
+        .password-toggle:hover {
+            color: #0a8079;
+        }
+        .password-field {
+            padding-right: 40px;
         }
         .submit-section {
             text-align: center;
@@ -115,11 +185,6 @@
         }
         .submit-section button:hover {
             background-color: #086e68;
-        }
-        .form-row {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 20px;
         }
         /* New or modified styles for responsive/single column behavior */
         .form-row:last-of-type { /* Adjust margin for the last row */
@@ -160,20 +225,10 @@
             z-index: 999;
             display: none;
         }
-        .popup.success {
-            border-left: 5px solid #28a745;
-        }
-        .popup.error {
-            border-left: 5px solid #dc3545;
-        }
-        .popup h3 {
-            margin: 0 0 10px 0;
-            color: #333;
-        }
-        .popup p {
-            margin: 0 0 20px 0;
-            color: #666;
-        }
+        .popup.success { border-left: 5px solid #28a745; }
+        .popup.error { border-left: 5px solid #dc3545; }
+        .popup h3 { margin: 0 0 10px 0; color: #333; }
+        .popup p { margin: 0 0 20px 0; color: #666; }
         .popup button {
             background: #0a8079;
             color: white;
@@ -183,29 +238,10 @@
             cursor: pointer;
             font-weight: bold;
         }
-        .popup button:hover {
-            background: #086e68;
-        }
-        .password-container {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-        .password-toggle {
-            position: absolute;
-            right: 10px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: #666;
-            font-size: 14px;
-            padding: 5px;
-        }
-        .password-toggle:hover {
-            color: #0a8079;
-        }
-        .password-field {
-            padding-right: 40px;
+        .popup button:hover { background: #086e68; }
+        @media (max-width: 900px) {
+            .settings-container, .form-section { max-width: 100%; padding: 10px; }
+            .form-row { flex-direction: column; gap: 0; }
         }
     </style>
 </head>
@@ -215,9 +251,17 @@
         <h1>Club Settings</h1>
         <div style="width: 60px;"></div>
     </div>
-    
-    <div class="container">
-        <form class="form-section" action="clubSettings" method="post">
+    <div class="settings-container">
+        <form class="form-section" action="clubSettings" method="post" enctype="multipart/form-data">
+            <div class="profile-picture-section">
+                <h3 style="margin-bottom: 20px; color: #0a8079;">Profile Picture</h3>
+                <img src="ClubImageServlet?clubID=<%= club.getClubId() %>" alt="Current Profile" class="current-profile-pic" id="currentProfilePic" />
+                <div class="file-input-container">
+                    <input type="file" name="profilePicture" id="profilePicture" accept="image/*" onchange="previewImage(this)" />
+                    <label for="profilePicture" class="file-input-label">Choose New Profile Picture</label>
+                </div>
+                <div class="file-info">Supported formats: JPG, PNG, GIF (Max size: 5MB)</div>
+            </div>
             <div class="form-row">
                 <div class="form-group">
                     <label>Club Name</label>
@@ -238,7 +282,7 @@
                     <input type="text" name="clubEstablishedDate" value="<%= club.getClubEstablishedDate() %>" readonly disabled />
                 </div>
             </div>
-            <div class="form-group password-group"> <%-- Added a specific class for targeting --%>
+            <div class="form-group password-group">
                 <label>Password</label>
                 <div class="password-container">
                     <input type="password" name="clubPassword" id="clubPassword" value="<%= club.getClubPassword() %>" required class="password-field" />
@@ -248,51 +292,41 @@
             <div class="submit-section">
                 <button type="submit">Update</button>
             </div>
+            <input type="hidden" id="successMsg" value="<%= message != null ? message : "" %>">
+            <input type="hidden" id="errorMsg" value="<%= error != null ? error : "" %>">
         </form>
-        
-        <input type="hidden" id="successMsg" value="<%= message != null ? message : "" %>">
-        <input type="hidden" id="errorMsg" value="<%= error != null ? error : "" %>">
     </div>
-    
     <div class="popup-overlay" id="popupOverlay"></div>
-    
     <div class="popup success" id="successPopup">
         <h3>Success!</h3>
         <p id="successMessage"></p>
         <button onclick="closePopup()">OK</button>
     </div>
-    
     <div class="popup error" id="errorPopup">
         <h3>Error!</h3>
         <p id="errorMessage"></p>
         <button onclick="closePopup()">OK</button>
     </div>
-    
     <script>
         function showPopup(type, message) {
             const overlay = document.getElementById('popupOverlay');
             const popup = document.getElementById(type + 'Popup');
             const messageElement = document.getElementById(type + 'Message');
-            
             messageElement.textContent = message;
             overlay.style.display = 'block';
             popup.style.display = 'block';
         }
-        
         function closePopup() {
             const overlay = document.getElementById('popupOverlay');
             const successPopup = document.getElementById('successPopup');
             const errorPopup = document.getElementById('errorPopup');
-            
             overlay.style.display = 'none';
             successPopup.style.display = 'none';
             errorPopup.style.display = 'none';
         }
-        
         function togglePassword() {
             const passwordField = document.getElementById('clubPassword');
             const toggleButton = document.getElementById('passwordToggle');
-            
             if (passwordField.type === 'password') {
                 passwordField.type = 'text';
                 toggleButton.textContent = '🙈';
@@ -303,25 +337,55 @@
                 toggleButton.title = 'Show password';
             }
         }
-        
-        // Close popup when clicking on overlay
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                if (file.size > 5 * 1024 * 1024) {
+                    showPopup('error', 'File size must be less than 5MB');
+                    input.value = '';
+                    return;
+                }
+                if (!file.type.match('image.*')) {
+                    showPopup('error', 'Please select an image file');
+                    input.value = '';
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('currentProfilePic').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
         document.getElementById('popupOverlay').addEventListener('click', function() {
             closePopup();
         });
-        
-        // Show popup on page load if there are messages
         window.onload = function() {
             var successMsg = document.getElementById('successMsg').value;
             var errorMsg = document.getElementById('errorMsg').value;
-            
             if (successMsg && successMsg.trim() !== '') {
                 showPopup('success', successMsg);
             }
-            
             if (errorMsg && errorMsg.trim() !== '') {
                 showPopup('error', errorMsg);
             }
         };
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const fileInput = document.getElementById('profilePicture');
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                if (file.size > 5 * 1024 * 1024) {
+                    e.preventDefault();
+                    showPopup('error', 'File size must be less than 5MB');
+                    return;
+                }
+                if (!file.type.match('image.*')) {
+                    e.preventDefault();
+                    showPopup('error', 'Please select an image file');
+                    return;
+                }
+            }
+        });
     </script>
 </body>
 </html>

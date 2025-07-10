@@ -373,7 +373,7 @@
           <td>
             <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
               <span style="font-size: 22px; font-weight: bold;"><%= studentCount %></span>
-              <a href="studentList.jsp?activityId=<%= activity.getActivityID() %>" class="view-btn" style="text-decoration: none; color: white;">View Students</a>
+              <a href="activityParticipants?activityId=<%= activity.getActivityID() %>" class="view-btn" style="text-decoration: none; color: white;">View Students</a>
             </div>
           </td>
         </tr>
