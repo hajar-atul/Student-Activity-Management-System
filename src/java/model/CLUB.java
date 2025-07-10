@@ -152,17 +152,24 @@ public class CLUB {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
-                String query = "UPDATE club SET clubName=?, clubContact=?, clubDesc=?, " +
-                             "clubStatus=?, clubEstablishedDate=?, clubPassword=? WHERE clubID=?";
-                PreparedStatement stmt = conn.prepareStatement(query);
+                StringBuilder query = new StringBuilder("UPDATE club SET clubName=?, clubContact=?, clubDesc=?, clubStatus=?, clubEstablishedDate=?, clubPassword=?");
+                if (this.profilePic != null && this.profilePicBlob != null) {
+                    query.append(", profilePic=?, profilePicBlob=?");
+                }
+                query.append(" WHERE clubID=?");
+                PreparedStatement stmt = conn.prepareStatement(query.toString());
                 stmt.setString(1, this.clubName);
                 stmt.setString(2, this.clubContact);
                 stmt.setString(3, this.clubDesc);
                 stmt.setString(4, this.clubStatus);
                 stmt.setString(5, this.clubEstablishedDate);
                 stmt.setString(6, this.clubPassword);
-                stmt.setInt(7, this.clubID);
-                
+                int paramIndex = 7;
+                if (this.profilePic != null && this.profilePicBlob != null) {
+                    stmt.setString(paramIndex++, this.profilePic);
+                    stmt.setBytes(paramIndex++, this.profilePicBlob);
+                }
+                stmt.setInt(paramIndex, this.clubID);
                 return stmt.executeUpdate() > 0;
             }
         } catch (Exception e) {

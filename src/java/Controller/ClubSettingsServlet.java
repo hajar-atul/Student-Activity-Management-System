@@ -2,15 +2,20 @@ package Controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.InputStream;
+import java.io.ByteArrayOutputStream;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.http.Part;
 import model.CLUB;
 
 @WebServlet(name = "ClubSettingsServlet", urlPatterns = {"/clubSettings"})
+@MultipartConfig(maxFileSize = 5 * 1024 * 1024) // 5MB
 public class ClubSettingsServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -36,6 +41,23 @@ public class ClubSettingsServlet extends HttpServlet {
             if (clubPassword.equals(club.getClubPassword())) {
                 response.sendRedirect("clubSettings.jsp?error=Password cannot be the same as before. Please choose a different password.");
                 return;
+            }
+            
+            // Handle profile picture upload
+            Part filePart = request.getPart("profilePicture");
+            if (filePart != null && filePart.getSize() > 0) {
+                String fileName = filePart.getSubmittedFileName();
+                InputStream fileContent = filePart.getInputStream();
+                ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+                int nRead;
+                byte[] data = new byte[16384];
+                while ((nRead = fileContent.read(data, 0, data.length)) != -1) {
+                    buffer.write(data, 0, nRead);
+                }
+                buffer.flush();
+                byte[] imageBytes = buffer.toByteArray();
+                club.setProfilePic(fileName);
+                club.setProfilePicBlob(imageBytes);
             }
             
             // Update club object with new values

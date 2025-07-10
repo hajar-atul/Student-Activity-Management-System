@@ -5,7 +5,10 @@
 --%>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.List, model.ACTIVITY, model.CLUB" %>
+<%@ page import="java.util.List, model.ACTIVITY, model.CLUB, model.FEEDBACK, model.STUDENT" %>
+<%@ page import="java.util.ArrayList, java.util.HashMap, java.util.Map" %>
+<%@ page import="java.sql.DriverManager, java.sql.Connection, java.sql.PreparedStatement, java.sql.ResultSet" %>
+<%@ page import="java.util.Collections, java.util.Comparator" %>
 <%
     CLUB club = (CLUB) session.getAttribute("club");
     List<ACTIVITY> rejectedActivities = new java.util.ArrayList<ACTIVITY>();
@@ -14,6 +17,45 @@
             if ("Rejected".equalsIgnoreCase(act.getActivityStatus())) {
                 rejectedActivities.add(act);
             }
+        }
+    }
+
+    // --- FEEDBACK BOX LOGIC (reuse from clubFeedback.jsp, limit 3) ---
+    Integer clubID = null;
+    Object clubIdObj = session.getAttribute("clubID");
+    if (clubIdObj != null) {
+        if (clubIdObj instanceof Integer) {
+            clubID = (Integer) clubIdObj;
+        } else if (clubIdObj instanceof String) {
+            clubID = Integer.parseInt((String) clubIdObj);
+        }
+    }
+    List<Map<String, String>> recentFeedbacks = new ArrayList<Map<String, String>>();
+    if (clubID != null) {
+        List<ACTIVITY> activities = ACTIVITY.getActivitiesByClubId(clubID);
+        List<Map<String, String>> allFeedbacks = new ArrayList<Map<String, String>>();
+        for (ACTIVITY activity : activities) {
+            List<FEEDBACK> activityFeedbacks = FEEDBACK.getFeedbacksByActivityId(activity.getActivityID());
+            for (FEEDBACK fb : activityFeedbacks) {
+                Map<String, String> fbMap = new HashMap<String, String>();
+                STUDENT stud = STUDENT.getStudentById(fb.getStudID());
+                fbMap.put("studName", stud != null ? stud.getStudName() : "");
+                fbMap.put("activityName", activity.getActivityName());
+                fbMap.put("feedRating", String.valueOf(fb.getFeedRating()));
+                fbMap.put("feedComment", fb.getFeedComment());
+                fbMap.put("DateSubmit", fb.getDateSubmit());
+                allFeedbacks.add(fbMap);
+            }
+        }
+        // Sort allFeedbacks by DateSubmit descending (Java 1.5/1.6 compatible)
+        Collections.sort(allFeedbacks, new Comparator<Map<String, String>>() {
+            public int compare(Map<String, String> a, Map<String, String> b) {
+                return b.get("DateSubmit").compareTo(a.get("DateSubmit"));
+            }
+        });
+        // Take only the 3 most recent
+        for (int i = 0; i < Math.min(3, allFeedbacks.size()); i++) {
+            recentFeedbacks.add(allFeedbacks.get(i));
         }
     }
 %>
@@ -517,6 +559,32 @@
       </div>
     </div>
 
+    <!-- FEEDBACK BOX: place after summary cards -->
+    <div class="feedback-box" style="background:#f7fafc; border-radius:14px; box-shadow:0 2px 10px rgba(0,0,0,0.07); padding:28px 32px; margin:32px 0 24px 0; max-width:700px;">
+      <h2 style="font-size:22px; color:#00796B; margin-bottom:18px; font-weight:600; letter-spacing:0.5px;">Recent Student Feedback</h2>
+      <% if (!recentFeedbacks.isEmpty()) { %>
+        <div style="display:flex; flex-direction:column; gap:18px;">
+          <% for (Map<String, String> fb : recentFeedbacks) { %>
+            <div style="background:#fff; border-radius:10px; box-shadow:0 1px 4px rgba(0,0,0,0.04); padding:16px 18px; display:flex; flex-direction:column; gap:4px;">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <span style="font-weight:600; color:#222;"><%= fb.get("studName") %></span>
+                <span style="color:#888; font-size:13px;">on <b><%= fb.get("activityName") %></b></span>
+                <span style="margin-left:auto; color:#FFD700;">
+                  <% for (int i = 0; i < Integer.parseInt(fb.get("feedRating")); i++) { %>
+                    &#9733;
+                  <% } %>
+                </span>
+              </div>
+              <div style="color:#444; font-size:15px; margin:2px 0 0 0;"><%= fb.get("feedComment") %></div>
+              <div style="color:#aaa; font-size:12px; margin-top:2px;">Submitted: <%= fb.get("DateSubmit") %></div>
+            </div>
+          <% } %>
+        </div>
+      <% } else { %>
+        <div style="color:#888; font-size:15px;">No recent feedback from students.</div>
+      <% } %>
+    </div>
+
     <!-- Rejected Activities -->
     <div class="rejected-activities-box">
       <div class="rejected-header">
@@ -561,7 +629,7 @@
                 <h3><%= act.getActivityName() %></h3>
                 <p>Date: <%= act.getActivityDate() %></p>
                 <p>Venue: <%= act.getActivityVenue() %></p>
-                <p>Status: <span style="color: #721c24; font-weight: bold;">Rejected</span></p>
+                <p>Status: <span style="background:#ffdddd; color:#d8000c; padding:4px 12px; border-radius:12px; font-weight:600; border:1px solid #d8000c;">Reject</span></p>
               </div>
         <%   }
            } else { %>

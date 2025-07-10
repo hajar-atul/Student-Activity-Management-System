@@ -10,6 +10,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import util.DBConnection;
 
 /**
  *
@@ -26,22 +27,22 @@ public class STAFF {
     private byte[] profilePicBlob;
     
     // Database connection details
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/student?useSSL=false&serverTimezone=UTC";
-    private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "";
+    // private static final String JDBC_URL = "jdbc:mysql://localhost:3306/student?useSSL=false&serverTimezone=UTC";
+    // private static final String DB_USER = "root";
+    // private static final String DB_PASSWORD = "";
 
     // Load JDBC driver
-    static {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
+    // static {
+    //     try {
+    //         Class.forName("com.mysql.cj.jdbc.Driver");
+    //     } catch (ClassNotFoundException e) {
+    //         e.printStackTrace();
+    //     }
+    // }
 
     // Get database connection
     private static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
+        return DBConnection.getConnection();
     }
 
     // Setter and Getter for staffID

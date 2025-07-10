@@ -24,9 +24,7 @@ public class REGISTERATION {
     private byte[] receiptFile;
     
     // Database connection details
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/student?useSSL=false&serverTimezone=UTC";
-    private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "";
+    // Remove JDBC_URL, DB_USER, DB_PASSWORD
 
     public void setStudID(int studID) {
         this.studID = studID;
@@ -63,8 +61,8 @@ public class REGISTERATION {
     // Register student for free activity
     public static boolean registerStudentForActivity(int studID, String activityID) {
         String query = "INSERT INTO registration (studID, activityID, regDate) VALUES (?, ?, CURDATE())";
-        try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+        try (java.sql.Connection conn = util.DBConnection.getConnection();
+             java.sql.PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, studID);
             pstmt.setString(2, activityID);
             int rowsAffected = pstmt.executeUpdate();
@@ -78,8 +76,8 @@ public class REGISTERATION {
     // Register student for paid activity with receipt
     public static boolean registerStudentForPaidActivity(int studID, String activityID, byte[] receiptFile) {
         String query = "INSERT INTO registration (studID, activityID, regDate, receiptFile) VALUES (?, ?, CURDATE(), ?)";
-        try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+        try (java.sql.Connection conn = util.DBConnection.getConnection();
+             java.sql.PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, studID);
             pstmt.setString(2, activityID);
             pstmt.setBytes(3, receiptFile);
@@ -94,11 +92,11 @@ public class REGISTERATION {
     // Check if student is already registered for an activity
     public static boolean isStudentRegistered(int studID, String activityID) {
         String query = "SELECT COUNT(*) FROM registration WHERE studID = ? AND activityID = ?";
-        try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+        try (java.sql.Connection conn = util.DBConnection.getConnection();
+             java.sql.PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, studID);
             pstmt.setString(2, activityID);
-            ResultSet rs = pstmt.executeQuery();
+            java.sql.ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 return rs.getInt(1) > 0;
             }
@@ -111,10 +109,10 @@ public class REGISTERATION {
     // Get registration by ID
     public static REGISTERATION getRegistrationById(int regID) {
         String query = "SELECT * FROM registration WHERE regID = ?";
-        try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+        try (java.sql.Connection conn = util.DBConnection.getConnection();
+             java.sql.PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, regID);
-            ResultSet rs = pstmt.executeQuery();
+            java.sql.ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 REGISTERATION registration = new REGISTERATION();
                 registration.setStudID(rs.getInt("studID"));
@@ -130,13 +128,13 @@ public class REGISTERATION {
     }
     
     // Get all registrations for a student
-    public static List<REGISTERATION> getRegistrationsByStudentId(int studID) {
-        List<REGISTERATION> registrations = new ArrayList<>();
+    public static java.util.List<REGISTERATION> getRegistrationsByStudentId(int studID) {
+        java.util.List<REGISTERATION> registrations = new java.util.ArrayList<>();
         String query = "SELECT * FROM registration WHERE studID = ? ORDER BY regDate DESC";
-        try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+        try (java.sql.Connection conn = util.DBConnection.getConnection();
+             java.sql.PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, studID);
-            ResultSet rs = pstmt.executeQuery();
+            java.sql.ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 REGISTERATION registration = new REGISTERATION();
                 registration.setStudID(rs.getInt("studID"));
@@ -152,13 +150,13 @@ public class REGISTERATION {
     }
     
     // Get all registrations for an activity
-    public static List<REGISTERATION> getRegistrationsByActivityId(String activityID) {
-        List<REGISTERATION> registrations = new ArrayList<>();
+    public static java.util.List<REGISTERATION> getRegistrationsByActivityId(String activityID) {
+        java.util.List<REGISTERATION> registrations = new java.util.ArrayList<>();
         String query = "SELECT * FROM registration WHERE activityID = ? ORDER BY regDate DESC";
-        try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+        try (java.sql.Connection conn = util.DBConnection.getConnection();
+             java.sql.PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setString(1, activityID);
-            ResultSet rs = pstmt.executeQuery();
+            java.sql.ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 REGISTERATION registration = new REGISTERATION();
                 registration.setStudID(rs.getInt("studID"));
@@ -176,10 +174,10 @@ public class REGISTERATION {
     public static int getStudentCountForActivity(String activityID) {
         int count = 0;
         String query = "SELECT COUNT(*) FROM registration WHERE activityID = ?";
-        try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+        try (java.sql.Connection conn = util.DBConnection.getConnection();
+             java.sql.PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setString(1, activityID);
-            ResultSet rs = pstmt.executeQuery();
+            java.sql.ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 count = rs.getInt(1);
             }

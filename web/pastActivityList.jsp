@@ -451,15 +451,6 @@
             <p><%= clubCount %></p>
           </div>
         </div>
-        <div class="summary-card">
-          <div class="summary-icon">
-            <img src="image/trophy.jpg" alt="Achievements Icon">
-          </div>
-          <div class="summary-text">
-            <h3>ACHIEVEMENTS</h3>
-            <p>0</p>
-          </div>
-        </div>
       </div>
 
       <!-- Table -->

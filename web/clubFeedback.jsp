@@ -5,8 +5,8 @@
 --%>
 
 <%@page import="java.sql.*, java.util.*" %>
+<%@ page import="model.ACTIVITY, model.FEEDBACK, model.STUDENT" %>
 <%
-    // Get clubID from session (set this when club logs in)
     Integer clubID = null;
     Object clubIdObj = session.getAttribute("clubID");
     if (clubIdObj != null) {
@@ -17,32 +17,24 @@
         }
     }
     List<Map<String, String>> feedbacks = new ArrayList<Map<String, String>>();
-    try {
-        Class.forName("com.mysql.jdbc.Driver");
-        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/student", "root", "");
-        PreparedStatement ps = conn.prepareStatement(
-            "SELECT f.feedbackID, f.feedRating, f.feedComment, f.DateSubmit, f.clubResponse, s.studName, a.activityName " +
-            "FROM feedback f JOIN student s ON f.studID = s.studID " +
-            "JOIN activity a ON f.activityID = a.activityID " +
-            "WHERE a.clubID = ?"
-        );
-        ps.setInt(1, clubID);
-        ResultSet rs = ps.executeQuery();
-        while (rs.next()) {
-            Map<String, String> fb = new HashMap<String, String>();
-            fb.put("feedbackID", rs.getString("feedbackID"));
-            fb.put("studName", rs.getString("studName"));
-            fb.put("activityName", rs.getString("activityName"));
-            fb.put("feedRating", rs.getString("feedRating"));
-            fb.put("feedComment", rs.getString("feedComment"));
-            fb.put("DateSubmit", rs.getString("DateSubmit"));
-            fb.put("clubResponse", rs.getString("clubResponse"));
-            feedbacks.add(fb);
+    if (clubID != null) {
+        List<ACTIVITY> activities = ACTIVITY.getActivitiesByClubId(clubID);
+        for (ACTIVITY activity : activities) {
+            List<FEEDBACK> activityFeedbacks = FEEDBACK.getFeedbacksByActivityId(activity.getActivityID());
+            for (FEEDBACK fb : activityFeedbacks) {
+                Map<String, String> fbMap = new HashMap<String, String>();
+                fbMap.put("feedbackID", String.valueOf(fb.getFeedbackId()));
+                STUDENT stud = STUDENT.getStudentById(fb.getStudID());
+                fbMap.put("studName", stud != null ? stud.getStudName() : "");
+                fbMap.put("activityName", activity.getActivityName());
+                fbMap.put("feedRating", String.valueOf(fb.getFeedRating()));
+                fbMap.put("feedComment", fb.getFeedComment());
+                fbMap.put("DateSubmit", fb.getDateSubmit());
+                fbMap.put("clubResponse", ""); // Add if you have this field in FEEDBACK
+                feedbacks.add(fbMap);
+            }
         }
-        rs.close();
-        ps.close();
-        conn.close();
-    } catch (Exception e) { e.printStackTrace(); }
+    }
 %>
 <!DOCTYPE html>
 <html>

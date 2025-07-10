@@ -323,11 +323,12 @@
     <img src="ClubImageServlet?clubID=<%= club.getClubId() %>" alt="User Profile Picture" class="profile-pic">
     <h3><%= session.getAttribute("clubName") %></h3>
     <ul>
-        <li><a href="clubDashboardPage.jsp" class="active">DASHBOARD</a></li>
-        <li><a href="clubActivitiesPage.jsp">ACTIVITIES</a></li>
+        <li><a href="clubDashboardPage.jsp" >DASHBOARD</a></li>
+        <li><a href="clubActivitiesPage.jsp" class="active">ACTIVITIES</a></li>
         <li><a href="venueBooking.jsp">VENUE BOOKING</a></li>
         <li><a href="resourceReq.jsp">RESOURCE BOOKING</a></li>
         <li><a href="clubFeedback.jsp">FEEDBACK</a></li>
+        <li><a href="clubReport.jsp">REPORT</a></li>
         <li><a href="clubSettings.jsp">SETTINGS</a></li>
     </ul>
   </div>
@@ -357,7 +358,7 @@
 
     <!-- Activity Information -->
     <div class="activity-info">
-      <h2><%= activity.getActivityName() %></h2>
+      <h2 style="text-align: center"><%= activity.getActivityName() %></h2>
       <div class="activity-details">
         <div class="detail-item">
           <div class="detail-label">Activity ID</div>
@@ -379,7 +380,7 @@
             <% } else if ("Pending".equalsIgnoreCase(activity.getActivityStatus())) { %>
               <span style="background:#fff3cd; color:#856404; padding:4px 12px; border-radius:12px; font-weight:500;">Pending</span>
             <% } else if ("Reject".equalsIgnoreCase(activity.getActivityStatus())) { %>
-              <span style="background:#f8d7da; color:#721c24; padding:4px 12px; border-radius:12px; font-weight:500;">Reject</span>
+              <span style="background:#f8d7da; color:#721c24; padding:4px 12px; border-radius:12px; font-weight:500;">Rejected</span>
             <% } else { %>
               <span style="background:#e2e3e5; color:#383d41; padding:4px 12px; border-radius:12px; font-weight:500;"><%= activity.getActivityStatus() %></span>
             <% } %>
