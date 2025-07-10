@@ -320,7 +320,7 @@
 
   <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
-    <img src="image/Raccoon.gif" alt="User Profile Picture" class="profile-pic">
+    <img src="ClubImageServlet?clubID=<%= club.getClubId() %>" alt="User Profile Picture" class="profile-pic">
     <h3><%= session.getAttribute("clubName") %></h3>
     <ul>
         <li><a href="clubDashboardPage.jsp" class="active">DASHBOARD</a></li>
@@ -341,7 +341,7 @@
         <button class="notification-btn" id="notificationBtn">
           <img src="image/bell.png" alt="Notifications" />
         </button>
-        <img src="image/Raccoon.gif" alt="User Avatar" class="profile-icon" />
+        <img src="ClubImageServlet?clubID=<%= club.getClubId() %>" alt="User Profile Picture" class="profile-icon" />
       </div>
     </div>
 
