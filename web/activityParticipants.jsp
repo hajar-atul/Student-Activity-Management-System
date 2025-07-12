@@ -35,7 +35,7 @@
             <tr><td colspan="5">No students registered for this activity.</td></tr>
             <% } else {
                 for (STUDENT s : students) { %>
-            <tr>
+              <tr>
                 <td><%= s.getStudID() %></td>
                 <td><%= s.getStudName() %></td>
                 <td><%= s.getStudEmail() %></td>

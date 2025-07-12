@@ -40,8 +40,8 @@ public class ActivityParticipantsServlet extends HttpServlet {
                 System.out.println("DEBUG: DB row: studID=" + rs.getInt("studID") +
                     ", activityID=" + rs.getString("activityID") +
                     ", regDate=" + rs.getString("regDate"));
-            }
-        } catch (Exception e) {
+                }
+            } catch (Exception e) {
             e.printStackTrace();
         }
         // --- DEBUG CODE END ---
