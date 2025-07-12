@@ -18,7 +18,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Club Activities</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -390,7 +390,7 @@
               </span>
             </td>
             <td style="padding:10px; border-bottom:1px solid #eee; text-align:center;">
-              <a href="ActivityParticipantsServlet?activityId=<%= act.getActivityID() %>" 
+              <a href="activityParticipants?activityId=<%= act.getActivityID() %>" 
                  style="background:#00796B; color:white; padding:8px 16px; border-radius:5px; text-decoration:none; font-size:0.9em; transition:background-color 0.3s ease;"
                  onmouseover="this.style.background='#004d40'"
                  onmouseout="this.style.background='#00796B'">
