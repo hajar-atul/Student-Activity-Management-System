@@ -256,10 +256,7 @@
 <div class="main-content" id="mainContent">
   <div class="header">
     <button class="toggle-btn" onclick="toggleSidebar()" style="display:block;">☰</button>
-    <div class="search-container">
-      <input type="text" placeholder="Search...">
-    </div>
-    <div class="top-icons">
+    <div class="top-icons" style="margin-left:auto;">
       <img src="image/umpsa.png" alt="Logo UMP" style="width:45px;height:45px;">
       <button class="notification-btn" id="notificationBtn" style="background:none; border:none; cursor:pointer; padding:0;">
         <img src="image/bell.png" alt="Notifications">

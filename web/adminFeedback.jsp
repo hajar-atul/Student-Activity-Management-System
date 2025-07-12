@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.sql.*, java.util.*, java.util.Arrays, model.FEEDBACK, model.STUDENT, java.text.SimpleDateFormat, java.util.Date" %>
+<% System.out.println("DEBUG: adminFeedback.jsp loaded"); %>
 <%
     Connection conn = null;
     Statement stmt = null;
@@ -16,39 +17,44 @@
     String todayDate = sdf.format(new Date());
 
     try {
-        Class.forName("com.mysql.jdbc.Driver");
-        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/student", "root", "");
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/student?useSSL=false&requireSSL=false", "root", "");
         stmt = conn.createStatement();
 
         String sql = "SELECT f.feedbackID, f.feedRating, f.studID, f.feedComment, f.DateSubmit, s.studName " +
                      "FROM feedback f JOIN student s ON f.studID = s.studID";
         rs = stmt.executeQuery(sql);
 
+        System.out.println("DEBUG: Before feedback ResultSet loop");
         while (rs.next()) {
             FEEDBACK feedback = new FEEDBACK();
-            feedback.setFeedbackId(rs.getInt("feedbackID"));
+            feedback.setFeedbackId(rs.getString("feedbackID"));
             feedback.setFeedRating(rs.getInt("feedRating"));
             feedback.setStudId(rs.getInt("studID"));
             feedback.setFeedComment(rs.getString("feedComment"));
             feedback.setDateSubmit(rs.getString("DateSubmit"));
             feedbackList.add(feedback);
-
             studentNames.put(rs.getInt("studID"), rs.getString("studName"));
-            
             int rating = rs.getInt("feedRating");
             if (rating >= 1 && rating <= 5) {
                 ratingCounts[rating - 1]++;
             }
-
             String feedbackDateStr = rs.getString("DateSubmit");
             if (feedbackDateStr != null && feedbackDateStr.startsWith(todayDate)) {
                 newTodayCount++;
             }
         }
+        System.out.println("DEBUG: After feedback ResultSet loop");
+        // DEBUG OUTPUT
+        System.out.println("DEBUG: feedbackList size = " + feedbackList.size());
+        for (FEEDBACK f : feedbackList) {
+            System.out.println("DEBUG: feedbackID=" + f.getFeedbackId() + ", comment=" + f.getFeedComment());
+        }
         totalFeedbacks = feedbackList.size();
         ratingCountsJs = Arrays.toString(ratingCounts);
 
     } catch (Exception e) {
+        System.out.println("DEBUG: Exception in adminFeedback.jsp");
         e.printStackTrace();
     } finally {
         try { if (rs != null) rs.close(); } catch (Exception e) {}
