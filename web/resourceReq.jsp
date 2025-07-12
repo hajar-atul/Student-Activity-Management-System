@@ -167,122 +167,157 @@
     }
 
     .resource-form-container {
-      background: #f4f4f4;
-      max-width: 700px;
+      background: white;
+      max-width: 800px;
       margin: 40px auto;
-      border-radius: 18px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
-      padding: 0 0 32px 0;
-      border: 2px solid #ccc;
-      height: 480px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+      padding: 40px;
+      border: 1px solid #e0e0e0;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .resource-form-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #00796B, #0a8079);
     }
     
     .resource-form-title {
       text-align: center;
-      color: #111;
-      font-size: 2em;
-      font-weight: bold;
-      padding: 24px 0 10px 0;
-      letter-spacing: 1px;
+      color: #00796B;
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 30px;
+      letter-spacing: 0.5px;
+      position: relative;
+    }
+    
+    .resource-form-title::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, #00796B, #0a8079);
+      border-radius: 2px;
     }
     
     form {
-      background: #f4f4f4;
-      border-radius: 12px;
-      margin: 0 24px;
-      padding: 18px 0 0 0;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 22px 32px;
-      box-sizing: border-box;
-      justify-content: space-between;
-      align-items: flex-start;
-      height: 320px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      margin-top: 30px;
     }
     
     .form-group {
       display: flex;
       flex-direction: column;
-      gap: 6px;
-      flex: 1 1 45%;
-      min-width: 220px;
-      max-width: 320px;
+      gap: 8px;
     }
     
     .form-group label {
       font-weight: 600;
-      color: #222;
-      margin-bottom: 2px;
+      color: #333;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
     }
     
     .form-group input[type="text"],
     .form-group input[type="date"],
     .form-group input[type="time"] {
-      padding: 10px 16px;
-      border: 1.5px solid #bbb;
-      border-radius: 18px;
-      font-size: 1em;
-      background: #fff;
+      padding: 14px 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 15px;
+      background: #fafafa;
       font-family: 'Poppins', Arial, sans-serif;
       outline: none;
-      transition: border 0.2s;
+      transition: all 0.3s ease;
+      color: #333;
     }
     
     .form-group input[type="text"]:focus,
     .form-group input[type="date"]:focus,
     .form-group input[type="time"]:focus {
-      border: 1.5px solid #009688;
+      border-color: #00796B;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(0, 121, 107, 0.1);
+      transform: translateY(-1px);
+    }
+    
+    .form-group input[type="text"]::placeholder,
+    .form-group input[type="date"]::placeholder,
+    .form-group input[type="time"]::placeholder {
+      color: #999;
+      font-style: italic;
     }
     
     .submit-btn {
-      background: #002aff;
-      color: #fff;
+      background: #00796B;
+      color: white;
       border: none;
-      border-radius: 10px;
-      font-size: 1.2em;
-      font-weight: bold;
-      padding: 16px 0;
-      margin-top: 18px;
-      width: 100%;
+      border-radius: 6px;
+      font-size: 15px;
+      font-weight: 500;
+      padding: 12px 24px;
+      margin-top: 20px;
       cursor: pointer;
-      transition: background 0.2s, transform 0.2s;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      letter-spacing: 1px;
-      align-self: flex-end;
-      max-width: 320px;
+      transition: background-color 0.3s ease;
+      grid-column: 1 / -1;
+      max-width: 150px;
+      margin-left: auto;
+      margin-right: auto;
     }
     
     .submit-btn:hover {
-      background: #001a99;
-      transform: translateY(-2px) scale(1.03);
+      background: #004d40;
     }
 
     .message {
       text-align: center;
-      padding: 10px;
-      margin: 0 24px 15px 24px;
+      padding: 16px;
+      margin-bottom: 24px;
       border-radius: 8px;
-      background: #d4edda;
+      background: linear-gradient(135deg, #d4edda, #c3e6cb);
       color: #155724;
       border: 1px solid #c3e6cb;
+      font-weight: 500;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .form-help-text {
+      font-size: 12px;
+      color: #666;
+      margin-top: 4px;
+      font-style: italic;
     }
 
     @media (max-width: 768px) {
+      .main-content {
+        margin-left: 0 !important;
+      }
+
       .sidebar {
+        width: 100%;
+        height: auto;
         position: static;
+        transform: none !important;
       }
 
       .toggle-btn {
         position: absolute;
         left: 10px;
         top: 10px;
-      }
-
-      .main-content {
-        margin-left: 20px;
       }
 
       .header {
@@ -296,18 +331,39 @@
       .resource-form-container {
         margin: 20px;
         max-width: 95vw;
+        padding: 30px 20px;
+      }
+      
+      form {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      
+      .submit-btn {
+        max-width: 100%;
       }
     }
 
     @media (max-width: 600px) {
       .resource-form-container {
-        margin: 18px 6px;
+        margin: 15px 10px;
         max-width: 98vw;
+        padding: 25px 15px;
+      }
+      
+      .resource-form-title {
+        font-size: 24px;
       }
       
       form {
-        margin: 0 6px;
-        padding: 12px 0 0 0;
+        gap: 18px;
+      }
+      
+      .form-group input[type="text"],
+      .form-group input[type="date"],
+      .form-group input[type="time"] {
+        padding: 12px 14px;
+        font-size: 14px;
       }
     }
   </style>
@@ -356,26 +412,31 @@
 
       <form action="ResourceBookingServlet" method="post">
         <div class="form-group">
-          <label for="date">Date</label>
-          <input type="date" id="date" name="date" required />
+          <label for="date">Booking Date</label>
+          <input type="date" id="date" name="date" required placeholder="Select booking date" />
+          <div class="form-help-text">Choose the date you need the resources</div>
         </div>
         <div class="form-group">
-          <label for="duration">Duration</label>
-          <input type="text" id="duration" name="duration" required />
+          <label for="time">Start Time</label>
+          <input type="time" id="time" name="time" required placeholder="Select start time" />
+          <div class="form-help-text">When you'll start using the resources</div>
         </div>
         <div class="form-group">
-          <label for="time">Time</label>
-          <input type="text" id="time" name="time" required />
+          <label for="duration">Duration (Hours)</label>
+          <input type="text" id="duration" name="duration" required placeholder="e.g., 2" />
+          <div class="form-help-text">How long you'll need the resources (in hours)</div>
         </div>
         <div class="form-group">
-          <label for="resourceName">Resources Name</label>
-          <input type="text" id="resourceName" name="resourceName" required />
+          <label for="resourceName">Resource Name</label>
+          <input type="text" id="resourceName" name="resourceName" required placeholder="e.g., Projector, Sound System" />
+          <div class="form-help-text">Name of the resource you want to book</div>
         </div>
         <div class="form-group">
-          <label for="resourceQty">Resources Quantity</label>
-          <input type="text" id="resourceQty" name="resourceQty" required />
+          <label for="resourceQty">Quantity</label>
+          <input type="text" id="resourceQty" name="resourceQty" required placeholder="e.g., 1, 2, 5" />
+          <div class="form-help-text">Number of units needed</div>
         </div>
-        <button type="submit" class="submit-btn">Submit</button>
+        <button type="submit" class="submit-btn"> Submit Booking </button>
       </form>
     </div>
   </div>

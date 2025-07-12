@@ -24,6 +24,7 @@ public class ACTIVITY {
        private byte[] qrImage;
        private byte[] posterImage;
        private int clubID;
+       private double activityFee = 0;
        
        // JDBC connection details
        private static final String JDBC_URL = "jdbc:mysql://localhost:3306/student?useSSL=false&serverTimezone=UTC";
@@ -135,6 +136,13 @@ public class ACTIVITY {
 
     public int getClubID() {
         return clubID;
+    }
+
+    public void setActivityFee(double activityFee) {
+        this.activityFee = activityFee;
+    }
+    public double getActivityFee() {
+        return activityFee;
     }
 
     // Save this activity and return generated activityID
@@ -263,6 +271,7 @@ public class ACTIVITY {
                     activity.setQrImage(rs.getBytes("qrImage"));
                     activity.setPosterImage(rs.getBytes("posterImage"));
                     activity.setClubID(rs.getInt("clubID"));
+                    activity.setActivityFee(rs.getDouble("activityFee"));
                 }
             }
         } catch (Exception e) {
@@ -296,6 +305,7 @@ public class ACTIVITY {
                     activity.setQrImage(rs.getBytes("qrImage"));
                     activity.setPosterImage(rs.getBytes("posterImage"));
                     activity.setClubID(rs.getInt("clubID"));
+                    activity.setActivityFee(rs.getDouble("activityFee"));
                     activities.add(activity);
                 }
             }
@@ -331,6 +341,7 @@ public class ACTIVITY {
                     activity.setQrImage(rs.getBytes("qrImage"));
                     activity.setPosterImage(rs.getBytes("posterImage"));
                     activity.setClubID(rs.getInt("clubID"));
+                    activity.setActivityFee(rs.getDouble("activityFee"));
                     activities.add(activity);
                 }
             }
@@ -506,6 +517,7 @@ public static java.util.List<ACTIVITY> getAvailableActivities() {
                 activity.setQrImage(rs.getBytes("qrImage"));
                 activity.setPosterImage(rs.getBytes("posterImage"));
                 activity.setClubID(rs.getInt("clubID"));
+                activity.setActivityFee(rs.getDouble("activityFee"));
                 activities.add(activity);
             }
         }
@@ -544,6 +556,7 @@ public static java.util.List<ACTIVITY> getAvailableUpcomingActivitiesForStudent(
                         activity.setQrImage(rs.getBytes("qrImage"));
                         activity.setPosterImage(rs.getBytes("posterImage"));
                         activity.setClubID(rs.getInt("clubID"));
+                        activity.setActivityFee(rs.getDouble("activityFee"));
                         activities.add(activity);
                     }
                 }
@@ -580,6 +593,7 @@ public static java.util.List<ACTIVITY> getAvailableUpcomingActivities() {
                     activity.setQrImage(rs.getBytes("qrImage"));
                     activity.setPosterImage(rs.getBytes("posterImage"));
                     activity.setClubID(rs.getInt("clubID"));
+                    activity.setActivityFee(rs.getDouble("activityFee"));
                     activities.add(activity);
                 }
             }
@@ -614,6 +628,7 @@ public static java.util.List<ACTIVITY> getCurrentActivities() {
                     activity.setQrImage(rs.getBytes("qrImage"));
                     activity.setPosterImage(rs.getBytes("posterImage"));
                     activity.setClubID(rs.getInt("clubID"));
+                    activity.setActivityFee(rs.getDouble("activityFee"));
                     activities.add(activity);
                 }
             }
@@ -649,6 +664,7 @@ public static java.util.List<ACTIVITY> getActivitiesByStudentId(String studID) {
                         activity.setQrImage(rs.getBytes("qrImage"));
                         activity.setPosterImage(rs.getBytes("posterImage"));
                         activity.setClubID(rs.getInt("clubID"));
+                        activity.setActivityFee(rs.getDouble("activityFee"));
                         activities.add(activity);
                     }
                 }
@@ -687,6 +703,7 @@ public static java.util.List<ACTIVITY> getRegisteredUpcomingActivities(String st
                         activity.setQrImage(rs.getBytes("qrImage"));
                         activity.setPosterImage(rs.getBytes("posterImage"));
                         activity.setClubID(rs.getInt("clubID"));
+                        activity.setActivityFee(rs.getDouble("activityFee"));
                         activities.add(activity);
                     }
                 }
@@ -725,6 +742,7 @@ public static java.util.List<ACTIVITY> getRegisteredPastActivities(String studID
                         activity.setQrImage(rs.getBytes("qrImage"));
                         activity.setPosterImage(rs.getBytes("posterImage"));
                         activity.setClubID(rs.getInt("clubID"));
+                        activity.setActivityFee(rs.getDouble("activityFee"));
                         activities.add(activity);
                     }
                 }
@@ -816,6 +834,7 @@ public static java.util.List<ACTIVITY> getActivitiesByStatus(String status) {
                 activity.setQrImage(rs.getBytes("qrImage"));
                 activity.setPosterImage(rs.getBytes("posterImage"));
                 activity.setClubID(rs.getInt("clubID"));
+                activity.setActivityFee(rs.getDouble("activityFee"));
                 activities.add(activity);
             }
         }

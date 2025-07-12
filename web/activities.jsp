@@ -1,4 +1,19 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="java.util.List, model.ACTIVITY, model.CLUB" %>
+<%
+    // Get approved activities from database
+    List<ACTIVITY> allApprovedActivities = ACTIVITY.getAvailableUpcomingActivities();
+    
+    // Filter activities that have poster images
+    List<ACTIVITY> approvedActivities = new java.util.ArrayList<ACTIVITY>();
+    if (allApprovedActivities != null) {
+        for (ACTIVITY activity : allApprovedActivities) {
+            if (activity.getPosterImage() != null && activity.getPosterImage().length > 0) {
+                approvedActivities.add(activity);
+            }
+        }
+    }
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -253,27 +268,65 @@
       background-color: #006d6d;
     }
 
-    .activity-images {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
+    .activity-images-container {
+      width: 100%;
+      max-width: 100vw;
+      height: 520px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      white-space: nowrap;
+      padding-bottom: 12px;
+      box-sizing: border-box;
       margin-top: 20px;
+      scrollbar-width: thin;
+      scrollbar-color: #b2dfdb #f0f0f0;
+    }
+    .activity-images-container::-webkit-scrollbar {
+      height: 10px;
+      background: #f0f0f0;
+    }
+    .activity-images-container::-webkit-scrollbar-thumb {
+      background: #b2dfdb;
+      border-radius: 6px;
+    }
+    .activity-images {
+      display: flex;
+      flex-direction: row;
+      gap: 30px;
+      height: 100%;
+      min-width: 100%;
+      white-space: nowrap;
+    }
+    .activity-card {
+      flex: 0 0 370px;
+      display: inline-flex;
+      flex-direction: column;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      padding: 20px;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      min-height: 450px;
+      max-height: 480px;
+      margin-bottom: 8px;
+      position: relative;
     }
 
-    .activity-card {
-      background-color: white;
-      border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      padding: 15px;
-      text-align: center;
+    .activity-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
     }
 
     .activity-card img {
-      width: 100%;
-      height: 120px;
-      object-fit: cover;
-      border-radius: 8px;
+      width: auto;
+      max-width: 100%;
+      height: 250px;
+      object-fit: contain;
+      border-radius: 10px;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
+      margin-bottom: 15px;
+      background-color: #f5f5f5;
     }
 
     .activity-card img:hover {
@@ -285,23 +338,114 @@
       margin: 10px 0 5px;
       font-size: 16px;
       color: #008b8b;
+      font-weight: 600;
+    }
+    
+    .activity-card p {
+      margin: 5px 0;
+      line-height: 1.4;
     }
 
     .toggle-desc {
       background-color: #008b8b;
       color: white;
       border: none;
-      padding: 6px 12px;
-      margin-top: 10px;
+      padding: 6px 18px;
       cursor: pointer;
       border-radius: 4px;
+      margin-top: 10px;
+      margin-bottom: 0;
+      position: static;
+      transform: none;
+      left: auto;
+      bottom: auto;
+      z-index: auto;
     }
 
     .activity-desc {
       display: none;
-      margin-top: 10px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 80px;
+      background: rgba(255, 255, 255, 0.95);
       color: #333;
       font-size: 14px;
+      line-height: 1.5;
+      text-align: left;
+      padding: 20px;
+      border-radius: 12px 12px 0 0;
+      overflow-y: auto;
+      z-index: 10;
+    }
+    
+    .activity-desc p {
+      margin: 8px 0;
+    }
+    
+    .activity-desc strong {
+      color: #008b8b;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .activity-images {
+        gap: 20px;
+      }
+      
+      .activity-card img {
+        height: 200px;
+      }
+      
+      .activity-card {
+        padding: 15px;
+      }
+      
+      .content {
+        padding: 100px 15px 20px 15px;
+        margin-left: 0;
+      }
+      
+      .sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
+      }
+      
+      .toggle-btn {
+        display: block;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .activity-card img {
+        height: 180px;
+      }
+      
+      .activity-buttons {
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      .activity-btn {
+        padding: 12px;
+        font-size: 14px;
+      }
+    }
+    .activities-outer-container {
+      background: #fff;
+      border-radius: 22px;
+      box-shadow: 0 8px 32px rgba(0,121,107,0.10);
+      padding: 36px 32px 28px 32px;
+      margin: 40px auto 0 auto;
+      max-width: 1700px;
+      min-width: 400px;
+      width: 90vw;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: flex-start;
     }
   </style>
 </head>
@@ -334,10 +478,6 @@
 
 <!-- Topbar -->
 <div class="topbar">
-  <div class="search-container">
-    <input type="text" placeholder="Search..." />
-    <button class="search-btn">X</button>
-  </div>
   <div class="dashboard-title">ACTIVITIES</div>
   <div class="top-icons">
     <img src="image/umpsa.png" class="umpsa-icon" alt="UMPSA">
@@ -359,46 +499,39 @@
   <div class="activity-container">
     <div class="activity-buttons">
       <button class="activity-btn" onclick="location.href='CurrentServlet'">Current Activity List</button>
-      <button class="activity-btn" onclick="location.href='AvailableServlet'">Join Activity</button>
       <button class="activity-btn" onclick="location.href='PastServlet'">View Past Activities</button>
     </div>
 
-    <div class="activity-images">
-      <div class="activity-card">
-        <img src="image/palap1.jfif" alt="Activity 1">
-        <h4>ROTU Annual Camp</h4>
-        <button class="toggle-desc" onclick="toggleDesc(this)">See more</button>
-        <p class="activity-desc">This camp trains leadership and discipline through military-style exercises.</p>
-      </div>
-      <div class="activity-card">
-        <img src="image/palap6.jfif" alt="Activity 2">
-        <h4>Road Relay 1.0</h4>
-        <button class="toggle-desc" onclick="toggleDesc(this)">See more</button>
-        <p class="activity-desc">Students expose to cadet officer's training routine.</p>
-      </div>
-      <div class="activity-card">
-        <img src="image/palap5.jfif" alt="Activity 3">
-        <h4>Compass Marching</h4>
-        <button class="toggle-desc" onclick="toggleDesc(this)">See more</button>
-        <p class="activity-desc">This activity is one of the Jr cadet officer's training. </p>
-      </div>
-      <div class="activity-card">
-        <img src="image/hiking.jfif" alt="Activity 4">
-        <h4>Hi-Pic</h4>
-        <button class="toggle-desc" onclick="toggleDesc(this)">See more</button>
-        <p class="activity-desc">Rileks club's first program that attract many student involvement.</p>
-      </div>
-      <div class="activity-card">
-        <img src="image/palap4.jfif" alt="Activity 5">
-        <h4>War-cry Competition</h4>
-        <button class="toggle-desc" onclick="toggleDesc(this)">See more</button>
-        <p class="activity-desc">Jr, Ir and Sr cadet officer present their war dance for the prize</p>
-      </div>
-      <div class="activity-card">
-        <img src="image/karnivalSukan.jpg" alt="Activity 6">
-        <h4>Karnival Sukan</h4>
-        <button class="toggle-desc" onclick="toggleDesc(this)">See more</button>
-        <p class="activity-desc">Students can show their skills and compete with each other in a good way.</p>
+    <div class="activities-outer-container">
+      <div class="activity-images-container">
+        <div class="activity-images">
+          <% if (approvedActivities != null && !approvedActivities.isEmpty()) { %>
+            <% for (ACTIVITY activity : approvedActivities) { 
+                CLUB club = CLUB.getClubById(activity.getClubID());
+                String clubName = (club != null) ? club.getClubName() : "Unknown Club";
+            %>
+              <div class="activity-card">
+                <img src="ActivityImageServlet?activityID=<%= activity.getActivityID() %>&type=poster" alt="<%= activity.getActivityName() %>">
+                <h4><%= activity.getActivityName() %></h4>
+                <p style="color: #666; font-size: 12px; margin: 5px 0;">by <%= clubName %></p>
+                <p style="color: #008b8b; font-size: 12px; margin: 5px 0;">📅 <%= activity.getActivityDate() %></p>
+                <p style="color: #008b8b; font-size: 12px; margin: 5px 0;">📍 <%= activity.getActivityVenue() != null ? activity.getActivityVenue() : "TBA" %></p>
+                <button class="toggle-desc" onclick="toggleDesc(this)">See more</button>
+                <div class="activity-desc">
+                  <p><strong>Description:</strong> <%= activity.getActivityDesc() != null ? activity.getActivityDesc() : "No description available." %></p>
+                  <p><strong>Type:</strong> <%= activity.getActivityType() != null ? activity.getActivityType() : "General" %></p>
+                  <p><strong>Adab Points:</strong> <%= activity.getAdabPoint() %> points</p>
+                  <a href="registerActivity.jsp?activityID=<%= activity.getActivityID() %>" style="background: #008b8b; color: white; padding: 8px 16px; text-decoration: none; border-radius: 4px; display: inline-block; margin-top: 10px;">Join Activity</a>
+                </div>
+              </div>
+            <% } %>
+          <% } else { %>
+            <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #666;">
+              <h3>No Approved Activities Available</h3>
+              <p>Check back later for new activities or contact your club administrators.</p>
+            </div>
+          <% } %>
+        </div>
       </div>
     </div>
   </div>

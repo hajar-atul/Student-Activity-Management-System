@@ -471,10 +471,6 @@
 
     <!-- Topbar -->
     <div class="topbar">
-        <div class="search-container">
-            <input type="text" placeholder="Search..." />
-            <button class="search-btn">X</button>
-        </div>
         <div class="dashboard-title">SETTINGS</div>
         <div class="top-icons">
             <img src="image/umpsa.png" class="umpsa-icon" alt="UMPSA">

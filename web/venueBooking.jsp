@@ -453,7 +453,7 @@
           
           <div class="form-group">
             <label for="duration">Duration (Hours)</label>
-            <input type="number" id="duration" name="duration" min="1" max="24" placeholder="e.g., 2" required />
+            <input type="number" id="duration" name="duration" min="1" max="24" placeholder="e.g., 2" required style="font-size: 18px; padding: 18px 20px; height: 60px;" />
             <div class="help-text">Enter the duration in hours (1-24)</div>
           </div>
           

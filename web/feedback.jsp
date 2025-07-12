@@ -252,59 +252,87 @@
     /* Feedback Section */
     .feedback-form-wrapper {
       width: 100%;
-      max-width: 600px;
+      max-width: 1200px;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
-      align-items: center;          /* Centers the form horizontally */
+      align-items: center;
       justify-content: flex-start;
       background: none;
     }
     .feedback-card {
       background: #fff;
-      border-radius: 24px;
-      box-shadow: 0 4px 32px rgba(0,0,0,0.10);
-      padding: 48px 48px 40px 48px;
+      border-radius: 18px;
+      box-shadow: 0 8px 32px rgba(0,121,107,0.10);
+      padding: 48px 60px;
       width: 100%;
       display: flex;
       flex-direction: column;
       align-items: stretch;
-      gap: 28px;
+      gap: 40px;
       margin-top: 0;
     }
-    .activity-box {
-      background: #e0f7fa;
-      border: 2px solid #009b9d;
-      border-radius: 14px;
-      padding: 22px 28px;
-      font-size: 1.35em;
-      font-weight: 600;
-      color: #00796b;
-      text-align: center;
-      margin-bottom: 10px;
-      letter-spacing: 0.5px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    .form-horizontal {
+      display: flex;
+      flex-direction: row;
+      gap: 32px;
+      width: 100%;
+      align-items: flex-start;
+      justify-content: center;
     }
-    .form-field-box {
-      background: #e0ffff;
-      border: 1.5px solid #b2dfdb;
-      border-radius: 10px;
-      padding: 16px 20px;
+    
+    .activity-box {
+      background: #f8fdfc;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 14px 16px;
+      font-size: 1em;
+      color: #333;
+      text-align: left;
       margin-bottom: 0;
-      font-size: 1.1em;
+      font-weight: 500;
+      outline: none;
+      transition: border 0.2s;
+    }
+    
+    .activity-box:focus {
+      border-color: #008b8b;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 180px;
+      flex: 1 1 0;
+      margin-bottom: 0;
+    }
+    
+    .form-field-box {
+      background: #f8fdfc;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin-bottom: 0;
+      font-size: 1em;
       color: #222;
       font-family: inherit;
       width: 100%;
       box-sizing: border-box;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+      outline: none;
+      transition: border 0.2s;
     }
+    
+    .form-field-box:focus {
+      border-color: #008b8b;
+    }
+    
+
     .feedback-card label {
-      font-weight: 600;
-      color: #009b9d;
-      margin-bottom: 8px;
-      font-size: 1.13em;
+      font-weight: 500;
+      color: #00796B;
+      font-size: 15px;
+      margin-bottom: 2px;
       letter-spacing: 0.2px;
-      align-self: flex-start;
     }
     .star-rating {
       display: flex;
@@ -327,23 +355,48 @@
       color: #ffb400;
     }
     .feedback-card button[type="submit"] {
-      width: 100%;
-      background: linear-gradient(90deg, #009b9d 60%, #00bfae 100%);
+      background: linear-gradient(90deg, #009688 0%, #00796B 100%);
       color: #fff;
-      font-weight: bold;
       border: none;
       border-radius: 12px;
-      padding: 18px 0;
-      font-size: 1.25em;
-      margin-top: 10px;
+      font-size: 1.35em;
+      font-weight: 700;
+      padding: 22px 0;
+      width: 320px;
+      max-width: 100%;
       cursor: pointer;
-      transition: background 0.2s, box-shadow 0.2s;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-      letter-spacing: 0.5px;
+      transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+      margin: 36px auto 0 auto;
+      display: block;
+      box-shadow: 0 6px 24px rgba(0,150,136,0.13);
+      letter-spacing: 1px;
+      text-align: center;
     }
     .feedback-card button[type="submit"]:hover {
-      background: linear-gradient(90deg, #00796b 60%, #009b9d 100%);
-      box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+      background: linear-gradient(90deg, #00796B 0%, #009688 100%);
+      box-shadow: 0 12px 32px rgba(0,150,136,0.18);
+      transform: translateY(-2px) scale(1.04);
+    }
+    
+    .star-rating {
+      display: flex;
+      flex-direction: row;
+      font-size: 2.5em;
+      margin-bottom: 0;
+      margin-top: 2px;
+      cursor: pointer;
+      user-select: none;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+    }
+    .star {
+      color: #b2dfdb;
+      transition: color 0.2s;
+      font-size: 1.1em;
+    }
+    .star.selected, .star.hovered {
+      color: #ffb400;
     }
     .feedback-card textarea.form-field-box {
       min-height: 110px;
@@ -351,10 +404,22 @@
     }
     @media (max-width: 900px) {
       .feedback-form-wrapper { max-width: 98vw; }
-      .feedback-card { padding: 28px 8vw 24px 8vw; }
+      .feedback-card { 
+        padding: 28px 8vw 24px 8vw; 
+      }
+      .form-horizontal {
+        flex-direction: column;
+        gap: 20px;
+      }
     }
     @media (max-width: 600px) {
-      .feedback-card { padding: 16px 2vw 12px 2vw; }
+      .feedback-card { 
+        padding: 16px 2vw 12px 2vw; 
+      }
+      .form-horizontal {
+        flex-direction: column;
+        gap: 15px;
+      }
       .activity-box { padding: 12px 6px; font-size: 1em; }
     }
   </style>
@@ -388,10 +453,6 @@
 
   <!-- Topbar -->
   <div class="topbar">
-    <div class="search-container">
-      <input type="text" placeholder="Search..." />
-      <button class="search-btn">X</button>
-    </div>
     <div class="dashboard-title">ACTIVITIES</div>
     <div class="top-icons">
       <img src="image/umpsa.png" class="umpsa-icon" alt="UMPSA">
@@ -418,30 +479,48 @@
         </div>
       <% } %>
       <form class="feedback-card" action="FeedbackServlet" method="post">
-        <h1 style="text-align: center;">Activity Feedback</h1>
+        <h2 style="text-align: center; color: #00796B; margin-bottom: 8px; font-size: 1.5em; font-weight: 600; letter-spacing: 0.5px;">Activity Feedback</h2>
+        
         <% if (activity != null && club != null) { %>
-          <div class="activity-box"><%= activity.getActivityName() %></div>
-          <input type="hidden" name="activityID" value="<%= activityID %>" />
-          <label>Organizer</label>
-          <input type="text" value="<%= club.getClubName() %>" readonly class="form-field-box" />
-          <input type="hidden" name="clubID" value="<%= club.getClubId() %>" />
-        <% } else { %>
-          <div style="color:#b71c1c; font-weight:bold;">Invalid activity. Please return to your activity list.</div>
-        <% } %>
-        <label>Rate Activity</label>
-        <div class="form-field-box" style="background:#fffbe7; display:flex; align-items:center; justify-content:center; gap:10px;">
-          <div class="star-rating" id="starRating">
-            <span class="star" data-value="1">&#9733;</span>
-            <span class="star" data-value="2">&#9733;</span>
-            <span class="star" data-value="3">&#9733;</span>
-            <span class="star" data-value="4">&#9733;</span>
-            <span class="star" data-value="5">&#9733;</span>
+          <div class="form-horizontal">
+            <div class="form-group">
+              <label>Activity Name</label>
+              <input type="text" value="<%= activity.getActivityName() %>" readonly class="activity-box" />
+              <input type="hidden" name="activityID" value="<%= activityID %>" />
+            </div>
+            
+            <div class="form-group">
+              <label>Organizer</label>
+              <input type="text" value="<%= club.getClubName() %>" readonly class="form-field-box" />
+              <input type="hidden" name="clubID" value="<%= club.getClubId() %>" />
+            </div>
           </div>
-        </div>
-        <input type="hidden" name="rating" id="ratingInput" value="0">
-        <label for="comments">Comments</label>
-        <textarea id="comments" name="comments" placeholder="Your feedback..." required class="form-field-box"></textarea>
-        <button type="submit" <% if (activity == null || club == null) { %>disabled<% } %>>Submit Feedback</button>
+          
+          <div class="form-horizontal">
+            <div class="form-group">
+              <label>Rate Activity</label>
+              <div class="form-field-box" style="background:#fffbe7; display:flex; align-items:center; justify-content:center; gap:10px;">
+                <div class="star-rating" id="starRating">
+                  <span class="star" data-value="1">&#9733;</span>
+                  <span class="star" data-value="2">&#9733;</span>
+                  <span class="star" data-value="3">&#9733;</span>
+                  <span class="star" data-value="4">&#9733;</span>
+                  <span class="star" data-value="5">&#9733;</span>
+                </div>
+              </div>
+              <input type="hidden" name="rating" id="ratingInput" value="0">
+            </div>
+            
+            <div class="form-group">
+              <label for="comments">Comments</label>
+              <textarea id="comments" name="comments" placeholder="Share your experience and suggestions..." required class="form-field-box"></textarea>
+            </div>
+          </div>
+          
+          <button type="submit">Submit Feedback</button>
+        <% } else { %>
+          <div style="color:#b71c1c; font-weight:bold; text-align: center; width: 100%;">Invalid activity. Please return to your activity list.</div>
+        <% } %>
       </form>
     </div>
   </div>

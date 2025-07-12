@@ -302,10 +302,6 @@
 
 <!-- Topbar -->
 <div class="topbar">
-    <div class="search-container">
-        <input type="text" placeholder="Search..." />
-        <button class="search-btn">X</button>
-    </div>
     <div class="dashboard-title">DASHBOARD</div>
     <div class="top-icons">
         <img src="image/umpsa.png" class="umpsa-icon" alt="UMPSA">
@@ -326,10 +322,25 @@
 <!-- Content -->
 <div class="content" id="content">
     <h1>Welcome, <%= session.getAttribute("studName") %></h1>
+    
+    <!-- Refresh upcoming activities data -->
+    <%
+        // Check if upcoming activities data needs to be loaded
+        if (session.getAttribute("upcomingActivities") == null) {
+    %>
+        <script>
+            // Load upcoming activities data when page loads
+            window.addEventListener('load', function() {
+                window.location.href = 'UpcomingActivitiesServlet';
+            });
+        </script>
+    <%
+        }
+    %>
 
     <div class="profile-container">
         <!-- Student Info Box -->
-        <div class="profile-box" style="flex: 1 1 600px;">
+        <div class="profile-box" style="flex: 1 1 450px;">
             <h2>STUDENT PROFILE</h2>
             <table>
                 <tr><td>STUDENT ID</td><td><%= session.getAttribute("studID") %></td></tr>
@@ -357,19 +368,60 @@
                 </div>
             </div>
 
-            <!-- Event Countdown -->
-            <div class="profile-box" style="background: #ffe9c8; border-left: 6px solid #ff9800;">
-                <h2 style="color: #c27000;">NEXT EVENT COUNTDOWN</h2>
-                <p style="font-size: 22px; font-weight: bold; color: #cc7000;">
-                    <% 
-                        Object days = session.getAttribute("daysUntilEvent");
-                        if (days != null) {
-                            out.print(days + " day(s) left");
-                        } else {
-                            out.print("No upcoming events");
-                        }
-                    %>
-                </p>
+                        <!-- Upcoming Activities -->
+            <div class="profile-box" style="background: #ffe9c8; border-left: 6px solid #ff9800; padding: 20px;">
+              <h2 style="color: #c27000; margin-bottom: 20px; font-size: 16px; text-align: center;">UPCOMING ACTIVITIES</h2>
+              <% 
+                  java.util.List<Controller.UpcomingActivitiesServlet.ActivityInfo> upcomingActivities = 
+                      (java.util.List<Controller.UpcomingActivitiesServlet.ActivityInfo>) session.getAttribute("upcomingActivities");
+                  
+                  if (upcomingActivities != null && !upcomingActivities.isEmpty()) {
+              %>
+                <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;">
+                  <% for (int i = 0; i < Math.min(upcomingActivities.size(), 4); i++) { 
+                      Controller.UpcomingActivitiesServlet.ActivityInfo activity = upcomingActivities.get(i);
+                  %>
+                    <% if (activity.getHasPoster()) { %>
+                      <div class="activity-poster" style="position: relative; width: 100px; height: 140px; cursor: pointer;" 
+                           data-name="<%= activity.getActivityName() %>"
+                           data-date="<%= activity.getActivityDate() %>"
+                           data-days="<%= activity.getDaysUntil() %>"
+                           data-club="<%= activity.getClubName() != null ? activity.getClubName() : "Unknown Club" %>">
+                        <img src="ActivityImageServlet?activityID=<%= activity.getActivityID() %>&type=poster" 
+                             alt="Event Poster" 
+                             style="width: 100%; height: 100%; border-radius: 12px; object-fit: cover; border: 3px solid #ff9800; box-shadow: 0 4px 12px rgba(255,152,0,0.3); transition: transform 0.2s, box-shadow 0.2s;">
+                        <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.8)); border-radius: 0 0 9px 9px; padding: 6px 4px;">
+                          <p style="font-size: 12px; font-weight: bold; color: white; margin: 0; text-align: center; text-shadow: 1px 1px 1px rgba(0,0,0,0.8);">
+                            <%= activity.getDaysUntil() %>d
+                          </p>
+                        </div>
+                      </div>
+                    <% } else { %>
+                      <div class="activity-poster" style="position: relative; width: 100px; height: 140px; cursor: pointer;" 
+                           data-name="<%= activity.getActivityName() %>"
+                           data-date="<%= activity.getActivityDate() %>"
+                           data-days="<%= activity.getDaysUntil() %>"
+                           data-club="<%= activity.getClubName() != null ? activity.getClubName() : "Unknown Club" %>">
+                        <div style="width: 100%; height: 100%; border-radius: 12px; background: #ffcc80; display: flex; align-items: center; justify-content: center; border: 3px solid #ff9800; box-shadow: 0 4px 12px rgba(255,152,0,0.3); transition: transform 0.2s, box-shadow 0.2s;">
+                          <span style="font-size: 30px; color: #e65100;">📅</span>
+                        </div>
+                        <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.8)); border-radius: 0 0 9px 9px; padding: 6px 4px;">
+                          <p style="font-size: 12px; font-weight: bold; color: white; margin: 0; text-align: center; text-shadow: 1px 1px 1px rgba(0,0,0,0.8);">
+                            <%= activity.getDaysUntil() %>d
+                          </p>
+                        </div>
+                      </div>
+                    <% } %>
+                  <% } %>
+                </div>
+              <% } else { %>
+                <div style="text-align: center; padding: 10px;">
+                  <div style="width: 100px; height: 140px; border-radius: 12px; background: #ffcc80; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px auto; border: 3px solid #ff9800;">
+                    <span style="font-size: 30px; color: #e65100;">📅</span>
+                  </div>
+                  <p style="font-size: 14px; color: #cc7000; margin: 0; font-weight: 500;">No upcoming events</p>
+                </div>
+              <% } %>
             </div>
 
             <!-- Activity Summary -->
@@ -386,6 +438,19 @@
             </div>
 
         </div>
+    </div>
+</div>
+
+<!-- Activity Details Modal -->
+<div id="activityModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 3000; align-items: center; justify-content: center;">
+    <div style="background: #fff; border-radius: 18px; padding: 32px; box-shadow: 0 12px 40px rgba(0,121,107,0.25); max-width: 400px; width: 90vw; text-align: center;">
+        <h3 id="modalActivityName" style="color: #00796B; margin-bottom: 16px; font-size: 20px; font-weight: 600;"></h3>
+        <div style="margin-bottom: 16px;">
+            <p style="color: #666; margin: 4px 0; font-size: 14px;"><strong>Date:</strong> <span id="modalActivityDate"></span></p>
+            <p style="color: #666; margin: 4px 0; font-size: 14px;"><strong>Organizer:</strong> <span id="modalActivityClub"></span></p>
+            <p style="color: #ff9800; margin: 8px 0; font-size: 18px; font-weight: bold;"><span id="modalActivityDays"></span> days until event</p>
+        </div>
+        <button onclick="closeActivityModal()" style="background: #ff9800; color: white; border: none; border-radius: 8px; padding: 10px 24px; font-size: 16px; cursor: pointer; transition: background 0.2s;">Close</button>
     </div>
 </div>
 
@@ -416,6 +481,50 @@
     window.addEventListener('click', function () {
         notificationDropdown.classList.remove('show');
         profileDropdown.classList.remove('show');
+    });
+    
+    // Activity poster click handlers
+    document.addEventListener('DOMContentLoaded', function() {
+        const posters = document.querySelectorAll('.activity-poster');
+        posters.forEach(poster => {
+            poster.addEventListener('click', function() {
+                const name = this.getAttribute('data-name');
+                const date = this.getAttribute('data-date');
+                const days = this.getAttribute('data-days');
+                const club = this.getAttribute('data-club');
+                showActivityDetails(name, date, days, club);
+            });
+            
+            // Add hover effects
+            poster.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.05)';
+                this.style.boxShadow = '0 8px 20px rgba(255,152,0,0.4)';
+            });
+            
+            poster.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1)';
+                this.style.boxShadow = '0 4px 12px rgba(255,152,0,0.3)';
+            });
+        });
+    });
+    
+    function showActivityDetails(name, date, days, club) {
+        document.getElementById('modalActivityName').textContent = name;
+        document.getElementById('modalActivityDate').textContent = date;
+        document.getElementById('modalActivityClub').textContent = club;
+        document.getElementById('modalActivityDays').textContent = days;
+        document.getElementById('activityModal').style.display = 'flex';
+    }
+    
+    function closeActivityModal() {
+        document.getElementById('activityModal').style.display = 'none';
+    }
+    
+    // Close modal when clicking outside
+    document.getElementById('activityModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeActivityModal();
+        }
     });
 </script>
 </body>

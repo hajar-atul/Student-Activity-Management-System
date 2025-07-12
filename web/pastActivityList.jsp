@@ -406,10 +406,6 @@
 
   <!-- Topbar -->
   <div class="topbar">
-    <div class="search-container">
-      <input type="text" placeholder="Search..." />
-      <button class="search-btn">X</button>
-    </div>
     <div class="dashboard-title">ACTIVITIES</div>
     <div class="top-icons">
       <img src="image/umpsa.png" class="umpsa-icon" alt="UMPSA">
@@ -490,7 +486,6 @@
                 <td><%= activity.getAdabPoint() %></td>
                 <td>
                   <button onclick="location.href='feedback.jsp?activityID=<%= activity.getActivityID() %>'">Feedback →</button>
-                  <button style="margin-left:8px;background:#bdbdbd;color:#222;" onclick="location.href='viewResponse.jsp?activityID=<%= activity.getActivityID() %>'">View Response</button>
                   <button style="margin-left:8px;background:#4CAF50;color:white;" onclick="location.href='CertificateServlet?activityID=<%= activity.getActivityID() %>&studID=<%= studID %>'">Download e-Certificate</button>
                 </td>
               </tr>
