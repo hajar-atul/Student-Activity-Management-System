@@ -24,7 +24,9 @@
     .sidebar.closed { transform: translateX(-100%); }
     .toggle-btn { position: fixed; top: 20px; left: 20px; background-color: #008b8b; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; z-index: 1002; }
     .sidebar img.profile-pic { width: 100px; aspect-ratio: 1 / 1; border-radius: 50%; object-fit: cover; margin: 0 auto 15px; display: block; border: 3px solid white; box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); }
-    .sidebar h2 { text-align: center; font-size: 14px; margin-top: 10px; }
+    .sidebar h2 {
+        color: white !important;
+    }
     .menu { margin-top: 30px; }
     .menu a { display: block; padding: 10px; background-color: #0a6d6d; margin-top: 10px; text-decoration: none; color: white; border-radius: 5px; text-align: center; }
     .logout-container { margin-top: auto; padding-top: 20px; }

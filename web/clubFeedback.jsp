@@ -59,7 +59,7 @@
 
             .sidebar {
               width: 270px;
-              height: 100vh;
+                height: 100vh;
               background-color: #00796B;
               color: white;
               position: fixed;
@@ -125,9 +125,9 @@
 
             .main-content {
               margin-left: 270px;
-              transition: margin-left 0.3s ease;
+                transition: margin-left 0.3s ease;
               min-height: 100vh;
-              overflow: hidden;
+                overflow: hidden;
             }
 
             .main-content.full-width {
@@ -135,9 +135,9 @@
             }
 
             .header {
-              display: flex;
+                display: flex;
               justify-content: space-between;
-              align-items: center;
+                align-items: center;
               background-color: #0a8079;
               color: white;
               padding: 20px 40px;
@@ -149,8 +149,8 @@
             }
 
             .top-icons {
-              display: flex;
-              align-items: center;
+                display: flex;
+                align-items: center;
               gap: 15px;
             }
 
@@ -220,7 +220,7 @@
             }
             
             th { 
-              background: #e0f7fa; 
+                background: #e0f7fa;
               font-weight: 600;
               color: #00796B;
             }
@@ -296,7 +296,7 @@
         </style>
     </head>
     <body>
-        <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+        <button class="toggle-btn" onclick="toggleSidebar()"></button>
 
         <div class="sidebar" id="sidebar">
           <img src="ClubImageServlet?clubID=<%= club != null ? club.getClubId() : 0 %>" alt="User Profile Picture" class="profile-pic">
@@ -328,7 +328,7 @@
             <p>No new notifications</p>
           </div>
 
-          <div class="container">
+        <div class="container">
             <h2>Feedback Received</h2>
             <table>
                 <tr>

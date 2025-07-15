@@ -418,55 +418,55 @@
       <div class="top-icons">
         <img src="image/umpsa.png" alt="UMPSA Logo" class="umpsa-icon" />
         <button class="notification-btn" id="notificationBtn">
-          <img src="image/bell.png" alt="Notifications" />
+      <img src="image/bell.png" alt="Notifications" />
         </button>
-        <img src="ClubImageServlet?clubID=<%= club != null ? club.getClubId() : 0 %>" alt="User Avatar" class="profile-icon" />
-      </div>
+      <img src="ClubImageServlet?clubID=<%= club != null ? club.getClubId() : 0 %>" alt="User Avatar" class="profile-icon" />
     </div>
+  </div>
 
     <div class="notification-dropdown" id="notificationDropdown">
       <p>No new notifications</p>
     </div>
 
-    <div class="venue-form-container">
+  <div class="venue-form-container">
       <div class="venue-form-title">Venue Booking Request</div>
       
       <div class="form-content">
-        <% if (request.getParameter("message") != null) { %>
+    <% if (request.getParameter("message") != null) { %>
           <div class="message success">
-              <%= request.getParameter("message") %>
-          </div>
-        <% } %>
+          <%= request.getParameter("message") %>
+      </div>
+    <% } %>
         
-        <form action="VenueBookingServlet" method="post">
-          <div class="form-group">
+    <form action="VenueBookingServlet" method="post">
+      <div class="form-group">
             <label for="date">Booking Date</label>
-            <input type="date" id="date" name="date" required />
+        <input type="date" id="date" name="date" required />
             <div class="help-text">Select the date for your venue booking</div>
-          </div>
+      </div>
           
-          <div class="form-group">
+      <div class="form-group">
             <label for="time">Start Time</label>
             <input type="time" id="time" name="time" required />
             <div class="help-text">Choose the start time for your event</div>
-          </div>
+      </div>
           
-          <div class="form-group">
+      <div class="form-group">
             <label for="duration">Duration (Hours)</label>
             <input type="number" id="duration" name="duration" min="1" max="24" placeholder="e.g., 2" required style="font-size: 18px; padding: 18px 20px; height: 60px;" />
             <div class="help-text">Enter the duration in hours (1-24)</div>
-          </div>
+      </div>
           
-          <div class="form-group">
+      <div class="form-group">
             <label for="venue">Select Venue</label>
-            <select id="venue" name="venue" required>
+        <select id="venue" name="venue" required>
               <option value="">Choose a venue...</option>
-              <option value="Dewan Serbaguna">Dewan Serbaguna</option>
-              <option value="Dewan Aspirasi">Dewan Aspirasi</option>
-              <option value="Dewan Tengku Hassanal">Dewan Tengku Hassanal</option>
-              <option value="Dewan Chanselor">Dewan Chanselor</option>
-              <option value="Dewan Ibnu Battuta">Dewan Ibnu Battuta</option>
-            </select>
+          <option value="Dewan Serbaguna">Dewan Serbaguna</option>
+          <option value="Dewan Aspirasi">Dewan Aspirasi</option>
+          <option value="Dewan Tengku Hassanal">Dewan Tengku Hassanal</option>
+          <option value="Dewan Chanselor">Dewan Chanselor</option>
+          <option value="Dewan Ibnu Battuta">Dewan Ibnu Battuta</option>
+        </select>
             <div class="help-text">Select the venue for your activity</div>
           </div>
           

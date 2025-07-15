@@ -63,8 +63,8 @@ public class RegisterActivityStudentServlet extends HttpServlet {
                     message = "Payment proof is required for paid activities.";
                     request.setAttribute("message", message);
                     request.getRequestDispatcher("registerActivity.jsp?activityID=" + activityID).forward(request, response);
-                    return;
-                }
+                return;
+            }
             }
 
             // Insert registration (and payment if paid)
@@ -99,8 +99,8 @@ public class RegisterActivityStudentServlet extends HttpServlet {
                     updateStmt.setString(2, studID);
                     updateStmt.executeUpdate();
                     updateStmt.close();
-                }
-                
+            }
+            
                 message = "Registration successful! You have been registered for this activity and earned " + activityAdabPoints + " adab points.";
                 
                 // Clear upcoming activities cache so it refreshes on dashboard

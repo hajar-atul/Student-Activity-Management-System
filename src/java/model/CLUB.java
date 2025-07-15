@@ -24,6 +24,7 @@ public class CLUB {
     private int studID;
     private String profilePic;
     private byte[] profilePicBlob;
+    private byte[] posterClub;
     
     // Database connection details
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/student?useSSL=false&serverTimezone=UTC";
@@ -60,6 +61,11 @@ public class CLUB {
                     } catch (SQLException e) {
                         club.setProfilePicBlob(null);
                     }
+                    try {
+                        club.setPosterClub(rs.getBytes("posterClub"));
+                    } catch (SQLException e) {
+                        club.setPosterClub(null);
+                    }
                 }
             }
         } catch (Exception e) {
@@ -87,6 +93,21 @@ public class CLUB {
                     club.setClubStatus(rs.getString("clubStatus"));
                     club.setClubEstablishedDate(rs.getString("clubEstablishedDate"));
                     club.setClubPassword(rs.getString("clubPassword"));
+                    try {
+                        club.setProfilePic(rs.getString("profilePic"));
+                    } catch (SQLException e) {
+                        club.setProfilePic(null);
+                    }
+                    try {
+                        club.setProfilePicBlob(rs.getBytes("profilePicBlob"));
+                    } catch (SQLException e) {
+                        club.setProfilePicBlob(null);
+                    }
+                    try {
+                        club.setPosterClub(rs.getBytes("posterClub"));
+                    } catch (SQLException e) {
+                        club.setPosterClub(null);
+                    }
                     clubs.add(club);
                 }
             }
@@ -121,8 +142,8 @@ public class CLUB {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
-                String query = "INSERT INTO club (clubName, clubContact, clubDesc, clubStatus, clubEstablishedDate, clubPassword, profilePic, profilePicBlob) " +
-                             "VALUES (?, ?, ?, 'active', ?, ?, ?, ?)";
+                String query = "INSERT INTO club (clubName, clubContact, clubDesc, clubStatus, clubEstablishedDate, clubPassword, profilePic, profilePicBlob, posterClub) " +
+                             "VALUES (?, ?, ?, 'active', ?, ?, ?, ?, ?)";
                 PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
                 stmt.setString(1, this.clubName);
                 stmt.setString(2, this.clubContact);
@@ -131,6 +152,7 @@ public class CLUB {
                 stmt.setString(5, this.clubPassword);
                 stmt.setString(6, this.profilePic);
                 stmt.setBytes(7, this.profilePicBlob);
+                stmt.setBytes(8, this.posterClub);
                 int affectedRows = stmt.executeUpdate();
                 if (affectedRows > 0) {
                     try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
@@ -156,6 +178,9 @@ public class CLUB {
                 if (this.profilePic != null && this.profilePicBlob != null) {
                     query.append(", profilePic=?, profilePicBlob=?");
                 }
+                if (this.posterClub != null) {
+                    query.append(", posterClub=?");
+                }
                 query.append(" WHERE clubID=?");
                 PreparedStatement stmt = conn.prepareStatement(query.toString());
                 stmt.setString(1, this.clubName);
@@ -168,6 +193,9 @@ public class CLUB {
                 if (this.profilePic != null && this.profilePicBlob != null) {
                     stmt.setString(paramIndex++, this.profilePic);
                     stmt.setBytes(paramIndex++, this.profilePicBlob);
+                }
+                if (this.posterClub != null) {
+                    stmt.setBytes(paramIndex++, this.posterClub);
                 }
                 stmt.setInt(paramIndex, this.clubID);
                 return stmt.executeUpdate() > 0;
@@ -213,6 +241,21 @@ public class CLUB {
                     club.setClubStatus(rs.getString("clubStatus"));
                     club.setClubEstablishedDate(rs.getString("clubEstablishedDate"));
                     club.setClubPassword(rs.getString("clubPassword"));
+                    try {
+                        club.setProfilePic(rs.getString("profilePic"));
+                    } catch (SQLException e) {
+                        club.setProfilePic(null);
+                    }
+                    try {
+                        club.setProfilePicBlob(rs.getBytes("profilePicBlob"));
+                    } catch (SQLException e) {
+                        club.setProfilePicBlob(null);
+                    }
+                    try {
+                        club.setPosterClub(rs.getBytes("posterClub"));
+                    } catch (SQLException e) {
+                        club.setPosterClub(null);
+                    }
                     clubs.add(club);
                 }
             }
@@ -242,6 +285,21 @@ public class CLUB {
                     club.setClubStatus(rs.getString("clubStatus"));
                     club.setClubEstablishedDate(rs.getString("clubEstablishedDate"));
                     club.setClubPassword(rs.getString("clubPassword"));
+                    try {
+                        club.setProfilePic(rs.getString("profilePic"));
+                    } catch (SQLException e) {
+                        club.setProfilePic(null);
+                    }
+                    try {
+                        club.setProfilePicBlob(rs.getBytes("profilePicBlob"));
+                    } catch (SQLException e) {
+                        club.setProfilePicBlob(null);
+                    }
+                    try {
+                        club.setPosterClub(rs.getBytes("posterClub"));
+                    } catch (SQLException e) {
+                        club.setPosterClub(null);
+                    }
                     return club;
                 }
             }
@@ -272,6 +330,21 @@ public class CLUB {
                     club.setClubDesc(rs.getString("clubDesc"));
                     club.setClubStatus(rs.getString("clubStatus"));
                     club.setClubEstablishedDate(rs.getString("clubEstablishedDate"));
+                    try {
+                        club.setProfilePic(rs.getString("profilePic"));
+                    } catch (SQLException e) {
+                        club.setProfilePic(null);
+                    }
+                    try {
+                        club.setProfilePicBlob(rs.getBytes("profilePicBlob"));
+                    } catch (SQLException e) {
+                        club.setProfilePicBlob(null);
+                    }
+                    try {
+                        club.setPosterClub(rs.getBytes("posterClub"));
+                    } catch (SQLException e) {
+                        club.setPosterClub(null);
+                    }
                     clubs.add(club);
                 }
             }
@@ -434,5 +507,13 @@ public class CLUB {
 
     public void setProfilePicBlob(byte[] profilePicBlob) {
         this.profilePicBlob = profilePicBlob;
+    }
+
+    public byte[] getPosterClub() {
+        return posterClub;
+    }
+
+    public void setPosterClub(byte[] posterClub) {
+        this.posterClub = posterClub;
     }
 }

@@ -486,33 +486,33 @@
             <div class="form-group">
               <label>Activity Name</label>
               <input type="text" value="<%= activity.getActivityName() %>" readonly class="activity-box" />
-              <input type="hidden" name="activityID" value="<%= activityID %>" />
+          <input type="hidden" name="activityID" value="<%= activityID %>" />
             </div>
             
             <div class="form-group">
-              <label>Organizer</label>
-              <input type="text" value="<%= club.getClubName() %>" readonly class="form-field-box" />
-              <input type="hidden" name="clubID" value="<%= club.getClubId() %>" />
+          <label>Organizer</label>
+          <input type="text" value="<%= club.getClubName() %>" readonly class="form-field-box" />
+          <input type="hidden" name="clubID" value="<%= club.getClubId() %>" />
             </div>
           </div>
           
           <div class="form-horizontal">
             <div class="form-group">
-              <label>Rate Activity</label>
-              <div class="form-field-box" style="background:#fffbe7; display:flex; align-items:center; justify-content:center; gap:10px;">
-                <div class="star-rating" id="starRating">
-                  <span class="star" data-value="1">&#9733;</span>
-                  <span class="star" data-value="2">&#9733;</span>
-                  <span class="star" data-value="3">&#9733;</span>
-                  <span class="star" data-value="4">&#9733;</span>
-                  <span class="star" data-value="5">&#9733;</span>
-                </div>
-              </div>
-              <input type="hidden" name="rating" id="ratingInput" value="0">
+        <label>Rate Activity</label>
+        <div class="form-field-box" style="background:#fffbe7; display:flex; align-items:center; justify-content:center; gap:10px;">
+          <div class="star-rating" id="starRating">
+            <span class="star" data-value="1">&#9733;</span>
+            <span class="star" data-value="2">&#9733;</span>
+            <span class="star" data-value="3">&#9733;</span>
+            <span class="star" data-value="4">&#9733;</span>
+            <span class="star" data-value="5">&#9733;</span>
+          </div>
+        </div>
+        <input type="hidden" name="rating" id="ratingInput" value="0">
             </div>
             
             <div class="form-group">
-              <label for="comments">Comments</label>
+        <label for="comments">Comments</label>
               <textarea id="comments" name="comments" placeholder="Share your experience and suggestions..." required class="form-field-box"></textarea>
             </div>
           </div>

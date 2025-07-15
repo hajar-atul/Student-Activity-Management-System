@@ -24,6 +24,8 @@
                 overflow: hidden;
                 font-family: Arial, sans-serif;
                 background-color: #f0f0f0;
+                width: 100%;
+                max-width: 100%;
             }
 
             .sidebar {
@@ -198,7 +200,7 @@
                 padding: 100px 30px 20px 30px;
                 margin-left: 250px;
                 height: calc(100vh - 100px);
-                overflow-y: auto;
+                overflow: hidden;
                 transition: margin-left 0.3s ease;
             }
 
@@ -209,19 +211,100 @@
             .club-container {
                 max-width: 1200px;
                 margin: 0 auto;
-                height: 100%;
+                height: calc(100vh - 140px);
                 display: flex;
+                flex-direction: column;
                 gap: 20px;
+                overflow: hidden;
+                width: 100%;
             }
 
             .current-membership, .available-clubs {
-                flex: 1;
                 background: white;
                 border-radius: 10px;
                 padding: 15px;
                 box-shadow: 0 2px 4px rgba(0,0,0,0.1);
                 overflow-y: auto;
-                max-height: calc(100vh - 140px);
+            }
+
+            .current-membership {
+                min-height: 200px;
+                max-height: 40%;
+            }
+
+            .available-clubs {
+                min-height: 600px;
+                max-height: 95vh;
+                flex: 5;
+                overflow-y: auto;
+                overflow-x: auto;
+                width: 100%;
+                position: relative;
+            }
+
+            .current-membership.empty {
+                min-height: 150px;
+                max-height: 30%;
+            }
+
+            .available-clubs.empty {
+                min-height: 200px;
+                max-height: 70%;
+            }
+
+            .available-clubs {
+                position: relative;
+            }
+
+            .scroll-indicator {
+                position: absolute;
+                right: 15px;
+                top: 50%;
+                transform: translateY(-50%);
+                background: rgba(0, 139, 139, 0.8);
+                color: white;
+                padding: 8px 12px;
+                border-radius: 20px;
+                font-size: 12px;
+                pointer-events: none;
+                opacity: 0;
+                transition: opacity 0.3s;
+                z-index: 10;
+            }
+
+            .available-clubs:hover .scroll-indicator {
+                opacity: 1;
+            }
+
+            .clubs-grid {
+                display: flex;
+                gap: 15px;
+                padding: 10px 0;
+                overflow-x: auto;
+                overflow-y: visible;
+                scroll-behavior: smooth;
+                -webkit-overflow-scrolling: touch;
+                width: 100%;
+                max-width: 100%;
+                flex-wrap: wrap;
+            }
+
+            .clubs-grid::-webkit-scrollbar {
+                height: 8px;
+            }
+
+            .clubs-grid::-webkit-scrollbar-track {
+                background: #f1f1f1;
+                border-radius: 4px;
+            }
+
+            .clubs-grid::-webkit-scrollbar-thumb {
+                background: #008b8b;
+                border-radius: 4px;
+            }
+
+            .clubs-grid::-webkit-scrollbar-thumb:hover {
+                background: #006d6d;
             }
 
             .section-title {
@@ -236,14 +319,43 @@
                 border: 1px solid #e0e0e0;
                 border-radius: 8px;
                 padding: 12px;
-                margin-bottom: 12px;
                 background-color: #f9f9f9;
                 transition: transform 0.2s;
+                min-width: 280px;
+                max-width: 280px;
+                height: fit-content;
+                display: flex;
+                flex-direction: column;
+                flex-shrink: 0;
+                box-sizing: border-box;
             }
 
             .club-card:hover {
                 transform: translateY(-2px);
                 box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+
+            .club-poster {
+                width: 100%;
+                height: 150px;
+                object-fit: cover;
+                border-radius: 6px;
+                margin-bottom: 10px;
+                background-color: #f0f0f0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #999;
+                font-size: 12px;
+            }
+
+            .club-poster img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                border-radius: 6px;
+                background: #f0f0f0;
+                display: block;
             }
 
             .club-name {
@@ -284,8 +396,9 @@
             }
 
             .action-buttons {
-                margin-top: 8px;
+                margin-top: auto;
                 text-align: right;
+                padding-top: 8px;
             }
 
             .join-btn, .leave-btn {
@@ -429,7 +542,7 @@
                         List<CLUB> allClubs = CLUB.getAllClubs();
                 %>
                         <!-- Current Membership Section -->
-                        <div class="current-membership">
+                        <div class="current-membership <%= (studentClubs == null || studentClubs.isEmpty()) ? "empty" : "" %>">
                             <h2 class="section-title">Current Membership</h2>
                             
                             <% if (request.getParameter("message") != null) { %>
@@ -461,41 +574,17 @@
                                 </div>
                             <% } %>
 
-                            <% if (studentClubs != null && !studentClubs.isEmpty()) {
-                                for (CLUB club : studentClubs) { %>
-                                    <div class="club-card">
-                                        <div class="club-name"><%= club.getClubName() %></div>
-                                        <div class="club-info"><strong>Description:</strong> <%= club.getClubDesc() %></div>
-                                        <div class="club-info"><strong>Contact:</strong> <%= club.getClubContact() %></div>
-                                        <div class="club-info"><strong>Status:</strong> <%= club.getClubStatus() %></div>
-                                        <div class="club-info"><strong>Established:</strong> <%= club.getClubEstablishedDate() %></div>
-                                        <div class="action-buttons">
-                                            <form action="ClubMembershipServlet" method="post">
-                                                <input type="hidden" name="clubID" value="<%= club.getClubId() %>">
-                                                <input type="hidden" name="action" value="leave">
-                                                <button type="submit" class="leave-btn">Leave Club</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                <% }
-                            } else { %>
-                                <div class="membership-status">
-                                    <div class="status-title">No Active Membership</div>
-                                    <div class="status-message">You are not currently a member of any club. Browse available clubs to join one!</div>
-                                </div>
-                            <% } %>
-                        </div>
-
-                        <!-- Available Clubs Section -->
-                        <div class="available-clubs">
-                            <h2 class="section-title">Available Clubs</h2>
-                            <% 
-                                boolean hasActiveClubs = false;
-                                for (CLUB club : allClubs) { 
-                                    if ("active".equalsIgnoreCase(club.getClubStatus())) {
-                                        hasActiveClubs = true;
-                            %>
+                            <% if (studentClubs != null && !studentClubs.isEmpty()) { %>
+                                <div class="clubs-grid">
+                                    <% for (CLUB club : studentClubs) { %>
                                         <div class="club-card">
+                                            <div class="club-poster">
+                                                <% if (club.getPosterClub() != null && club.getPosterClub().length > 0) { %>
+                                                    <img src="ClubPosterServlet?clubID=<%= club.getClubId() %>" alt="<%= club.getClubName() %> Poster">
+                                                <% } else { %>
+                                                    <span>No Poster Available</span>
+                                                <% } %>
+                                            </div>
                                             <div class="club-name"><%= club.getClubName() %></div>
                                             <div class="club-info"><strong>Description:</strong> <%= club.getClubDesc() %></div>
                                             <div class="club-info"><strong>Contact:</strong> <%= club.getClubContact() %></div>
@@ -504,20 +593,68 @@
                                             <div class="action-buttons">
                                                 <form action="ClubMembershipServlet" method="post">
                                                     <input type="hidden" name="clubID" value="<%= club.getClubId() %>">
-                                                    <input type="hidden" name="action" value="join">
-                                                    <button type="submit" class="join-btn" 
-                                                            <%= (studentClubs != null && !studentClubs.isEmpty()) ? "disabled" : "" %>>
-                                                        Join Club
-                                                    </button>
+                                                    <input type="hidden" name="action" value="leave">
+                                                    <button type="submit" class="leave-btn">Leave Club</button>
                                                 </form>
                                             </div>
                                         </div>
-                            <% }
+                                    <% } %>
+                                </div>
+                            <% } else { %>
+                                <div class="membership-status">
+                                    <div class="status-title">No Active Membership</div>
+                                    <div class="status-message">You are not currently a member of any club. Browse available clubs to join one!</div>
+                                </div>
+                            <% } %>
+                        </div>
+
+                        <!-- Available Clubs Section -->
+                        <% 
+                            boolean hasActiveClubs = false;
+                            for (CLUB club : allClubs) { 
+                                if ("active".equalsIgnoreCase(club.getClubStatus())) {
+                                    hasActiveClubs = true;
                                 }
-                                if (!hasActiveClubs) { %>
-                                    <div class="no-clubs">
-                                        <p>No active clubs available at the moment.</p>
-                                    </div>
+                            }
+                        %>
+                        <div class="available-clubs <%= (!hasActiveClubs) ? "empty" : "" %>">
+                            <h2 class="section-title">Available Clubs</h2>
+                            <% if (hasActiveClubs) { %>
+                                <div class="clubs-grid">
+                                    <% for (CLUB club : allClubs) { 
+                                        if ("active".equalsIgnoreCase(club.getClubStatus())) { %>
+                                            <div class="club-card">
+                                                <div class="club-poster">
+                                                    <% if (club.getPosterClub() != null && club.getPosterClub().length > 0) { %>
+                                                        <img src="ClubPosterServlet?clubID=<%= club.getClubId() %>" alt="<%= club.getClubName() %> Poster">
+                                                    <% } else { %>
+                                                        <span>No Poster Available</span>
+                                                    <% } %>
+                                                </div>
+                                                <div class="club-name"><%= club.getClubName() %></div>
+                                                <div class="club-info"><strong>Description:</strong> <%= club.getClubDesc() %></div>
+                                                <div class="club-info"><strong>Contact:</strong> <%= club.getClubContact() %></div>
+                                                <div class="club-info"><strong>Status:</strong> <%= club.getClubStatus() %></div>
+                                                <div class="club-info"><strong>Established:</strong> <%= club.getClubEstablishedDate() %></div>
+                                                <div class="action-buttons">
+                                                    <form action="ClubMembershipServlet" method="post">
+                                                        <input type="hidden" name="clubID" value="<%= club.getClubId() %>">
+                                                        <input type="hidden" name="action" value="join">
+                                                        <button type="submit" class="join-btn" 
+                                                                <%= (studentClubs != null && !studentClubs.isEmpty()) ? "disabled" : "" %>>
+                                                            Join Club
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                    <% }
+                                    } %>
+                                </div>
+                                <div class="scroll-indicator">Scroll for more clubs →</div>
+                            <% } else { %>
+                                <div class="no-clubs">
+                                    <p>No active clubs available at the moment.</p>
+                                </div>
                             <% } %>
                         </div>
                 <% } else { %>

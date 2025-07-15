@@ -232,7 +232,7 @@
       padding: 100px 30px 20px 30px;
       margin-left: 250px;
       height: calc(100vh - 100px);
-      overflow-y: auto;
+      overflow: hidden;
       transition: margin-left 0.3s ease;
     }
 
@@ -243,12 +243,14 @@
     .activity-container {
       max-width: 1200px;
       margin: 0 auto;
+      height: 100%;
+      overflow: hidden;
     }
 
     .activity-buttons {
       display: flex;
       gap: 20px;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
     }
 
     .activity-btn {
@@ -270,36 +272,46 @@
 
     .activity-images-container {
       width: 100%;
-      max-width: 100vw;
-      height: 520px;
+      max-width: 100%;
+      height: calc(100% - 80px);
       overflow-x: auto;
       overflow-y: hidden;
-      white-space: nowrap;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
       padding-bottom: 12px;
       box-sizing: border-box;
       margin-top: 20px;
-      scrollbar-width: thin;
-      scrollbar-color: #b2dfdb #f0f0f0;
     }
+
     .activity-images-container::-webkit-scrollbar {
-      height: 10px;
-      background: #f0f0f0;
+      height: 8px;
     }
+
+    .activity-images-container::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 4px;
+    }
+
     .activity-images-container::-webkit-scrollbar-thumb {
-      background: #b2dfdb;
-      border-radius: 6px;
+      background: #008b8b;
+      border-radius: 4px;
     }
+
+    .activity-images-container::-webkit-scrollbar-thumb:hover {
+      background: #006d6d;
+    }
+
     .activity-images {
       display: flex;
-      flex-direction: row;
       gap: 30px;
-      height: 100%;
-      min-width: 100%;
-      white-space: nowrap;
+      padding: 10px 0;
+      width: 100%;
+      max-width: 100%;
     }
     .activity-card {
-      flex: 0 0 370px;
-      display: inline-flex;
+      min-width: 370px;
+      max-width: 370px;
+      display: flex;
       flex-direction: column;
       background-color: white;
       border-radius: 12px;
@@ -311,6 +323,8 @@
       max-height: 480px;
       margin-bottom: 8px;
       position: relative;
+      flex-shrink: 0;
+      box-sizing: border-box;
     }
 
     .activity-card:hover {
@@ -434,18 +448,87 @@
       }
     }
     .activities-outer-container {
+      position: relative;
+      overflow-x: auto;
+      overflow-y: hidden;
+      white-space: nowrap;
+      padding-bottom: 24px;
+      width: 100%;
+      max-width: 100vw;
+      box-sizing: border-box;
       background: #fff;
       border-radius: 22px;
       box-shadow: 0 8px 32px rgba(0,121,107,0.10);
       padding: 36px 32px 28px 32px;
-      margin: 40px auto 0 auto;
-      max-width: 1700px;
+      margin: 20px auto 0 auto;
       min-width: 400px;
-      width: 90vw;
+      height: calc(100vh - 280px);
+    }
+    .activities-outer-container::after {
+      content: "";
+      display: block;
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      bottom: 0;
+      height: 4px;
+      background: #008b8b;
+      border-radius: 2px;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .activities-grid {
+      display: flex;
+      flex-direction: row;
+      gap: 15px;
+      min-width: max-content;
+      width: fit-content;
+      padding: 10px 0;
+    }
+    .activities-grid::-webkit-scrollbar {
+      height: 8px;
+    }
+    .activities-grid::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 4px;
+    }
+    .activities-grid::-webkit-scrollbar-thumb {
+      background: #008b8b;
+      border-radius: 4px;
+    }
+    .activities-grid::-webkit-scrollbar-thumb:hover {
+      background: #006d6d;
+    }
+    .activity-card {
+      min-width: 280px;
+      max-width: 280px;
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 12px;
       display: flex;
       flex-direction: column;
-      align-items: stretch;
-      justify-content: flex-start;
+      flex-shrink: 0;
+      box-sizing: border-box;
+      margin-bottom: 0;
+    }
+    .scroll-indicator {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 139, 139, 0.8);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s;
+      z-index: 10;
+    }
+    .activities-outer-container:hover .scroll-indicator {
+      opacity: 1;
     }
   </style>
 </head>
@@ -533,6 +616,7 @@
           <% } %>
         </div>
       </div>
+      <div class="scroll-indicator">Scroll for more activities →</div>
     </div>
   </div>
 </div>

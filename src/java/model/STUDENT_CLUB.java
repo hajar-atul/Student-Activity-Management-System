@@ -33,7 +33,12 @@ public class STUDENT_CLUB {
                 STUDENT_CLUB studentClub = new STUDENT_CLUB();
                 studentClub.setStudID(rs.getInt("studID"));
                 studentClub.setClubID(rs.getInt("clubID"));
-                studentClub.setJoinDate(rs.getDate("joinDate"));
+                try {
+                    studentClub.setJoinDate(rs.getDate("joinDate"));
+                } catch (SQLException e) {
+                    // If joinDate column doesn't exist, set to null
+                    studentClub.setJoinDate(null);
+                }
                 return studentClub;
             }
         } catch (Exception e) {
@@ -60,16 +65,33 @@ public class STUDENT_CLUB {
             }
 
             try (java.sql.Connection conn = DBConnection.getConnection()) {
-                String query = "INSERT INTO student_club (studID, clubID, joinDate) VALUES (?, ?, CURDATE())";
-                java.sql.PreparedStatement stmt = conn.prepareStatement(query);
-                stmt.setInt(1, studID);
-                stmt.setInt(2, clubID);
-                
-                int result = stmt.executeUpdate();
-                if (result > 0) {
-                    return "success";
-                } else {
-                    return "Failed to add student to club";
+                // Try with joinDate first, fallback to without joinDate
+                String query;
+                try {
+                    query = "INSERT INTO student_club (studID, clubID, joinDate) VALUES (?, ?, CURDATE())";
+                    java.sql.PreparedStatement stmt = conn.prepareStatement(query);
+                    stmt.setInt(1, studID);
+                    stmt.setInt(2, clubID);
+                    
+                    int result = stmt.executeUpdate();
+                    if (result > 0) {
+                        return "success";
+                    } else {
+                        return "Failed to add student to club";
+                    }
+                } catch (SQLException e) {
+                    // If joinDate column doesn't exist, try without it
+                    query = "INSERT INTO student_club (studID, clubID) VALUES (?, ?)";
+                    java.sql.PreparedStatement stmt = conn.prepareStatement(query);
+                    stmt.setInt(1, studID);
+                    stmt.setInt(2, clubID);
+                    
+                    int result = stmt.executeUpdate();
+                    if (result > 0) {
+                        return "success";
+                    } else {
+                        return "Failed to add student to club";
+                    }
                 }
             }
         } catch (Exception e) {
