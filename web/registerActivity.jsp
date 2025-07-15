@@ -403,13 +403,29 @@
         opacity: 1;
       }
     }
+    .activity-btn {
+      width: 100%;
+                padding: 15px;
+                background-color: #f44336;
+                color: white;
+                border: none;
+      border-radius: 8px;
+                font-size: 16px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: background-color 0.2s;
+                margin: 0;
+            }
+             .activity-btn:hover {
+                background-color: #d32f2f;
+    }
   </style>
 </head>
 <body>
 <!-- Sidebar -->
 <div class="sidebar" id="sidebar">
   <img src="StudentImageServlet?studID=${studID}" alt="Profile" class="profile-pic" />
-  <h2>
+  <h2 style="text-align: center; font-size: 14px; margin-top: 10px;">
     <%= session.getAttribute("studName") %><br>
     <%= session.getAttribute("studID") %>
   </h2>
@@ -419,11 +435,11 @@
     <a href="studentClub.jsp">CLUBS</a>
     <a href="SettingsServlet">SETTINGS</a>
   </div>
-  <div class="logout-container">
+  <div style="position: absolute; bottom: 20px; width: 80%; left: 10%;">
     <form action="index.jsp">
-      <button type="submit" class="LOGOUT-btn">Logout</button>
+        <button type="submit" class="activity-btn">Logout</button>
     </form>
-  </div>
+</div>
 </div>
 <!-- Toggle Button -->
 <button class="toggle-btn" id="toggleBtn">☰</button>

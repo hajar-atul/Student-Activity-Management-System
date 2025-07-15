@@ -297,6 +297,22 @@
       .feedback-table-section { flex-direction: column; gap: 18px; }
       .feedback-chart-section { max-width: 100%; min-width: 0; }
     }
+    .activity-btn {
+                width: 100%;
+                padding: 15px;
+                background-color: #f44336;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                font-size: 16px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: background-color 0.2s;
+                margin: 0;
+            }
+             .activity-btn:hover {
+                background-color: #d32f2f;
+            }
   </style>
 </head>
 <body>
@@ -309,6 +325,11 @@
         <li><a href="addAdmin.jsp">ADD ADMIN</a></li>
         <li><a href="adminReport.jsp">REPORT</a></li>
     </ul>
+    <div style="position: absolute; bottom: 20px; width: 80%; left: 10%;">
+      <form action="index.jsp">
+          <button type="submit" class="activity-btn">Logout</button>
+      </form>
+  </div>
 </div>
 
 <div class="main-content">

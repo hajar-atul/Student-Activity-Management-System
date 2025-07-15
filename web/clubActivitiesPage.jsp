@@ -77,6 +77,23 @@
             background-color: rgba(0, 0, 0, 0.2);
         }
 
+        .activity-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin: 0;
+        }
+        .activity-btn:hover {
+            background-color: #d32f2f;
+        }
+
     /* Toggle Button */
     .toggle-btn {
       position: fixed;
@@ -274,6 +291,11 @@
     <li><a href="clubReport.jsp">REPORT</a></li>
     <li><a href="clubSettings.jsp">SETTINGS</a></li>
     </ul>
+    <div style="position: absolute; bottom: 20px; width: 80%; left: 10%;">
+      <form action="index.jsp">
+        <button type="submit" class="activity-btn">Logout</button>
+      </form>
+    </div>
   </div>
 
   <!-- Main Content -->
@@ -390,7 +412,7 @@
               </span>
             </td>
             <td style="padding:10px; border-bottom:1px solid #eee; text-align:center;">
-              <a href="activityParticipants?activityId=<%= act.getActivityID() %>" 
+              <a href="ActivityParticipantStudentServlet?activityId=<%= act.getActivityID() %>" 
                  style="background:#00796B; color:white; padding:8px 16px; border-radius:5px; text-decoration:none; font-size:0.9em; transition:background-color 0.3s ease;"
                  onmouseover="this.style.background='#004d40'"
                  onmouseout="this.style.background='#00796B'">

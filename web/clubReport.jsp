@@ -380,6 +380,22 @@
             padding: 20px;
           }
         }
+        .activity-btn {
+          width: 100%;
+          padding: 15px;
+          background-color: #f44336;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          font-size: 16px;
+          font-weight: bold;
+          cursor: pointer;
+          transition: background-color 0.2s;
+          margin: 0;
+        }
+        .activity-btn:hover {
+          background-color: #d32f2f;
+        }
     </style>
     <script>
         function showFileName(input) {
@@ -403,6 +419,11 @@
         <li><a href="clubReport.jsp" class="active">REPORT</a></li>
         <li><a href="clubSettings.jsp">SETTINGS</a></li>
       </ul>
+      <div style="position: absolute; bottom: 20px; width: 80%; left: 10%; margin-top: 50px; margin-bottom: 25px;">
+        <form action="index.jsp">
+          <button type="submit" class="activity-btn">Logout</button>
+        </form>
+      </div>
     </div>
 
     <div class="main-content" id="mainContent">

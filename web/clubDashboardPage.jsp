@@ -9,6 +9,7 @@
 <%@ page import="java.util.ArrayList, java.util.HashMap, java.util.Map" %>
 <%@ page import="java.sql.DriverManager, java.sql.Connection, java.sql.PreparedStatement, java.sql.ResultSet" %>
 <%@ page import="java.util.Collections, java.util.Comparator" %>
+<%@ page import="model.STUDENT_CLUB" %>
 <%
     CLUB club = (CLUB) session.getAttribute("club");
     List<ACTIVITY> rejectedActivities = new java.util.ArrayList<ACTIVITY>();
@@ -57,6 +58,12 @@
         for (int i = 0; i < Math.min(3, allFeedbacks.size()); i++) {
             recentFeedbacks.add(allFeedbacks.get(i));
         }
+    }
+
+    // Add after club object is retrieved
+    List<STUDENT> clubMembers = new ArrayList<STUDENT>();
+    if (club != null) {
+        clubMembers = STUDENT_CLUB.getStudentsInClub(club.getClubId());
     }
 %>
 <!DOCTYPE html>
@@ -129,6 +136,23 @@
     .sidebar ul li a:hover,
     .sidebar ul li a.active {
       background-color: rgba(0, 0, 0, 0.2);
+    }
+
+    .activity-btn {
+        width: 100%;
+        padding: 15px;
+        background-color: #f44336;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        margin: 0;
+    }
+    .activity-btn:hover {
+        background-color: #d32f2f;
     }
 
     .toggle-btn {
@@ -353,49 +377,66 @@
 
     .rejected-cards-container {
       display: flex;
-      flex-wrap: wrap;
+      flex-direction: row;
       gap: 20px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding-bottom: 10px;
+      min-width: max-content;
+      width: fit-content;
+      scrollbar-width: thin;
+      scrollbar-color: #008b8b #f0f0f0;
     }
-
+    .rejected-cards-container::-webkit-scrollbar {
+      height: 8px;
+    }
+    .rejected-cards-container::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 4px;
+    }
+    .rejected-cards-container::-webkit-scrollbar-thumb {
+      background: #008b8b;
+      border-radius: 4px;
+    }
+    .rejected-cards-container::-webkit-scrollbar-thumb:hover {
+      background: #006d6d;
+    }
     .activity-card {
-      width: 220px;
+      min-width: 220px;
+      max-width: 220px;
+      height: 320px;
       background-color: white;
       border-radius: 10px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       overflow: hidden;
       display: flex;
       flex-direction: column;
+      flex-shrink: 0;
+      box-sizing: border-box;
     }
-
     .activity-card img {
       width: 100%;
-      height: 120px;
+      height: 160px;
       object-fit: cover;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+      display: block;
     }
-
     .activity-info {
-      padding: 15px;
+      flex: 1;
+      padding: 12px 10px 8px 10px;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      height: 130px;
+      justify-content: flex-start;
+      align-items: flex-start;
+      height: auto;
     }
-
-    .activity-info h4 {
-      font-size: 16px;
-      margin-bottom: 5px;
-    }
-
-    .activity-info p {
-      font-size: 12px;
-      margin: 2px 0;
-    }
-
     .card-actions {
+      margin-top: auto;
+      width: 100%;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 8px;
     }
 
     .rejected-label {
@@ -517,6 +558,11 @@
     <li><a href="clubReport.jsp">REPORT</a></li>
     <li><a href="clubSettings.jsp">SETTINGS</a></li>
   </ul>
+  <div style="position: absolute; bottom: 20px; width: 80%; left: 10%;">
+    <form action="index.jsp">
+      <button type="submit" class="activity-btn">Logout</button>
+    </form>
+  </div>
 </div>
 
 <div class="main-content" id="mainContent">
@@ -543,6 +589,12 @@
             <img src="image/create_icon.png" alt="Create Activity" />
           </div>
           <div class="summary-text"><h3>CREATE ACTIVITY</h3></div>
+        </div>
+        <div class="summary-card view-members" onclick="document.getElementById('membersModal').style.display='flex'">
+          <div class="summary-icon">
+            <img src="image/userIcon.png" alt="View Members" />
+          </div>
+          <div class="summary-text"><h3>VIEW MEMBERS</h3></div>
         </div>
         <div class="summary-card">
           <div class="summary-icon">
@@ -589,65 +641,87 @@
     <div class="rejected-activities-box">
       <div class="rejected-header">
         <h2>Rejected Activities</h2>
-        <button class="view-all-btn">View All</button>
       </div>
       <div class="rejected-cards-container">
-        <div class="activity-card">
-          <img src="image/basketballPlayer_icon.png" alt="Activity Image">
-          <div class="activity-info">
-            <h4>3v3 Basketball Match</h4>
-            <p>Date: June 5, 2025</p>
-            <p>Venue: UMPSA Indoor Court</p>
-            <div class="card-actions">
-              <span class="rejected-label">Remove</span>
-              <button class="appeal-btn" onclick="openModal()">Appeal</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="activity-card">
-          <img src="image/streetballPlayer_icon.png" alt="Activity Image">
-          <div class="activity-info">
-            <h4>Streetball Tournament</h4>
-            <p>Date: May 30, 2025</p>
-            <p>Venue: Main Hall</p>
-            <div class="card-actions">
-              <span class="rejected-label">Remove</span>
-              <button class="appeal-btn" onclick="openModal()">Appeal</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div style="margin-top: 40px;">
-      <h2>Rejected Activities</h2>
-      <div style="display: flex; gap: 20px; flex-wrap: wrap;">
         <% if (!rejectedActivities.isEmpty()) {
             for (ACTIVITY act : rejectedActivities) { %>
-              <div style="background: #f8d7da; border: 1px solid #f5c6cb; border-radius: 10px; padding: 20px; width: 300px;">
-                <h3><%= act.getActivityName() %></h3>
-                <p>Date: <%= act.getActivityDate() %></p>
-                <p>Venue: <%= act.getActivityVenue() %></p>
-                <p>Status: <span style="background:#ffdddd; color:#d8000c; padding:4px 12px; border-radius:12px; font-weight:600; border:1px solid #d8000c;">Reject</span></p>
+              <div class="activity-card">
+                <img src="ActivityImageServlet?activityID=<%= act.getActivityID() %>&type=poster" alt="Activity Poster" />
+                <div class="activity-info">
+                  <h4><%= act.getActivityName() %></h4>
+                  <p>Date: <%= act.getActivityDate() %></p>
+                  <p>Venue: <%= act.getActivityVenue() %></p>
+                  <div class="card-actions">
+                    <form action="RemoveActivityServlet" method="post" style="display:inline;">
+                      <input type="hidden" name="activityID" value="<%= act.getActivityID() %>">
+                      <button type="submit" class="rejected-label" style="background:none; border:none; color:red; cursor:pointer;">Remove</button>
+                    </form>
+                    <form action="AppealActivityServlet" method="post" style="display:inline;" onsubmit="return submitAppealForm(this);">
+                      <input type="hidden" name="activityID" value="<%= act.getActivityID() %>">
+                      <input type="hidden" name="appealReason" class="appeal-reason-input" value="">
+                      <button type="button" class="appeal-btn" onclick="openAppealModal(this, '<%= act.getActivityID() %>')">Appeal</button>
+                    </form>
+                  </div>
+                </div>
               </div>
         <%   }
            } else { %>
-          <div style="color: #888;">No rejected activities.</div>
+          <div style="color: #888; padding: 20px;">No rejected activities.</div>
         <% } %>
       </div>
     </div>
-  </div>
-</div>
+
+
 
 <!-- Appeal Modal -->
 <div class="modal" id="appealModal">
   <div class="modal-content">
     <h3>Submit Appeal</h3>
-    <textarea placeholder="Write your appeal reason here..."></textarea>
+    <input type="hidden" id="appealActivityId" name="activityID" value="" />
+    <textarea id="appealReasonTextarea" placeholder="Write your appeal reason here..."></textarea>
     <div class="modal-buttons">
       <button class="btn-cancel" onclick="closeModal()">Cancel</button>
       <button class="btn-submit" onclick="submitAppeal()">Submit</button>
+    </div>
+  </div>
+</div>
+
+<!-- Members Modal -->
+<div class="modal" id="membersModal">
+  <div class="modal-content" style="max-width: 700px; width: 95%;">
+    <h3>Club Members</h3>
+    <div style="overflow-x:auto;">
+      <table style="width:100%; border-collapse:collapse;">
+        <thead>
+          <tr style="background:#e0f7fa;">
+            <th style="padding:8px; border:1px solid #ccc;">#</th>
+            <th style="padding:8px; border:1px solid #ccc;">Student ID</th>
+            <th style="padding:8px; border:1px solid #ccc;">Name</th>
+            <th style="padding:8px; border:1px solid #ccc;">Email</th>
+            <th style="padding:8px; border:1px solid #ccc;">Course</th>
+            <th style="padding:8px; border:1px solid #ccc;">Semester</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% int idx = 1;
+             for (STUDENT stud : clubMembers) { %>
+            <tr>
+              <td style="padding:8px; border:1px solid #ccc;"><%= idx++ %></td>
+              <td style="padding:8px; border:1px solid #ccc;"><%= stud.getStudID() %></td>
+              <td style="padding:8px; border:1px solid #ccc;"><%= stud.getStudName() %></td>
+              <td style="padding:8px; border:1px solid #ccc;"><%= stud.getStudEmail() %></td>
+              <td style="padding:8px; border:1px solid #ccc;"><%= stud.getStudCourse() %></td>
+              <td style="padding:8px; border:1px solid #ccc;"><%= stud.getStudSemester() %></td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+      <% if (clubMembers.isEmpty()) { %>
+        <div style="color:#888; text-align:center; margin:20px 0;">No members in this club.</div>
+      <% } %>
+    </div>
+    <div class="modal-buttons">
+      <button class="btn-cancel" onclick="document.getElementById('membersModal').style.display='none'">Close</button>
     </div>
   </div>
 </div>
@@ -676,6 +750,25 @@
   function submitAppeal() {
     alert("Appeal submitted successfully!");
     closeModal();
+  }
+
+  let currentAppealForm = null;
+  function openAppealModal(btn, activityID) {
+    document.getElementById("appealModal").style.display = "flex";
+    document.getElementById("appealActivityId").value = activityID;
+    document.getElementById("appealReasonTextarea").value = "";
+    currentAppealForm = btn.closest('form');
+  }
+  function submitAppeal() {
+    if (currentAppealForm) {
+      currentAppealForm.querySelector('.appeal-reason-input').value = document.getElementById("appealReasonTextarea").value;
+      currentAppealForm.submit();
+      closeModal();
+    }
+  }
+  function submitAppealForm(form) {
+    // Prevent default form submission, handled by modal
+    return false;
   }
 </script>
 

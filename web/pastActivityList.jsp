@@ -375,6 +375,22 @@
         text-align: center;
       }
     }
+    .activity-btn {
+                width: 100%;
+                padding: 15px;
+                background-color: #f44336;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                font-size: 16px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: background-color 0.2s;
+                margin: 0;
+            }
+             .activity-btn:hover {
+                background-color: #d32f2f;
+            }
   </style>
 </head>
 <body>
@@ -394,11 +410,11 @@
     </div>
 
     <!-- Logout button fixed at the bottom -->
-    <div class="logout-container">
+    <div style="position: absolute; bottom: 20px; width: 80%; left: 10%;">
       <form action="index.jsp">
-        <button type="submit" class="LOGOUT-btn">Logout</button>
+          <button type="submit" class="activity-btn">Logout</button>
       </form>
-    </div>
+  </div>
   </div>
 
   <!-- Toggle Button -->

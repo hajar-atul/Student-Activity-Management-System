@@ -16,7 +16,7 @@
       position: fixed;
       top: 0;
       left: 0;
-      padding: 30px 20px 20px 20px;
+      padding: 30px 20px 30px 20px;
       overflow-y: auto;
       z-index: 10;
       text-align: center;
@@ -140,11 +140,11 @@
       background: transparent;
     }
     .container {
-      max-width: 900px;
+      max-width: 1400px;
       margin: 40px auto;
       background: #fff;
       border-radius: 10px;
-      padding: 30px;
+      padding: 30px 40px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
       flex: 1 1 auto;
       overflow: auto;
@@ -158,36 +158,60 @@
     }
     table {
       width: 100%;
-      border-collapse: collapse;
+      border-collapse: separate;
+      border-spacing: 0;
       margin-top: 20px;
       background: #fff;
-      border-radius: 12px;
+      border-radius: 14px;
       overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      box-shadow: 0 2px 12px rgba(34,139,135,0.07);
     }
     th, td {
-      padding: 16px 18px;
-      border: 1px solid #e0e0e0;
-      text-align: center;
-      font-size: 17px;
+      padding: 15px 18px;
+      text-align: left;
+      font-size: 16px;
+      border: none;
     }
     th {
-      background: #eaf6f6;
-      font-size: 18px;
-      font-weight: bold;
-      color: #219a98;
+      background: #e0f7fa;
+      font-size: 17px;
+      font-weight: 600;
+      color: #00796B;
+      border-bottom: 2px solid #b2dfdb;
     }
-    tr:nth-child(even) { background: #f9f9f9; }
-    a.back-link {
+    tr {
+      transition: background 0.18s;
+    }
+    tr:nth-child(even) { background: #f7fafc; }
+    tr:nth-child(odd) { background: #fff; }
+    tr:hover { background: #e0f7fa; }
+    td {
+      color: #222;
+      font-weight: 400;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .back-link {
       display: inline-block;
-      margin-bottom: 20px;
-      color: #218c8d;
+      margin-bottom: 24px;
+      background: #00796B;
+      color: #fff;
       text-decoration: none;
-      font-weight: bold;
+      font-weight: 500;
       font-size: 16px;
-      transition: color 0.2s;
+      padding: 10px 26px;
+      border-radius: 7px;
+      border: none;
+      transition: background 0.18s, box-shadow 0.18s;
+      box-shadow: 0 2px 8px rgba(10,128,121,0.07);
+      letter-spacing: 0.2px;
+      cursor: pointer;
     }
-    a.back-link:hover { text-decoration: underline; color: #1a7e7c; }
+    .back-link:hover {
+      background: #005f56;
+      color: #fff;
+      text-decoration: none;
+      box-shadow: 0 4px 16px rgba(10,128,121,0.13);
+    }
     @media (max-width: 900px) {
       .main-content { margin-left: 0; }
       .sidebar { position: static; width: 100%; height: auto; }
@@ -195,6 +219,22 @@
       .container { margin: 20px 5px; padding: 10px; }
       table { font-size: 15px; }
     }
+    .activity-btn {
+                width: 100%;
+                padding: 15px;
+                background-color: #f44336;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                font-size: 16px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: background-color 0.2s;
+                margin: 0;
+            }
+             .activity-btn:hover {
+                background-color: #d32f2f;
+            }
   </style>
 </head>
 <body>
@@ -210,6 +250,11 @@
     <li><a href="addAdmin.jsp">ADD ADMIN</a></li>
     <li><a href="adminReport.jsp">REPORT</a></li>
   </ul>
+  <div style="width: 80%; margin: 0 auto; margin-top: auto; margin-bottom: 40px;">
+    <form action="index.jsp">
+        <button type="submit" class="activity-btn">Logout</button>
+    </form>
+</div>
 </div>
 
 <div class="main-content" id="mainContent">

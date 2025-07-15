@@ -82,30 +82,22 @@
             text-align: center;
         }
 
-        .logout-container {
-            margin-top: auto;
-            padding-top: 20px;
-        }
-
-        .LOGOUT-btn {
-            display: block;
+        .activity-btn {
             width: 100%;
-            padding: 10px;
-            background-color: #d82215d2;
+                padding: 15px;
+                background-color: #f44336;
             color: white;
             border: none;
-            border-radius: 5px;
-            text-align: center;
+                border-radius: 8px;
             font-size: 16px;
             font-weight: bold;
+                cursor: pointer;
             transition: background-color 0.2s;
-            cursor: pointer;
+                margin: 0;
         }
-
-        .LOGOUT-btn:hover {
-            background-color: #b71c1c;
+             .activity-btn:hover {
+                background-color: #d32f2f;
         }
-
         .topbar {
             position: fixed;
             top: 0;
@@ -290,9 +282,9 @@
         <a href="studentClub.jsp">CLUBS</a>
         <a href="SettingsServlet">SETTINGS</a>
     </div>
-    <div class="logout-container">
+    <div style="position: absolute; bottom: 20px; width: 80%; left: 10%;">
         <form action="index.jsp">
-            <button type="submit" class="LOGOUT-btn">Logout</button>
+            <button type="submit" class="activity-btn">Logout</button>
         </form>
     </div>
 </div>

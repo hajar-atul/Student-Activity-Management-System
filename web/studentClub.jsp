@@ -233,13 +233,11 @@
             }
 
             .available-clubs {
-                min-height: 600px;
-                max-height: 95vh;
-                flex: 5;
-                overflow-y: auto;
-                overflow-x: auto;
+                min-height: 300px;
+                max-height: 60%;
+                flex: 1;
+                overflow: hidden;
                 width: 100%;
-                position: relative;
             }
 
             .current-membership.empty {
@@ -281,12 +279,11 @@
                 gap: 15px;
                 padding: 10px 0;
                 overflow-x: auto;
-                overflow-y: visible;
+                overflow-y: hidden;
                 scroll-behavior: smooth;
                 -webkit-overflow-scrolling: touch;
                 width: 100%;
                 max-width: 100%;
-                flex-wrap: wrap;
             }
 
             .clubs-grid::-webkit-scrollbar {
@@ -352,10 +349,8 @@
             .club-poster img {
                 width: 100%;
                 height: 100%;
-                object-fit: contain;
+                object-fit: cover;
                 border-radius: 6px;
-                background: #f0f0f0;
-                display: block;
             }
 
             .club-name {

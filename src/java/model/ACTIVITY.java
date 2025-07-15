@@ -25,6 +25,7 @@ public class ACTIVITY {
        private byte[] posterImage;
        private int clubID;
        private double activityFee = 0;
+       private String appealReason;
        
        // JDBC connection details
        private static final String JDBC_URL = "jdbc:mysql://localhost:3306/student?useSSL=false&serverTimezone=UTC";
@@ -143,6 +144,13 @@ public class ACTIVITY {
     }
     public double getActivityFee() {
         return activityFee;
+    }
+
+    public void setAppealReason(String appealReason) {
+        this.appealReason = appealReason;
+    }
+    public String getAppealReason() {
+        return appealReason;
     }
 
     // Save this activity and return generated activityID
@@ -272,6 +280,7 @@ public class ACTIVITY {
                     activity.setPosterImage(rs.getBytes("posterImage"));
                     activity.setClubID(rs.getInt("clubID"));
                     activity.setActivityFee(rs.getDouble("activityFee"));
+                    try { activity.setAppealReason(rs.getString("appealReason")); } catch(Exception e) { activity.setAppealReason(null); }
                 }
             }
         } catch (Exception e) {
@@ -306,6 +315,7 @@ public class ACTIVITY {
                     activity.setPosterImage(rs.getBytes("posterImage"));
                     activity.setClubID(rs.getInt("clubID"));
                     activity.setActivityFee(rs.getDouble("activityFee"));
+                    try { activity.setAppealReason(rs.getString("appealReason")); } catch(Exception e) { activity.setAppealReason(null); }
                     activities.add(activity);
                 }
             }
@@ -342,6 +352,7 @@ public class ACTIVITY {
                     activity.setPosterImage(rs.getBytes("posterImage"));
                     activity.setClubID(rs.getInt("clubID"));
                     activity.setActivityFee(rs.getDouble("activityFee"));
+                    try { activity.setAppealReason(rs.getString("appealReason")); } catch(Exception e) { activity.setAppealReason(null); }
                     activities.add(activity);
                 }
             }
@@ -518,6 +529,7 @@ public static java.util.List<ACTIVITY> getAvailableActivities() {
                 activity.setPosterImage(rs.getBytes("posterImage"));
                 activity.setClubID(rs.getInt("clubID"));
                 activity.setActivityFee(rs.getDouble("activityFee"));
+                try { activity.setAppealReason(rs.getString("appealReason")); } catch(Exception e) { activity.setAppealReason(null); }
                 activities.add(activity);
             }
         }
@@ -557,6 +569,7 @@ public static java.util.List<ACTIVITY> getAvailableUpcomingActivitiesForStudent(
                         activity.setPosterImage(rs.getBytes("posterImage"));
                         activity.setClubID(rs.getInt("clubID"));
                         activity.setActivityFee(rs.getDouble("activityFee"));
+                        try { activity.setAppealReason(rs.getString("appealReason")); } catch(Exception e) { activity.setAppealReason(null); }
                         activities.add(activity);
                     }
                 }
@@ -594,6 +607,7 @@ public static java.util.List<ACTIVITY> getAvailableUpcomingActivities() {
                     activity.setPosterImage(rs.getBytes("posterImage"));
                     activity.setClubID(rs.getInt("clubID"));
                     activity.setActivityFee(rs.getDouble("activityFee"));
+                    try { activity.setAppealReason(rs.getString("appealReason")); } catch(Exception e) { activity.setAppealReason(null); }
                     activities.add(activity);
                 }
             }
@@ -629,6 +643,7 @@ public static java.util.List<ACTIVITY> getCurrentActivities() {
                     activity.setPosterImage(rs.getBytes("posterImage"));
                     activity.setClubID(rs.getInt("clubID"));
                     activity.setActivityFee(rs.getDouble("activityFee"));
+                    try { activity.setAppealReason(rs.getString("appealReason")); } catch(Exception e) { activity.setAppealReason(null); }
                     activities.add(activity);
                 }
             }
@@ -665,6 +680,7 @@ public static java.util.List<ACTIVITY> getActivitiesByStudentId(String studID) {
                         activity.setPosterImage(rs.getBytes("posterImage"));
                         activity.setClubID(rs.getInt("clubID"));
                         activity.setActivityFee(rs.getDouble("activityFee"));
+                        try { activity.setAppealReason(rs.getString("appealReason")); } catch(Exception e) { activity.setAppealReason(null); }
                         activities.add(activity);
                     }
                 }
@@ -704,6 +720,7 @@ public static java.util.List<ACTIVITY> getRegisteredUpcomingActivities(String st
                         activity.setPosterImage(rs.getBytes("posterImage"));
                         activity.setClubID(rs.getInt("clubID"));
                         activity.setActivityFee(rs.getDouble("activityFee"));
+                        try { activity.setAppealReason(rs.getString("appealReason")); } catch(Exception e) { activity.setAppealReason(null); }
                         activities.add(activity);
                     }
                 }
@@ -743,6 +760,7 @@ public static java.util.List<ACTIVITY> getRegisteredPastActivities(String studID
                         activity.setPosterImage(rs.getBytes("posterImage"));
                         activity.setClubID(rs.getInt("clubID"));
                         activity.setActivityFee(rs.getDouble("activityFee"));
+                        try { activity.setAppealReason(rs.getString("appealReason")); } catch(Exception e) { activity.setAppealReason(null); }
                         activities.add(activity);
                     }
                 }
@@ -835,6 +853,7 @@ public static java.util.List<ACTIVITY> getActivitiesByStatus(String status) {
                 activity.setPosterImage(rs.getBytes("posterImage"));
                 activity.setClubID(rs.getInt("clubID"));
                 activity.setActivityFee(rs.getDouble("activityFee"));
+                try { activity.setAppealReason(rs.getString("appealReason")); } catch(Exception e) { activity.setAppealReason(null); }
                 activities.add(activity);
             }
         }
@@ -842,6 +861,22 @@ public static java.util.List<ACTIVITY> getActivitiesByStatus(String status) {
         e.printStackTrace();
     }
     return activities;
+}
+
+public static boolean deleteActivityById(String activityID) {
+    try {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        try (java.sql.Connection conn = java.sql.DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/student?useSSL=false&serverTimezone=UTC", "root", "")) {
+            String query = "DELETE FROM activity WHERE activityID = ?";
+            java.sql.PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, activityID);
+            return stmt.executeUpdate() > 0;
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return false;
 }
 
 }

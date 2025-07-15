@@ -2,6 +2,7 @@
 <%@ page import="java.util.List, model.ACTIVITY, model.CLUB, model.STUDENT" %>
 <%
     List<ACTIVITY> pendingProposals = ACTIVITY.getActivitiesByStatus("Pending");
+    List<ACTIVITY> appealActivities = ACTIVITY.getActivitiesByStatus("Appeal Pending");
     int totalStudents = STUDENT.getTotalStudents();
     int totalClubs = CLUB.getTotalClubs();
     String message = request.getParameter("message");
@@ -236,6 +237,22 @@
       .overview-cards { flex-direction: column; gap: 18px; }
       .activity-section { padding: 20px 10px 0 10px; }
     }
+    .activity-btn {
+                width: 100%;
+                padding: 15px;
+                background-color: #f44336;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                font-size: 16px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: background-color 0.2s;
+                margin: 0;
+            }
+             .activity-btn:hover {
+                background-color: #d32f2f;
+            }
   </style>
 </head>
 <body>
@@ -251,6 +268,11 @@
     <li><a href="addAdmin.jsp">ADD ADMIN</a></li>
     <li><a href="adminReport.jsp">REPORT</a></li>
   </ul>
+  <div style="position: absolute; bottom: 20px; width: 80%; left: 10%;">
+    <form action="index.jsp">
+        <button type="submit" class="activity-btn">Logout</button>
+    </form>
+</div>
 </div>
 
 <div class="main-content" id="mainContent">
@@ -295,6 +317,7 @@
           <td><%= clubName %></td>
           <td><%= proposal.getActivityDate() %></td>
           <td>
+              <a href="viewProposal.jsp?activityID=<%= proposal.getActivityID() %>" class="action-btn view-btn">View</a>
               <a href="handleProposal?action=approve&activityID=<%= proposal.getActivityID() %>" class="action-btn approve-btn">Approve</a>
               <a href="handleProposal?action=reject&activityID=<%= proposal.getActivityID() %>" class="action-btn reject-btn">Reject</a>
           </td>
@@ -302,6 +325,42 @@
       <% } } else { %>
       <tr>
           <td colspan="4">No pending proposals at the moment.</td>
+      </tr>
+      <% } %>
+      </tbody>
+    </table>
+
+    <!-- Appeal Pending Activities Section -->
+    <h2 style="margin-top:40px;">Appeal Activities</h2>
+    <table class="proposal-table">
+      <thead>
+        <tr>
+          <th>ACTIVITY</th>
+          <th>CLUB</th>
+          <th>DATE</th>
+          <th>APPEAL REASON</th>
+          <th>ACTION</th>
+        </tr>
+      </thead>
+      <tbody>
+      <% if (appealActivities != null && !appealActivities.isEmpty()) {
+          for (ACTIVITY appeal : appealActivities) {
+              CLUB club = CLUB.getClubById(appeal.getClubID());
+              String clubName = (club != null) ? club.getClubName() : "N/A";
+      %>
+      <tr>
+          <td><%= appeal.getActivityName() %></td>
+          <td><%= clubName %></td>
+          <td><%= appeal.getActivityDate() %></td>
+          <td><%= appeal.getAppealReason() != null ? appeal.getAppealReason() : "-" %></td>
+          <td>
+              <a href="handleProposal?action=approve&activityID=<%= appeal.getActivityID() %>" class="action-btn approve-btn">Approve</a>
+              <a href="handleProposal?action=reject&activityID=<%= appeal.getActivityID() %>" class="action-btn reject-btn">Reject</a>
+          </td>
+      </tr>
+      <% } } else { %>
+      <tr>
+          <td colspan="5">No appeal activities at the moment.</td>
       </tr>
       <% } %>
       </tbody>
