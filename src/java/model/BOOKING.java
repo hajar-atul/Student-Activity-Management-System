@@ -22,9 +22,10 @@ public class BOOKING {
     private String bookingType;
     private String itemName;
     private String itemDetails;
-    private String clubName;
     private String bookingDate;
     private String status;
+    private int clubID;
+    private String activityID;
 
     // Database connection details
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/student?useSSL=false&serverTimezone=UTC";
@@ -54,12 +55,14 @@ public class BOOKING {
     public void setItemName(String itemName) { this.itemName = itemName; }
     public String getItemDetails() { return itemDetails; }
     public void setItemDetails(String itemDetails) { this.itemDetails = itemDetails; }
-    public String getClubName() { return clubName; }
-    public void setClubName(String clubName) { this.clubName = clubName; }
     public String getBookingDate() { return bookingDate; }
     public void setBookingDate(String bookingDate) { this.bookingDate = bookingDate; }
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+    public int getClubID() { return clubID; }
+    public void setClubID(int clubID) { this.clubID = clubID; }
+    public String getActivityID() { return activityID; }
+    public void setActivityID(String activityID) { this.activityID = activityID; }
 
     // Fetch all bookings
     public static List<BOOKING> getAllBookings() {
@@ -74,9 +77,10 @@ public class BOOKING {
                 booking.setBookingType(rs.getString("bookingType"));
                 booking.setItemName(rs.getString("itemName"));
                 booking.setItemDetails(rs.getString("itemDetails"));
-                booking.setClubName(rs.getString("clubName"));
                 booking.setBookingDate(rs.getString("bookingDate"));
                 booking.setStatus(rs.getString("status"));
+                try { booking.setClubID(rs.getInt("clubID")); } catch(Exception e) { booking.setClubID(0); }
+                try { booking.setActivityID(rs.getString("activityID")); } catch(Exception e) { booking.setActivityID(null); }
                 bookings.add(booking);
             }
         } catch (SQLException e) {
@@ -99,9 +103,10 @@ public class BOOKING {
                     booking.setBookingType(rs.getString("bookingType"));
                     booking.setItemName(rs.getString("itemName"));
                     booking.setItemDetails(rs.getString("itemDetails"));
-                    booking.setClubName(rs.getString("clubName"));
                     booking.setBookingDate(rs.getString("bookingDate"));
                     booking.setStatus(rs.getString("status"));
+                    try { booking.setClubID(rs.getInt("clubID")); } catch(Exception e) { booking.setClubID(0); }
+                    try { booking.setActivityID(rs.getString("activityID")); } catch(Exception e) { booking.setActivityID(null); }
                     bookings.add(booking);
                 }
             }
@@ -126,15 +131,16 @@ public class BOOKING {
     }
 
     // Add new booking
-    public static boolean addBooking(String bookingType, String itemName, String itemDetails, String clubName, String bookingDate) {
-        String query = "INSERT INTO booking (bookingType, itemName, itemDetails, clubName, bookingDate, status) VALUES (?, ?, ?, ?, ?, 'Pending')";
+    public static boolean addBooking(String bookingType, String itemName, String itemDetails, String bookingDate, int clubID, String activityID) {
+        String query = "INSERT INTO booking (bookingType, itemName, itemDetails, bookingDate, status, clubID, activityID) VALUES (?, ?, ?, ?, 'Pending', ?, ?)";
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setString(1, bookingType);
             pstmt.setString(2, itemName);
             pstmt.setString(3, itemDetails);
-            pstmt.setString(4, clubName);
-            pstmt.setString(5, bookingDate);
+            pstmt.setString(4, bookingDate);
+            pstmt.setInt(5, clubID);
+            pstmt.setString(6, activityID);
             int rowsAffected = pstmt.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {

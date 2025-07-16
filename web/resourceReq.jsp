@@ -303,7 +303,7 @@
     }
 
     .activity-btn {
-      width: 100%;
+      width: 215px;
       padding: 15px;
       background-color: #f44336;
       color: white;
@@ -314,6 +314,7 @@
       cursor: pointer;
       transition: background-color 0.2s;
       margin: 0;
+      margin-bottom: 8%;
     }
     .activity-btn:hover {
       background-color: #d32f2f;

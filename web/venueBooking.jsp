@@ -2,13 +2,9 @@
 <%@ page import="java.util.List, model.ACTIVITY, model.CLUB" %>
 <%
     CLUB club = (CLUB) session.getAttribute("club");
-    List<ACTIVITY> rejectedActivities = new java.util.ArrayList<ACTIVITY>();
+    List<ACTIVITY> clubActivities = new java.util.ArrayList<ACTIVITY>();
     if (club != null) {
-        for (ACTIVITY act : ACTIVITY.getActivitiesByClubId(club.getClubId())) {
-            if ("Rejected".equalsIgnoreCase(act.getActivityStatus())) {
-                rejectedActivities.add(act);
-            }
-        }
+        clubActivities = ACTIVITY.getActivitiesByClubId(club.getClubId());
     }
 %>
 <!DOCTYPE html>
@@ -394,17 +390,16 @@
       }
     }
     .activity-btn {
-                width: 100%;
+                width: 215px;
                 padding: 15px;
                 background-color: #f44336;
                 color: white;
                 border: none;
-                border-radius: 8px;
+                
                 font-size: 16px;
                 font-weight: bold;
                 cursor: pointer;
                 transition: background-color 0.2s;
-                margin: 0;
             }
              .activity-btn:hover {
                 background-color: #d32f2f;
@@ -426,7 +421,7 @@
       <li><a href="clubReport.jsp">REPORT</a></li>
       <li><a href="clubSettings.jsp">SETTINGS</a></li>
     </ul>
-    <div style="position: absolute; bottom: 20px; width: 80%;">
+    <div style="position: absolute; bottom: 40px; width: 78%; right: 10%;">
       <form action="index.jsp">
           <button type="submit" class="activity-btn">Logout</button>
       </form>
@@ -461,6 +456,15 @@
         
     <form action="VenueBookingServlet" method="post">
       <div class="form-group">
+        <div class="form-group">
+          <label for="activityID">Select Activity</label>
+          <select id="activityID" name="activityID" required>
+            <option value="">-- Select Activity --</option>
+            <% for (ACTIVITY act : clubActivities) { %>
+              <option value="<%= act.getActivityID() %>"><%= act.getActivityName() %></option>
+            <% } %>
+          </select>
+        </div>
             <label for="date">Booking Date</label>
         <input type="date" id="date" name="date" required />
             <div class="help-text">Select the date for your venue booking</div>
@@ -490,7 +494,6 @@
         </select>
             <div class="help-text">Select the venue for your activity</div>
           </div>
-          
           <div class="submit-section">
             <button type="submit" class="submit-btn">Submit Booking Request</button>
           </div>
@@ -500,6 +503,17 @@
   </div>
 
   <script>
+    var activityData = {};
+    <% for (ACTIVITY act : clubActivities) { 
+         String venue = act.getActivityVenue() != null ? act.getActivityVenue().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", " ") : "";
+         String date = act.getActivityDate() != null ? act.getActivityDate().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", " ") : "";
+    %>
+      activityData["<%= act.getActivityID() %>"] = {
+        venue: "<%= venue %>",
+        date: "<%= date %>"
+      };
+    <% } %>
+
     function toggleSidebar() {
       const sidebar = document.getElementById('sidebar');
       const main = document.getElementById('mainContent');
@@ -512,18 +526,17 @@
       dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
     });
 
-    // Add smooth animations for form elements
-    document.addEventListener('DOMContentLoaded', function() {
-      const formGroups = document.querySelectorAll('.form-group');
-      formGroups.forEach((group, index) => {
-        group.style.opacity = '0';
-        group.style.transform = 'translateY(20px)';
-        setTimeout(() => {
-          group.style.transition = 'all 0.5s ease';
-          group.style.opacity = '1';
-          group.style.transform = 'translateY(0)';
-        }, index * 100);
-      });
+    document.getElementById('activityID').addEventListener('change', function() {
+      var selectedId = this.value;
+      var venueInput = document.getElementById('venue');
+      var dateInput = document.getElementById('date');
+      if (activityData[selectedId]) {
+        venueInput.value = activityData[selectedId].venue;
+        dateInput.value = activityData[selectedId].date;
+      } else {
+        venueInput.value = '';
+        dateInput.value = '';
+      }
     });
   </script>
 </body>

@@ -634,94 +634,53 @@
                         <th>DETAILS</th>
                         <th>CLUB</th>
                         <th>DATE</th>
+                        <th>ACTIVITY NAME</th>
                         <th>ACTION</th>
                     </tr>
                 </thead>
                 <tbody>
+                    <%-- Dynamic booking rows --%>
+                    <%
+                        java.util.List<model.BOOKING> bookings = model.BOOKING.getAllBookings();
+                        for (model.BOOKING booking : bookings) {
+                            String activityName = "-";
+                            if (booking.getActivityID() != null) {
+                                model.ACTIVITY activity = model.ACTIVITY.getActivityById(booking.getActivityID());
+                                if (activity != null) {
+                                    activityName = activity.getActivityName();
+                                }
+                            }
+                            String clubName = "-";
+                            if (booking.getClubID() > 0) {
+                                model.CLUB clubObj = model.CLUB.getClubById(booking.getClubID());
+                                if (clubObj != null) {
+                                    clubName = clubObj.getClubName();
+                                }
+                            }
+                    %>
                     <tr>
-                        <td><span class="badge type-venue">Venue</span></td>
-                        <td>Dewan Serbaguna</td>
-                        <td>Duration: 3 hours</td>
-                        <td>SOCIETY</td>
-                        <td>15 JULY 2025</td>
+                        <td><span class="badge type-<%= booking.getBookingType().toLowerCase() %>"><%= booking.getBookingType() %></span></td>
+                        <td><%= booking.getItemName() %></td>
+                        <td><%= booking.getItemDetails() %></td>
+                        <td><%= clubName %></td>
+                        <td><%= booking.getBookingDate() %></td>
+                        <td><%= activityName %></td>
                         <td>
                             <form action="<%= request.getContextPath() %>/UpdateBookingStatusServlet" method="post" style="display:inline;">
-                                <input type="hidden" name="bookingId" value="1">
+                                <input type="hidden" name="bookingId" value="<%= booking.getBookingID() %>">
                                 <input type="hidden" name="status" value="Approved">
                                 <input type="hidden" name="redirectPage" value="staffBooking.jsp">
                                 <button type="submit" class="btn approve">Approve</button>
                             </form>
                             <form action="<%= request.getContextPath() %>/UpdateBookingStatusServlet" method="post" style="display:inline;">
-                                <input type="hidden" name="bookingId" value="1">
+                                <input type="hidden" name="bookingId" value="<%= booking.getBookingID() %>">
                                 <input type="hidden" name="status" value="Rejected">
                                 <input type="hidden" name="redirectPage" value="staffBooking.jsp">
                                 <button type="submit" class="btn reject">Reject</button>
                             </form>
                         </td>
                     </tr>
-                    <tr>
-                        <td><span class="badge type-resource">Resource</span></td>
-                        <td>CHAIR</td>
-                        <td>Quantity: 100</td>
-                        <td>IT CLUB</td>
-                        <td>26 JUNE 2025</td>
-                        <td>
-                            <form action="<%= request.getContextPath() %>/UpdateBookingStatusServlet" method="post" style="display:inline;">
-                                <input type="hidden" name="bookingId" value="2">
-                                <input type="hidden" name="status" value="Approved">
-                                <input type="hidden" name="redirectPage" value="staffBooking.jsp">
-                                <button type="submit" class="btn approve">Approve</button>
-                            </form>
-                            <form action="<%= request.getContextPath() %>/UpdateBookingStatusServlet" method="post" style="display:inline;">
-                                <input type="hidden" name="bookingId" value="2">
-                                <input type="hidden" name="status" value="Rejected">
-                                <input type="hidden" name="redirectPage" value="staffBooking.jsp">
-                                <button type="submit" class="btn reject">Reject</button>
-                            </form>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><span class="badge type-resource">Resource</span></td>
-                        <td>CURTAINS</td>
-                        <td>Quantity: 5</td>
-                        <td>EACC CLUB</td>
-                        <td>12 JULY 2025</td>
-                        <td>
-                            <form action="<%= request.getContextPath() %>/UpdateBookingStatusServlet" method="post" style="display:inline;">
-                                <input type="hidden" name="bookingId" value="3">
-                                <input type="hidden" name="status" value="Approved">
-                                <input type="hidden" name="redirectPage" value="staffBooking.jsp">
-                                <button type="submit" class="btn approve">Approve</button>
-                            </form>
-                            <form action="<%= request.getContextPath() %>/UpdateBookingStatusServlet" method="post" style="display:inline;">
-                                <input type="hidden" name="bookingId" value="3">
-                                <input type="hidden" name="status" value="Rejected">
-                                <input type="hidden" name="redirectPage" value="staffBooking.jsp">
-                                <button type="submit" class="btn reject">Reject</button>
-                            </form>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><span class="badge type-venue">Venue</span></td>
-                        <td>Dewan Aspirasi</td>
-                        <td>Duration: 2 hours</td>
-                        <td>EACC CLUB</td>
-                        <td>18 JULY 2025</td>
-                        <td>
-                            <form action="<%= request.getContextPath() %>/UpdateBookingStatusServlet" method="post" style="display:inline;">
-                                <input type="hidden" name="bookingId" value="4">
-                                <input type="hidden" name="status" value="Approved">
-                                <input type="hidden" name="redirectPage" value="staffBooking.jsp">
-                                <button type="submit" class="btn approve">Approve</button>
-                            </form>
-                            <form action="<%= request.getContextPath() %>/UpdateBookingStatusServlet" method="post" style="display:inline;">
-                                <input type="hidden" name="bookingId" value="4">
-                                <input type="hidden" name="status" value="Rejected">
-                                <input type="hidden" name="redirectPage" value="staffBooking.jsp">
-                                <button type="submit" class="btn reject">Reject</button>
-                            </form>
-                        </td>
-                    </tr>
+                    <% } %>
                 </tbody>
             </table>
         </div>

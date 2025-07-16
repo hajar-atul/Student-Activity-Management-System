@@ -89,6 +89,7 @@
             cursor: pointer;
             transition: background-color 0.2s;
             margin: 0;
+            margin-bottom: 10%;
         }
         .activity-btn:hover {
             background-color: #d32f2f;
@@ -361,6 +362,7 @@
             <th style="padding:12px; text-align:left;">Activity ID</th>
             <th style="padding:12px; text-align:left;">Activity Name</th>
             <th style="padding:12px; text-align:left;">Date</th>
+            <th style="padding:12px; text-align:left;">Venue</th>
             <th style="padding:12px; text-align:left;">Status</th>
             <th style="padding:12px; text-align:left;">Participants</th>
             <th style="padding:12px; text-align:left;">Actions</th>
@@ -387,6 +389,14 @@
                   }
                 }
               }
+              // Sort activities by date descending (latest first)
+              java.util.Collections.sort(activities, new java.util.Comparator<model.ACTIVITY>() {
+                public int compare(model.ACTIVITY a1, model.ACTIVITY a2) {
+                  if (a1.getActivityDate() == null) return 1;
+                  if (a2.getActivityDate() == null) return -1;
+                  return a2.getActivityDate().compareTo(a1.getActivityDate());
+                }
+              });
             }
             for (model.ACTIVITY act : activities) {
               int participantCount = model.ACTIVITY.getParticipantCount(act.getActivityID());
@@ -395,6 +405,7 @@
             <td style="padding:10px; border-bottom:1px solid #eee;"><%= act.getActivityID() %></td>
             <td style="padding:10px; border-bottom:1px solid #eee;"><%= act.getActivityName() %></td>
             <td style="padding:10px; border-bottom:1px solid #eee;"><%= act.getActivityDate() %></td>
+            <td style="padding:10px; border-bottom:1px solid #eee;"><%= act.getActivityVenue() != null ? act.getActivityVenue() : "-" %></td>
             <td style="padding:10px; border-bottom:1px solid #eee;">
               <% if ("Approved".equalsIgnoreCase(act.getActivityStatus())) { %>
                 <span style="background:#c8f7c5; color:#218838; padding:4px 12px; border-radius:12px; font-weight:500;">Approved</span>

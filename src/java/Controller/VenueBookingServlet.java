@@ -17,12 +17,14 @@ public class VenueBookingServlet extends HttpServlet {
         String duration = request.getParameter("duration");
         String time = request.getParameter("time");
         String venue = request.getParameter("venue");
-        // In a real application, clubName would come from the user's session.
-        String clubName = "SOCIETY";
+        // Get club from session
+        model.CLUB club = (model.CLUB) request.getSession().getAttribute("club");
+        int clubID = club != null ? club.getClubId() : 0;
         String itemDetails = "Time: " + time + ", Duration: " + duration;
+        String activityID = request.getParameter("activityID");
         String message;
         try {
-            boolean success = BOOKING.addBooking("Venue", venue, itemDetails, clubName, date);
+            boolean success = model.BOOKING.addBooking("Venue", venue, itemDetails, date, clubID, activityID);
             if (success) {
                 message = "Venue booking request submitted successfully!";
             } else {

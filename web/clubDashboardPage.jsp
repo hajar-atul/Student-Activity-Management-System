@@ -65,6 +65,30 @@
     if (club != null) {
         clubMembers = STUDENT_CLUB.getStudentsInClub(club.getClubId());
     }
+    // Get count of accepted venue bookings for this club
+    int acceptedVenueBookings = 0;
+    List<model.BOOKING> acceptedVenueBookingsList = new ArrayList<model.BOOKING>();
+    if (club != null) {
+        java.util.List<model.BOOKING> allVenueBookings = model.BOOKING.getBookingsByType("Venue");
+        for (model.BOOKING booking : allVenueBookings) {
+            if ("Approved".equalsIgnoreCase(booking.getStatus()) && club.getClubName().equalsIgnoreCase(booking.getClubName())) {
+                acceptedVenueBookings++;
+                acceptedVenueBookingsList.add(booking);
+            }
+        }
+    }
+    // Get count of accepted resource bookings for this club
+    int acceptedResourceBookings = 0;
+    java.util.List<model.BOOKING> acceptedResourceBookingsList = new java.util.ArrayList<model.BOOKING>();
+    if (club != null) {
+        java.util.List<model.BOOKING> allResourceBookings = model.BOOKING.getBookingsByType("Resource");
+        for (model.BOOKING booking : allResourceBookings) {
+            if ("Approved".equalsIgnoreCase(booking.getStatus()) && club.getClubName().equalsIgnoreCase(booking.getClubName())) {
+                acceptedResourceBookings++;
+                acceptedResourceBookingsList.add(booking);
+            }
+        }
+    }
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -150,6 +174,7 @@
         cursor: pointer;
         transition: background-color 0.2s;
         margin: 0;
+        margin-bottom: 10%;
     }
     .activity-btn:hover {
         background-color: #d32f2f;
@@ -596,17 +621,17 @@
           </div>
           <div class="summary-text"><h3>VIEW MEMBERS</h3></div>
         </div>
-        <div class="summary-card">
+        <div class="summary-card" onclick="document.getElementById('venueModal').style.display='flex'">
           <div class="summary-icon">
             <img src="image/venue_icon.png" alt="Venue" />
           </div>
-          <div class="summary-text"><h3>VENUE BOOKED</h3><p>2</p></div>
+          <div class="summary-text"><h3>VENUE BOOKED</h3><p><%= acceptedVenueBookings %></p></div>
         </div>
-        <div class="summary-card resource">
+        <div class="summary-card resource" onclick="document.getElementById('resourceModal').style.display='flex'">
           <div class="summary-icon">
             <img src="image/resource_icon.png" alt="Resource" />
           </div>
-          <div class="summary-text"><h3>RESOURCE ACCEPTED</h3><p>5</p></div>
+          <div class="summary-text"><h3>RESOURCE ACCEPTED</h3><p><%= acceptedResourceBookings %></p></div>
         </div>
       </div>
     </div>
@@ -722,6 +747,95 @@
     </div>
     <div class="modal-buttons">
       <button class="btn-cancel" onclick="document.getElementById('membersModal').style.display='none'">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Venue Booked Modal -->
+<div id="venueModal" class="modal">
+  <div class="modal-content" style="max-width: 500px;">
+    <h3>Accepted Venue Bookings</h3>
+    <table style="width:100%; border-collapse:collapse;">
+      <thead>
+        <tr>
+          <th style="padding:8px; border:1px solid #ccc;">Venue</th>
+          <th style="padding:8px; border:1px solid #ccc;">Activity</th>
+          <th style="padding:8px; border:1px solid #ccc;">Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <%
+          for (model.BOOKING booking : acceptedVenueBookingsList) {
+              // Find the activity for this booking (by venue and club)
+              model.ACTIVITY matchedActivity = null;
+              java.util.List<model.ACTIVITY> clubActivities = new java.util.ArrayList<model.ACTIVITY>(model.ACTIVITY.getActivitiesByClubId(club.getClubId()));
+              for (model.ACTIVITY act : clubActivities) {
+                  if (act.getActivityVenue() != null && act.getActivityVenue().equalsIgnoreCase(booking.getItemName())) {
+                      matchedActivity = act;
+                      break;
+                  }
+              }
+        %>
+        <tr>
+          <td style="padding:8px; border:1px solid #ccc;"><%= booking.getItemName() %></td>
+          <td style="padding:8px; border:1px solid #ccc;"><%= matchedActivity != null ? matchedActivity.getActivityName() : "-" %></td>
+          <td style="padding:8px; border:1px solid #ccc;"><%= booking.getBookingDate() %></td>
+        </tr>
+        <% } %>
+        <% if (acceptedVenueBookingsList.isEmpty()) { %>
+        <tr>
+          <td colspan="3" style="text-align:center; color:#888; padding:12px;">No accepted venue bookings.</td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+    <div class="modal-buttons" style="text-align:right; margin-top:16px;">
+      <button class="btn-cancel" onclick="document.getElementById('venueModal').style.display='none'">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Resource Accepted Modal -->
+<div id="resourceModal" class="modal">
+  <div class="modal-content" style="max-width: 600px;">
+    <h3>Accepted Resource Bookings</h3>
+    <table style="width:100%; border-collapse:collapse;">
+      <thead>
+        <tr>
+          <th style="padding:8px; border:1px solid #ccc;">Resource</th>
+          <th style="padding:8px; border:1px solid #ccc;">Quantity/Details</th>
+          <th style="padding:8px; border:1px solid #ccc;">Activity</th>
+          <th style="padding:8px; border:1px solid #ccc;">Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% 
+          java.util.List<model.ACTIVITY> clubActivities = new java.util.ArrayList<model.ACTIVITY>(model.ACTIVITY.getActivitiesByClubId(club.getClubId()));
+          for (model.BOOKING booking : acceptedResourceBookingsList) {
+              model.ACTIVITY matchedActivity = null;
+              for (model.ACTIVITY act : clubActivities) {
+                  if (act.getActivityDesc() != null && act.getActivityDesc().toLowerCase().contains(booking.getItemName().toLowerCase())) {
+                      matchedActivity = act;
+                      break;
+                  }
+              }
+        %>
+        <tr>
+          <td style="padding:8px; border:1px solid #ccc;"><%= booking.getItemName() %></td>
+          <td style="padding:8px; border:1px solid #ccc;"><%= booking.getItemDetails() %></td>
+          <td style="padding:8px; border:1px solid #ccc;"><%= matchedActivity != null ? matchedActivity.getActivityName() : "-" %></td>
+          <td style="padding:8px; border:1px solid #ccc;"><%= booking.getBookingDate() %></td>
+        </tr>
+        <% } %>
+        <% if (acceptedResourceBookingsList.isEmpty()) { %>
+        <tr>
+          <td colspan="4" style="text-align:center; color:#888; padding:12px;">No accepted resource bookings.</td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+    <div class="modal-buttons" style="text-align:right; margin-top:16px;">
+      <button class="btn-cancel" onclick="document.getElementById('resourceModal').style.display='none'">Close</button>
     </div>
   </div>
 </div>

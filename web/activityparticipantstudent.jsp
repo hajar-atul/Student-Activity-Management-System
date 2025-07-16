@@ -136,50 +136,58 @@
             z-index: 100;
         }
         .sidebar {
-            width: 270px;
-            height: 100vh;
-            background-color: #00796B;
-            color: white;
-            position: fixed;
-            padding: 70px 20px 20px 20px;
-            overflow-y: auto;
-            z-index: 10;
-            text-align: center;
-        }
-        .sidebar.closed {
-            transform: translateX(-100%);
-        }
-        .sidebar img.profile-pic {
-            width: 100px;
-            aspect-ratio: 1 / 1;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-bottom: 15px;
-            border: 3px solid white;
-        }
-        .sidebar h3 {
-            margin-bottom: 10px;
-        }
-        .sidebar ul {
-            list-style: none;
-            padding-left: 0;
-            margin-top: 20px;
-        }
-        .sidebar ul li {
-            margin-bottom: 15px;
-        }
-        .sidebar ul li a {
-            color: white;
-            text-decoration: none;
-            padding: 10px;
-            display: block;
-            border-radius: 5px;
-            transition: background-color 0.2s ease;
-        }
-        .sidebar ul li a:hover,
-        .sidebar ul li a.active {
-            background-color: rgba(0, 0, 0, 0.2);
-        }
+      width: 230px;
+      height: 100vh;
+      background-color: #00796B;
+      color: white;
+      position: fixed;
+      padding: 70px 20px 20px 20px;
+      overflow-y: auto;
+      z-index: 10;
+      text-align: center;
+    }
+
+    .sidebar.closed {
+      transform: translateX(-100%);
+    }
+
+    .sidebar img.profile-pic {
+      width: 100px;
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 15px;
+      border: 3px solid white;
+    }
+
+    .sidebar h3 {
+      margin-bottom: 10px;
+    }
+
+    .sidebar ul {
+      list-style: none;
+      padding-left: 0;
+      margin-top: 20px;
+    }
+
+    .sidebar ul li {
+      margin-bottom: 15px;
+    }
+
+    .sidebar ul li a {
+      color: white;
+      text-decoration: none;
+      padding: 10px;
+      display: block;
+      border-radius: 5px;
+      transition: background-color 0.2s ease;
+    }
+
+    .sidebar ul li a:hover,
+    .sidebar ul li a.active {
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+
         .activity-btn {
             width: 100%;
             padding: 15px;
@@ -241,7 +249,7 @@
         <h3><%= session.getAttribute("clubName") %></h3>
         <ul>
             <li><a href="clubDashboardPage.jsp">DASHBOARD</a></li>
-            <li><a href="clubActivitiesPage.jsp">ACTIVITIES</a></li>
+            <li><a href="clubActivitiesPage.jsp" class="active">ACTIVITIES</a></li>
             <li><a href="venueBooking.jsp">VENUE BOOKING</a></li>
             <li><a href="resourceReq.jsp">RESOURCE BOOKING</a></li>
             <li><a href="clubFeedback.jsp">FEEDBACK</a></li>

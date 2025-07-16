@@ -233,10 +233,9 @@
             }
 
             .available-clubs {
-                min-height: 300px;
-                max-height: 60%;
+                min-height: 550px;
+                max-height: 90%;
                 flex: 1;
-                overflow: hidden;
                 width: 100%;
             }
 
@@ -615,7 +614,7 @@
                         <div class="available-clubs <%= (!hasActiveClubs) ? "empty" : "" %>">
                             <h2 class="section-title">Available Clubs</h2>
                             <% if (hasActiveClubs) { %>
-                                <div class="clubs-grid">
+                                <div class="clubs-grid" id="clubsGrid">
                                     <% for (CLUB club : allClubs) { 
                                         if ("active".equalsIgnoreCase(club.getClubStatus())) { %>
                                             <div class="club-card">
@@ -645,7 +644,7 @@
                                     <% }
                                     } %>
                                 </div>
-                                <div class="scroll-indicator">Scroll for more clubs →</div>
+                                <div class="scroll-indicator" id="scrollIndicator">Scroll for more clubs →</div>
                             <% } else { %>
                                 <div class="no-clubs">
                                     <p>No active clubs available at the moment.</p>
@@ -688,6 +687,21 @@
                 notificationDropdown.classList.remove('show');
                 profileDropdown.classList.remove('show');
             });
+
+            // Show scroll indicator only if horizontal scroll is possible
+            function updateScrollIndicator() {
+                const grid = document.getElementById('clubsGrid');
+                const indicator = document.getElementById('scrollIndicator');
+                if (!grid || !indicator) return;
+                if (grid.scrollWidth > grid.clientWidth) {
+                    indicator.style.display = 'block';
+                } else {
+                    indicator.style.display = 'none';
+                }
+            }
+            // Run on load and on window resize
+            window.addEventListener('load', updateScrollIndicator);
+            window.addEventListener('resize', updateScrollIndicator);
         </script>
     </body>
 </html>

@@ -100,7 +100,7 @@ public class LoginServlet extends HttpServlet {
                         session.setAttribute("staffEmail", staff.getStaffEmail());
                         session.setAttribute("staffPhone", staff.getStaffPhone());
                         session.setAttribute("staffDepartment", staff.getStaffDepartment());
-                        response.sendRedirect("staffDashboardPage.jsp");
+                        response.sendRedirect("StaffDashboardServlet");
                     } else {
                         response.sendRedirect("indexStaff.jsp?error=wrong_password");
                     }
@@ -139,10 +139,10 @@ public class LoginServlet extends HttpServlet {
                     switch (student.getStudType()) {
                         case "student":
                         case "admin":
-                            response.sendRedirect("studentDashboardPage.jsp");
+                            response.sendRedirect("StudentDashboardServlet");
                             break;
                         case "staff":
-                            response.sendRedirect("staffDashboardPage.jsp");
+                            response.sendRedirect("StaffDashboardServlet");
                             break;
                         default:
                             response.sendRedirect("index.jsp?error=Invalid+role");

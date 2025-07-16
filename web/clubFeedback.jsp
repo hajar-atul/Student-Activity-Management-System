@@ -312,7 +312,7 @@
         </style>
     </head>
     <body>
-        <button class="toggle-btn" onclick="toggleSidebar()"></button>
+      <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
 
         <div class="sidebar" id="sidebar">
           <img src="ClubImageServlet?clubID=<%= club != null ? club.getClubId() : 0 %>" alt="User Profile Picture" class="profile-pic">

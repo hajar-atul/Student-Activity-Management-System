@@ -18,16 +18,16 @@ public class ResourceBookingServlet extends HttpServlet {
         String resourceName = request.getParameter("resourceName");
         String resourceQty = request.getParameter("resourceQty");
         
-        // In a real application, clubName would come from the user's session.
-        // For this example, we'll hardcode it.
-        String clubName = "IT CLUB";
+        // Get club from session
+        model.CLUB club = (model.CLUB) request.getSession().getAttribute("club");
+        int clubID = club != null ? club.getClubId() : 0;
         
         String itemDetails = "Quantity: " + resourceQty;
         
         String message;
         
         try {
-            boolean success = BOOKING.addBooking("Resource", resourceName, itemDetails, clubName, date);
+            boolean success = model.BOOKING.addBooking("Resource", resourceName, itemDetails, date, clubID, null);
             if (success) {
                 message = "Resource booking request submitted successfully!";
             } else {
