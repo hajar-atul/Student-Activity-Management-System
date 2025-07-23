@@ -198,6 +198,11 @@
       Please select a valid role before submitting.
     </p>
   <% } %>
+  <% if ("wrong_password".equals(request.getParameter("error"))) { %>
+    <p style="color:red; font-weight: bold; margin-bottom: 20px;">
+      Wrong password. Please try again.
+    </p>
+  <% } %>
 
   <form action="<%= request.getContextPath() %>/LoginServlet" method="post" onsubmit="return validateForm();">
 

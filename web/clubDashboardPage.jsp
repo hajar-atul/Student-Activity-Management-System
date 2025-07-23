@@ -71,7 +71,7 @@
     if (club != null) {
         java.util.List<model.BOOKING> allVenueBookings = model.BOOKING.getBookingsByType("Venue");
         for (model.BOOKING booking : allVenueBookings) {
-            if ("Approved".equalsIgnoreCase(booking.getStatus()) && club.getClubName().equalsIgnoreCase(booking.getClubName())) {
+            if ("Approved".equalsIgnoreCase(booking.getStatus()) && booking.getClubID() == club.getClubId()) {
                 acceptedVenueBookings++;
                 acceptedVenueBookingsList.add(booking);
             }
@@ -83,7 +83,7 @@
     if (club != null) {
         java.util.List<model.BOOKING> allResourceBookings = model.BOOKING.getBookingsByType("Resource");
         for (model.BOOKING booking : allResourceBookings) {
-            if ("Approved".equalsIgnoreCase(booking.getStatus()) && club.getClubName().equalsIgnoreCase(booking.getClubName())) {
+            if ("Approved".equalsIgnoreCase(booking.getStatus()) && booking.getClubID() == club.getClubId()) {
                 acceptedResourceBookings++;
                 acceptedResourceBookingsList.add(booking);
             }

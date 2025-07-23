@@ -460,9 +460,10 @@
           <label for="activityID">Select Activity</label>
           <select id="activityID" name="activityID" required>
             <option value="">-- Select Activity --</option>
-            <% for (ACTIVITY act : clubActivities) { %>
+            <% for (ACTIVITY act : clubActivities) { 
+                 if ("Approved".equalsIgnoreCase(act.getActivityStatus())) { %>
               <option value="<%= act.getActivityID() %>"><%= act.getActivityName() %></option>
-            <% } %>
+            <% } } %>
           </select>
         </div>
             <label for="date">Booking Date</label>
@@ -502,17 +503,15 @@
     </div>
   </div>
 
-  <script>
-    var activityData = {};
-    <% for (ACTIVITY act : clubActivities) { 
-         String venue = act.getActivityVenue() != null ? act.getActivityVenue().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", " ") : "";
-         String date = act.getActivityDate() != null ? act.getActivityDate().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", " ") : "";
-    %>
-      activityData["<%= act.getActivityID() %>"] = {
-        venue: "<%= venue %>",
-        date: "<%= date %>"
-      };
-    <% } %>
+<script>
+  var activityData = {};
+  <% for (ACTIVITY act : clubActivities) { 
+       if ("Approved".equalsIgnoreCase(act.getActivityStatus())) { %>
+    activityData["<%= act.getActivityID() %>"] = {
+      venue: "<%= act.getActivityVenue() != null ? act.getActivityVenue().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", " ") : "" %>",
+      date: "<%= act.getActivityDate() != null ? act.getActivityDate().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", " ") : "" %>"
+    };
+  <% } } %>
 
     function toggleSidebar() {
       const sidebar = document.getElementById('sidebar');

@@ -157,13 +157,7 @@
     }
 
     .error-message {
-      color: red;
-      font-size: 0.9em;
-      margin-bottom: 15px;
-      text-align: center;
-      padding: 10px;
-      background-color: #ffe6e6;
-      border-radius: 5px;
+         color:red; font-weight: bold; margin-bottom: 20px;
     }
   </style>
 </head>
@@ -189,7 +183,7 @@
     </div>
   <% } else if ("invalid_credentials".equals(request.getParameter("error"))) { %>
     <div class="error-message">
-      Invalid Club ID or Password. Please try again.
+      Wrong Password. Please try again.
     </div>
   <% } else if ("invalid_club_id".equals(request.getParameter("error"))) { %>
     <div class="error-message">

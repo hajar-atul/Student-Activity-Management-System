@@ -622,8 +622,10 @@
             <div class="booking-table-title">OVERALL BOOKING REQUEST</div>
             
             <div class="booking-actions">
-                <a href="<%= request.getContextPath() %>/BookingListServlet?type=venue" class="action-btn">VENUE BOOKING</a>
-                <a href="<%= request.getContextPath() %>/BookingListServlet?type=resource" class="action-btn">RESOURCE BOOKING</a>
+                <a href="staffBooking.jsp" class="action-btn">ALL BOOKING</a>
+                <a href="staffBooking.jsp?type=venue" class="action-btn">VENUE BOOKING</a>
+                <a href="staffBooking.jsp?type=resource" class="action-btn">RESOURCE BOOKING</a>
+                <a href="staffBooking.jsp?type=rejected" class="action-btn" style="background:#c62828; color:white;">REJECTED BOOKING</a>
             </div>
 
             <table class="booking-table">
@@ -634,6 +636,7 @@
                         <th>DETAILS</th>
                         <th>CLUB</th>
                         <th>DATE</th>
+                        <th>STATUS</th>
                         <th>ACTIVITY NAME</th>
                         <th>ACTION</th>
                     </tr>
@@ -642,7 +645,21 @@
                     <%-- Dynamic booking rows --%>
                     <%
                         java.util.List<model.BOOKING> bookings = model.BOOKING.getAllBookings();
+                        String filterType = request.getParameter("type");
                         for (model.BOOKING booking : bookings) {
+                            if (filterType != null && !filterType.isEmpty() && !filterType.equalsIgnoreCase("all")) {
+                                if (filterType.equalsIgnoreCase("approved")) {
+                                    if (!"Approved".equalsIgnoreCase(booking.getStatus())) {
+                                        continue;
+                                    }
+                                } else if (filterType.equalsIgnoreCase("rejected")) {
+                                    if (!"Rejected".equalsIgnoreCase(booking.getStatus())) {
+                                        continue;
+                                    }
+                                } else if (!filterType.equalsIgnoreCase(booking.getBookingType())) {
+                                    continue;
+                                }
+                            }
                             String activityName = "-";
                             if (booking.getActivityID() != null) {
                                 model.ACTIVITY activity = model.ACTIVITY.getActivityById(booking.getActivityID());
@@ -664,6 +681,15 @@
                         <td><%= booking.getItemDetails() %></td>
                         <td><%= clubName %></td>
                         <td><%= booking.getBookingDate() %></td>
+                        <td>
+                          <% if ("Approved".equalsIgnoreCase(booking.getStatus())) { %>
+                            <span style="background:#c8f7c5; color:#218838; padding:4px 12px; border-radius:12px; font-weight:500;">Approved</span>
+                          <% } else if ("Rejected".equalsIgnoreCase(booking.getStatus())) { %>
+                            <span style="background:#f8d7da; color:#721c24; padding:4px 12px; border-radius:12px; font-weight:500;">Rejected</span>
+                          <% } else { %>
+                            <span style="background:#fff3cd; color:#856404; padding:4px 12px; border-radius:12px; font-weight:500;">Pending</span>
+                          <% } %>
+                        </td>
                         <td><%= activityName %></td>
                         <td>
                             <form action="<%= request.getContextPath() %>/UpdateBookingStatusServlet" method="post" style="display:inline;">

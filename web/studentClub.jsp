@@ -235,8 +235,6 @@
             .available-clubs {
                 min-height: 550px;
                 max-height: 90%;
-                flex: 1;
-                width: 100%;
             }
 
             .current-membership.empty {
@@ -245,8 +243,8 @@
             }
 
             .available-clubs.empty {
-                min-height: 200px;
-                max-height: 70%;
+                min-height: 150px;
+                max-height: 30%;
             }
 
             .available-clubs {

@@ -266,6 +266,15 @@
             font-weight: bold;
             width: 200px;
         }
+        .dashboard-card-clickable {
+            cursor: pointer;
+            transition: box-shadow 0.2s, background 0.2s, transform 0.2s;
+        }
+        .dashboard-card-clickable:hover {
+            box-shadow: 0 12px 36px rgba(0,139,139,0.22);
+            background: #d0f7f4;
+            transform: scale(1.04);
+        }
     </style>
 </head>
 <body>
@@ -324,14 +333,67 @@
         </div>
         
         <div style="display:flex; gap:24px; max-width:900px; margin:0 auto 24px auto;">
-            <div style="flex:1; background:#eaf6f4; border-radius:12px; padding:24px 0; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+            <div class="dashboard-card-clickable" style="flex:1; background:#eaf6f4; border-radius:12px; padding:24px 0; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.04);" onclick="window.location.href='staffBooking.jsp'">
                 <h3 style="margin:0 0 8px 0; font-size:2em; color:#008b8b;"><%= request.getAttribute("bookingRequests") != null ? request.getAttribute("bookingRequests") : "0" %></h3>
                 <p style="margin:0; color:#444; font-weight:bold;">Booking Requests</p>
             </div>
-            <div style="flex:1; background:#eaf6f4; border-radius:12px; padding:24px 0; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+            <div class="dashboard-card-clickable" style="flex:1; background:#eaf6f4; border-radius:12px; padding:24px 0; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.04);" onclick="window.location.href='staffBooking.jsp?type=approved'">
                 <h3 style="margin:0 0 8px 0; font-size:2em; color:#008b8b;"><%= request.getAttribute("approvedBookings") != null ? request.getAttribute("approvedBookings") : "0" %></h3>
                 <p style="margin:0; color:#444; font-weight:bold;">Approved Bookings</p>
             </div>
+        </div>
+        <div style="display:flex; gap:24px; max-width:900px; margin:0 auto 24px auto;">
+            <div class="dashboard-card-clickable" style="flex:1; background:#ffeaea; border-radius:12px; padding:24px 0; text-align:center; box-shadow:0 2px 8px rgba(255,0,0,0.08);">
+                <h3 style="margin:0 0 8px 0; font-size:2em; color:#c62828;">Rejected Bookings</h3>
+                <p style="margin:0; color:#c62828; font-weight:bold;">View all rejected venue and resource bookings</p>
+            </div>
+        </div>
+
+        <div style="max-width:900px; margin:0 auto 32px auto; background:#fff; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.04); padding:24px;">
+            <h3 style="color:#222; margin-bottom:16px;">Rejected Bookings List</h3>
+            <table style="width:100%; border-collapse:collapse; background:#fff;">
+                <thead>
+                    <tr style="background:#f5f5f5; color:#222;">
+                        <th style="padding:10px;">Booking Type</th>
+                        <th style="padding:10px;">Item/Venue</th>
+                        <th style="padding:10px;">Details</th>
+                        <th style="padding:10px;">Club</th>
+                        <th style="padding:10px;">Date</th>
+                        <th style="padding:10px;">Activity Name</th>
+                        <th style="padding:10px;">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <% java.util.List<model.BOOKING> bookings = model.BOOKING.getAllBookings();
+                   for (model.BOOKING booking : bookings) {
+                       if (!"Rejected".equalsIgnoreCase(booking.getStatus())) continue;
+                       String activityName = "-";
+                       if (booking.getActivityID() != null) {
+                           model.ACTIVITY activity = model.ACTIVITY.getActivityById(booking.getActivityID());
+                           if (activity != null) {
+                               activityName = activity.getActivityName();
+                           }
+                       }
+                       String clubName = "-";
+                       if (booking.getClubID() > 0) {
+                           model.CLUB clubObj = model.CLUB.getClubById(booking.getClubID());
+                           if (clubObj != null) {
+                               clubName = clubObj.getClubName();
+                           }
+                       }
+                %>
+                    <tr>
+                        <td style="padding:8px; text-align:center;"><%= booking.getBookingType() %></td>
+                        <td style="padding:8px; text-align:center;"><%= booking.getItemName() %></td>
+                        <td style="padding:8px; text-align:center;"><%= booking.getItemDetails() %></td>
+                        <td style="padding:8px; text-align:center;"><%= clubName %></td>
+                        <td style="padding:8px; text-align:center;"><%= booking.getBookingDate() %></td>
+                        <td style="padding:8px; text-align:center;"><%= activityName %></td>
+                        <td style="padding:8px; text-align:center;"><span style="background:#f8d7da; color:#c62828; padding:4px 12px; border-radius:12px; font-weight:500;">Rejected</span></td>
+                    </tr>
+                <% } %>
+                </tbody>
+            </table>
         </div>
     </div>
 

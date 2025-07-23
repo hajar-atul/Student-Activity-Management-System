@@ -2,13 +2,9 @@
 <%@ page import="java.util.List, model.ACTIVITY, model.CLUB" %>
 <%
     CLUB club = (CLUB) session.getAttribute("club");
-    List<ACTIVITY> rejectedActivities = new java.util.ArrayList<ACTIVITY>();
+    List<ACTIVITY> clubActivities = new java.util.ArrayList<ACTIVITY>();
     if (club != null) {
-        for (ACTIVITY act : ACTIVITY.getActivitiesByClubId(club.getClubId())) {
-            if ("Rejected".equalsIgnoreCase(act.getActivityStatus())) {
-                rejectedActivities.add(act);
-            }
-        }
+        clubActivities = ACTIVITY.getActivitiesByClubId(club.getClubId());
     }
 %>
 <!DOCTYPE html>
@@ -358,7 +354,7 @@
       }
       
       .submit-btn {
-        max-width: 100%;
+        max-width: 100px;
       }
     }
 
@@ -435,6 +431,17 @@
 
       <form action="ResourceBookingServlet" method="post">
         <div class="form-group">
+          <label for="activityID">Select Activity</label>
+          <select id="activityID" name="activityID" required style="padding: 18px 20px; border-radius: 12px; font-size: 1.1em; background: #fafafa; border: 2px solid #e0e0e0; color: #333; width: 100%; box-sizing: border-box; margin-bottom: 8px;">
+            <option value="">-- Select Activity --</option>
+            <% for (ACTIVITY act : clubActivities) { 
+                 if ("Approved".equalsIgnoreCase(act.getActivityStatus())) { %>
+              <option value="<%= act.getActivityID() %>"><%= act.getActivityName() %></option>
+            <% } } %>
+          </select>
+          <div class="form-help-text">Choose the activity for which you are booking the resource</div>
+        </div>
+        <div class="form-group">
           <label for="date">Booking Date</label>
           <input type="date" id="date" name="date" required placeholder="Select booking date" />
           <div class="form-help-text">Choose the date you need the resources</div>
@@ -464,7 +471,15 @@
     </div>
   </div>
 
-  <script>
+<script>
+  var activityData = {};
+  <% for (ACTIVITY act : clubActivities) { 
+       if ("Approved".equalsIgnoreCase(act.getActivityStatus())) { %>
+    activityData["<%= act.getActivityID() %>"] = {
+      date: "<%= act.getActivityDate() != null ? act.getActivityDate().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", " ") : "" %>"
+    };
+  <% } } %>
+
     function toggleSidebar() {
       const sidebar = document.getElementById('sidebar');
       const main = document.getElementById('mainContent');
@@ -475,6 +490,16 @@
     document.getElementById("notificationBtn").addEventListener("click", function () {
       const dropdown = document.getElementById("notificationDropdown");
       dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
+    });
+
+    document.getElementById('activityID').addEventListener('change', function() {
+      var selectedId = this.value;
+      var dateInput = document.getElementById('date');
+      if (activityData[selectedId]) {
+        dateInput.value = activityData[selectedId].date;
+      } else {
+        dateInput.value = '';
+      }
     });
   </script>
 </body>

@@ -149,7 +149,7 @@ public class LoginServlet extends HttpServlet {
                             break;
                     }
                 } else {
-                    response.sendRedirect("indexStudent.jsp?error=wrong_password");
+                    response.sendRedirect("index.jsp?error=wrong_password");
                 }
             }
         } catch (Exception e) {

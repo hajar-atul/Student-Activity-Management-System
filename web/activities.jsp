@@ -241,10 +241,12 @@
     }
 
     .activity-container {
-      max-width: 1200px;
+      max-width: 1500px;
       margin: 0 auto;
-      height: 100%;
-      overflow: hidden;
+      min-height: 400px;
+      max-height: 800px;
+      height: auto;
+      overflow: visible;
     }
 
     .activity-buttons {
@@ -462,7 +464,8 @@
       padding: 36px 32px 28px 32px;
       margin: 20px auto 0 auto;
       min-width: 400px;
-      height: calc(100vh - 280px);
+      min-height: 300px;
+      height: auto;
     }
     .activities-outer-container::after {
       content: "";
