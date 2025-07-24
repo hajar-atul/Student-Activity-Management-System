@@ -10,10 +10,16 @@
 <head>
     <title>Staff Dashboard</title>
     <style>
-        body {
+        * {
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
             font-family: Arial, sans-serif;
-            display: flex;
             background-color: #f0f0f0;
         }
 
@@ -21,145 +27,103 @@
             width: 250px;
             background-color: #008b8b;
             color: white;
-            padding: 20px 0 0 0;
+            padding: 20px;
             height: 100vh;
             position: fixed;
-            top: 0;
             left: 0;
-            transition: width 0.3s;
-            z-index: 2001;
+            top: 0;
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
         }
 
-        .sidebar.collapsed {
-            width: 60px;
-            padding-left: 0;
-            padding-right: 0;
+        .sidebar.closed {
+            transform: translateX(-100%);
         }
 
-        .sidebar.collapsed .sidebar-header h2,
-        .sidebar.collapsed .sidebar-header img,
-        .sidebar.collapsed .menu,
-        .sidebar.collapsed form {
-            display: none;
+        .toggle-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: #008b8b;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            z-index: 1002;
         }
 
-        .sidebar-header {
-            position: relative;
-            margin-bottom: 18px;
-        }
-
-        #sidebarToggle {
-            margin-top: 4px;
-            margin-bottom: 4px;
-            z-index: 2002;
-            width: 28px;
-            height: 28px;
-            left: 8px;
-            top: 8px;
-            padding: 0;
-        }
-
-        #sidebarToggle span {
-            display: block;
-            width: 20px;
-            height: 3px;
-            background: #fff;
-            margin: 4px 0;
-            border-radius: 2px;
-        }
-
-        .sidebar-header img.profile-icon {
-            width: 110px;
-            height: 110px;
-            margin-top: 18px;
+        .sidebar img.profile-pic {
+            width: 100px;
+            aspect-ratio: 1 / 1;
             border-radius: 50%;
             object-fit: cover;
+            margin: 0 auto 15px;
+            display: block;
+            border: 3px solid white;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
         }
 
-        .sidebar-header h2 {
-            margin-top: 8px;
-            font-size: 1.1em;
+        .sidebar h2 {
+            text-align: center;
+            font-size: 14px;
+            margin-top: 10px;
         }
 
         .menu {
-            margin-top: 10px;
+            margin-top: 30px;
         }
 
         .menu a {
             display: block;
-            padding: 6px 0;
+            padding: 10px;
             background-color: #0a6d6d;
-            margin: 8px 24px 0 24px;
+            margin-top: 10px;
             text-decoration: none;
             color: white;
-            border-radius: 6px;
+            border-radius: 5px;
             text-align: center;
-            font-size: 1em;
-            height: 38px;
-            line-height: 24px;
-            transition: background 0.2s;
         }
 
-        .menu a:hover {
-            background-color: #007b7b;
-        }
-
-        .sidebar form {
-            position: absolute;
-            bottom: 60px;
-            left: 0;
+        .activity-btn {
             width: 100%;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-        }
-
-        .sidebar form button {
-            width: 90%;
-            background: #c0392b;
-            color: #fff;
-            font-weight: bold;
+            padding: 15px;
+            background-color: #f44336;
+            color: white;
             border: none;
             border-radius: 8px;
-            padding: 0;
-            height: 44px;
-            font-size: 1.1em;
+            font-size: 16px;
+            font-weight: bold;
             cursor: pointer;
-            margin-bottom: 0;
-            transition: background 0.2s;
-            display: block;
+            transition: background-color 0.2s;
+            margin: 0;
         }
-
-        .sidebar form button:hover {
-            background: #a93226;
+        .activity-btn:hover {
+            background-color: #d32f2f;
         }
-
         .topbar {
             position: fixed;
             top: 0;
-            left: 250px;
+            left: 0;
             right: 0;
-            height: 60px;
+            height: 80px;
             background-color: #008b8b;
             color: white;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 20px;
+            padding: 0 30px;
             z-index: 1000;
-            transition: left 0.3s;
-        }
-
-        body.sidebar-collapsed .topbar {
-            left: 60px;
         }
 
         .dashboard-title {
-            font-size: 22px;
+            font-size: 26px;
             font-weight: bold;
-            flex-grow: 1;
             text-align: center;
-            margin-left: 50px;
+            flex-grow: 1;
+            margin-left: 60px;
         }
 
         .top-icons {
@@ -168,32 +132,24 @@
             gap: 15px;
         }
 
-        .top-icons img {
-            width: 24px;
-            height: 24px;
-        }
-
         .top-icons img.umpsa-icon {
-            width: 36px;
-            height: 36px;
-        }
-
-        .notification-btn img {
-            width: 32px;
-            height: 32px;
-        }
-
-        .profile-icon {
             width: 40px;
             height: 40px;
+        }
+
+        .notification-btn img,
+        .profile-icon {
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
+            cursor: pointer;
         }
 
         .notification-dropdown {
             display: none;
             position: absolute;
-            top: 50px;
-            right: 50px;
+            top: 80px;
+            right: 40px;
             background: white;
             min-width: 250px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.15);
@@ -202,21 +158,17 @@
             border-radius: 8px;
             color: #333;
         }
-
         .notification-dropdown.show {
             display: block;
         }
-
         .notification-dropdown p {
             margin: 0;
             padding: 10px 20px;
             border-bottom: 1px solid #eee;
         }
-
         .notification-dropdown p:last-child {
             border-bottom: none;
         }
-
         .notification-btn {
             background: none;
             border: none;
@@ -224,101 +176,70 @@
             cursor: pointer;
             position: relative;
         }
-
         .content {
             flex-grow: 1;
             padding: 100px 40px 40px 40px;
             margin-left: 250px;
             transition: margin-left 0.3s;
         }
-
         body.sidebar-collapsed .content {
             margin-left: 60px;
         }
-
-        .content h1 {
-            font-size: 24px;
-            color: #0a6d6d;
-        }
-
-        .profile-box {
-            background-color: #b3e0e0;
-            padding: 20px;
-            border-radius: 10px;
-            width: 650px;
-        }
-
-        .profile-box h2 {
-            margin-bottom: 20px;
-            font-size: 18px;
-        }
-
-        .profile-box table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .profile-box td {
-            padding: 10px;
-        }
-
-        .profile-box td:first-child {
-            font-weight: bold;
-            width: 200px;
-        }
-        .dashboard-card-clickable {
-            cursor: pointer;
-            transition: box-shadow 0.2s, background 0.2s, transform 0.2s;
-        }
-        .dashboard-card-clickable:hover {
-            box-shadow: 0 12px 36px rgba(0,139,139,0.22);
-            background: #d0f7f4;
-            transform: scale(1.04);
+        @media (max-width: 768px) {
+            .content {
+                margin-left: 0;
+            }
+            .sidebar {
+                position: static;
+                width: 100%;
+                height: auto;
+            }
+            .toggle-btn {
+                display: block;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- Sidebar -->
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-header" style="text-align:center; position:relative;">
-            <button id="sidebarToggle" style="background:none; border:none; position:absolute; left:8px; top:8px; cursor:pointer; outline:none; width:28px; height:28px; padding:0;">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-            <img src="StaffImageServlet?staffID=${staffID}" alt="Profile Picture" class="profile-icon" id="profileBtn">
-            <h2 style="margin-top:8px;">
-                <%= session.getAttribute("staffName") %><br>
-                <%= session.getAttribute("staffID") %>
-            </h2>
-        </div>
-        <div class="menu">
-            <a href="<%= request.getContextPath() %>/StaffDashboardServlet">HOME</a>
-            <a href="<%= request.getContextPath() %>/staffBooking.jsp">BOOKING</a>
-            <a href="<%= request.getContextPath() %>/StaffAdabPointServlet">ADAB POINT</a>
-            <a href="<%= request.getContextPath() %>/addClub.jsp">CLUB REGISTRATION</a>
-            <a href="<%= request.getContextPath() %>/addStaff.jsp">ADD STAFF</a>
-        </div>
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+    <img src="StaffImageServlet?staffID=${staffID}" alt="Profile" class="profile-pic" />
+    <h2>
+        <%= session.getAttribute("staffName") %><br>
+        <%= session.getAttribute("staffID") %>
+    </h2>
+    <div class="menu">
+        <a href="<%= request.getContextPath() %>/StaffDashboardServlet">DASHBOARD</a>
+        <a href="<%= request.getContextPath() %>/staffBooking.jsp">BOOKING</a>
+        <a href="<%= request.getContextPath() %>/StaffAdabPointServlet">ADAB POINT</a>
+        <a href="<%= request.getContextPath() %>/addClub.jsp">CLUB REGISTRATION</a>
+        <a href="<%= request.getContextPath() %>/addStaff.jsp">ADD STAFF</a>
+    </div>
+    <div style="position: absolute; bottom: 20px; width: 80%; left: 10%;">
         <form action="index.jsp" method="get">
-            <button type="submit">Logout</button>
+            <button type="submit" class="activity-btn">Logout</button>
         </form>
     </div>
-        
- <!-- Top Navigation Bar -->
-    <div class="topbar">
-        <div class="dashboard-title">STAFF DASHBOARD</div>
-        <div class="top-icons">
-            <img src="image/umpsa.png" alt="UMPSA" class="umpsa-icon">
-            <button class="notification-btn" id="notificationBtn">
-                <img src="image/bell.png" alt="Notification">
-            </button>
-            <div class="notification-dropdown" id="notificationDropdown">
-                <p>No new notifications</p>
-            </div>
-            <img src="StaffImageServlet?staffID=${staffID}" class="profile-icon" id="profileBtn">
+</div>
+
+<!-- Toggle Button -->
+<button class="toggle-btn" id="toggleBtn">☰</button>
+
+<!-- Topbar -->
+<div class="topbar">
+    <div class="dashboard-title">STAFF DASHBOARD</div>
+    <div class="top-icons">
+        <img src="image/umpsa.png" class="umpsa-icon" alt="UMPSA">
+        <button class="notification-btn" id="notificationBtn">
+            <img src="image/bell.png" alt="Notification">
+        </button>
+        <div class="notification-dropdown" id="notificationDropdown">
+            <p>No new notifications</p>
         </div>
+        <img src="StaffImageServlet?staffID=${staffID}" alt="Profile" class="profile-icon" id="profileBtn">
     </div>
+</div>
  
     
     <div class="content">
@@ -399,9 +320,9 @@
 
     <script>
         const sidebar = document.getElementById('sidebar');
-        const toggleBtn = document.getElementById('sidebarToggle');
+        const toggleBtn = document.getElementById('toggleBtn');
         toggleBtn.addEventListener('click', function() {
-            sidebar.classList.toggle('collapsed');
+            sidebar.classList.toggle('closed');
             document.body.classList.toggle('sidebar-collapsed');
         });
     </script>

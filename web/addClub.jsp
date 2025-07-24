@@ -10,82 +10,12 @@
             margin: 0;
             padding: 0;
             overflow: hidden;
-        }
-        body {
             font-family: 'Poppins', Arial, sans-serif;
             background-color: #e6f2ff;
-            height: 100vh;
+        }
+        body {
             display: flex;
             flex-direction: column;
-        }
-        .topbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 60px;
-            background-color: #008b8b;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 20px;
-            z-index: 1000;
-        }
-        .dashboard-title {
-            font-size: 22px;
-            font-weight: bold;
-            flex-grow: 1;
-            text-align: center;
-            margin-left: 0;
-        }
-        .top-icons {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        .top-icons img {
-            width: 24px;
-            height: 24px;
-        }
-        .top-icons img.umpsa-icon {
-            width: 36px;
-            height: 36px;
-        }
-        .notification-btn img {
-            width: 32px;
-            height: 32px;
-        }
-        .notification-dropdown {
-            display: none;
-            position: absolute;
-            top: 50px;
-            right: 50px;
-            background: white;
-            min-width: 250px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-            z-index: 2000;
-            padding: 10px 0;
-            border-radius: 8px;
-            color: #333;
-        }
-        .notification-dropdown.show {
-            display: block;
-        }
-        .notification-dropdown p {
-            margin: 0;
-            padding: 10px 20px;
-            border-bottom: 1px solid #eee;
-        }
-        .notification-dropdown p:last-child {
-            border-bottom: none;
-        }
-        .notification-btn {
-            background: none;
-            border: none;
-            padding: 0;
-            cursor: pointer;
-            position: relative;
         }
         .main-content {
             flex: 1;
@@ -167,19 +97,6 @@
     </style>
 </head>
 <body>
-    <!-- Top Navigation Bar -->
-    <div class="topbar">
-        <div class="dashboard-title">STAFF DASHBOARD</div>
-        <div class="top-icons">
-            <img src="image/umpsa.png" alt="UMPSA" class="umpsa-icon">
-            <button class="notification-btn" id="notificationBtn">
-                <img src="image/bell.png" alt="Notification">
-            </button>
-            <div class="notification-dropdown" id="notificationDropdown">
-                <p>No new notifications</p>
-            </div>
-        </div>
-    </div>
     <div class="main-content">
         <div class="container">
             <h2>Register New Club</h2>

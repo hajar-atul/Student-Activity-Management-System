@@ -10,297 +10,132 @@
 <head>
     <title>Add Staff</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         html, body {
             height: 100%;
-            margin: 0;
-            padding: 0;
-            overflow: hidden; /* Prevent page scroll */
+            overflow: hidden;
+            font-family: 'Poppins', Arial, sans-serif;
+            background-color: #e6f2ff;
         }
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(135deg, #e0f7fa 0%, #f0f0f0 100%);
-            min-height: 100vh;
-            display: flex;
-        }
-        .content {
-            flex-grow: 1;
-            padding: 0;
-            margin-left: 250px;
-            height: 100vh;
-            box-sizing: border-box;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .container {
-            max-width: 500px;
-            width: 100%;
-            background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.07);
-            padding: 12px 12px 12px 12px;
-            height: 95vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        .form-header {
-            text-align: center;
-            margin-bottom: 10px;
-        }
-        .form-header img {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            margin-bottom: 6px;
-        }
-        .form-header h1 {
-            margin: 0;
-            font-size: 1.1em;
-            color: #008b8b;
-        }
-        .form-group {
-            margin-bottom: 8px;
-        }
-        .form-group label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 2px;
-            font-size: 0.98em;
-        }
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 6px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 0.98em;
-            background: #e0ffff;
-        }
-        .form-group input[type="file"] {
-            background: none;
-            border: none;
-        }
-        .submit-btn {
-            width: 100%;
-            background: #008b8b;
-            color: #fff;
-            font-weight: bold;
-            border: none;
-            border-radius: 8px;
-            padding: 8px;
-            font-size: 1em;
-            cursor: pointer;
-            margin-top: 6px;
-            transition: background 0.2s;
-        }
-        .submit-btn:hover {
-            background: #005f5f;
-        }
-        .message.success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-            padding: 6px;
-            border-radius: 6px;
-            margin-bottom: 8px;
-            text-align: center;
-            font-size: 0.93em;
-        }
-        .message.error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-            padding: 6px;
-            border-radius: 6px;
-            margin-bottom: 8px;
-            text-align: center;
-            font-size: 0.93em;
-        }
-        @media (max-width: 900px) {
-            .container {
-                max-width: 95vw;
-                padding: 6px;
-                height: 98vh;
-            }
-            .content {
-                padding: 0;
-            }
-        }
-        @media (max-width: 600px) {
-            .container {
-                max-width: 100vw;
-                padding: 2px;
-                height: 99vh;
-            }
-            .form-header h1 {
-                font-size: 0.98em;
-            }
-            .form-group label {
-                font-size: 0.93em;
-            }
-            .form-group input,
-            .form-group select {
-                font-size: 0.93em;
-                padding: 4px;
-            }
-        }
-        /* --- Sidebar/Topbar CSS from staffDashboardPage.jsp (copy as needed, but do not override .container or .form-group) --- */
         .sidebar {
             width: 250px;
             background-color: #008b8b;
             color: white;
-            padding: 20px 0 0 0;
+            padding: 20px;
             height: 100vh;
             position: fixed;
-            top: 0;
             left: 0;
-            transition: width 0.3s;
-            z-index: 2001;
+            top: 0;
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
         }
-        .sidebar.collapsed {
-            width: 60px;
-            padding-left: 0;
-            padding-right: 0;
+        .sidebar.closed {
+            transform: translateX(-100%);
         }
-        .sidebar.collapsed .sidebar-header h2,
-        .sidebar.collapsed .sidebar-header img,
-        .sidebar.collapsed .menu,
-        .sidebar.collapsed form {
-            display: none;
+        .toggle-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: #008b8b;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            z-index: 1002;
         }
-        .sidebar-header {
-            position: relative;
-            margin-bottom: 18px;
-        }
-        #sidebarToggle {
-            margin-top: 4px;
-            margin-bottom: 4px;
-            z-index: 2002;
-            width: 28px;
-            height: 28px;
-            left: 8px;
-            top: 8px;
-            padding: 0;
-        }
-        #sidebarToggle span {
-            display: block;
-            width: 20px;
-            height: 3px;
-            background: #fff;
-            margin: 4px 0;
-            border-radius: 2px;
-        }
-        .sidebar-header img.profile-icon {
-            width: 110px;
-            height: 110px;
-            margin-top: 18px;
+        .sidebar img.profile-pic {
+            width: 100px;
+            aspect-ratio: 1 / 1;
             border-radius: 50%;
             object-fit: cover;
+            margin: 0 auto 15px;
+            display: block;
+            border: 3px solid white;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
         }
-        .sidebar-header h2 {
-            margin-top: 8px;
-            font-size: 1.1em;
+        .sidebar h2 {
+            text-align: center;
+            font-size: 14px;
+            margin-top: 10px;
         }
         .menu {
-            margin-top: 10px;
+            margin-top: 30px;
         }
         .menu a {
             display: block;
-            padding: 6px 0;
+            padding: 10px;
             background-color: #0a6d6d;
-            margin: 8px 24px 0 24px;
+            margin-top: 10px;
             text-decoration: none;
             color: white;
-            border-radius: 6px;
+            border-radius: 5px;
             text-align: center;
-            font-size: 1em;
-            height: 38px;
-            line-height: 24px;
-            transition: background 0.2s;
         }
-        .menu a:hover {
-            background-color: #007b7b;
-        }
-        .sidebar form {
-            position: absolute;
-            bottom: 60px;
-            left: 0;
+        .activity-btn {
             width: 100%;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-        }
-        .sidebar form button {
-            width: 90%;
-            background: #c0392b;
-            color: #fff;
-            font-weight: bold;
+            padding: 15px;
+            background-color: #f44336;
+            color: white;
             border: none;
             border-radius: 8px;
-            padding: 0;
-            height: 44px;
-            font-size: 1.1em;
+            font-size: 16px;
+            font-weight: bold;
             cursor: pointer;
-            margin-bottom: 0;
-            transition: background 0.2s;
-            display: block;
+            transition: background-color 0.2s;
+            margin: 0;
         }
-        .sidebar form button:hover {
-            background: #a93226;
+        .activity-btn:hover {
+            background-color: #d32f2f;
         }
         .topbar {
             position: fixed;
             top: 0;
-            left: 250px;
+            left: 0;
             right: 0;
-            height: 60px;
+            height: 80px;
             background-color: #008b8b;
             color: white;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 20px;
+            padding: 0 30px;
             z-index: 1000;
-            transition: left 0.3s;
-        }
-        body.sidebar-collapsed .topbar {
-            left: 60px;
         }
         .dashboard-title {
-            font-size: 22px;
+            font-size: 26px;
             font-weight: bold;
-            flex-grow: 1;
             text-align: center;
-            margin-left: 50px;
+            flex-grow: 1;
+            margin-left: 60px;
         }
         .top-icons {
             display: flex;
             align-items: center;
             gap: 15px;
         }
-        .top-icons img {
-            width: 24px;
-            height: 24px;
-        }
         .top-icons img.umpsa-icon {
-            width: 36px;
-            height: 36px;
-        }
-        .notification-btn img {
-            width: 32px;
-            height: 32px;
-        }
-        .profile-icon {
             width: 40px;
             height: 40px;
+        }
+        .notification-btn img,
+        .profile-icon {
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
+            cursor: pointer;
         }
         .notification-dropdown {
             display: none;
             position: absolute;
-            top: 50px;
-            right: 50px;
+            top: 80px;
+            right: 40px;
             background: white;
             min-width: 250px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.15);
@@ -327,52 +162,202 @@
             cursor: pointer;
             position: relative;
         }
-        body.sidebar-collapsed .content {
-            margin-left: 60px;
+        .content {
+            flex-grow: 1;
+            padding: 0;
+            margin-left: 250px;
+            height: 100vh;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        /* --- End Sidebar/Topbar CSS --- */
+        @media (max-width: 768px) {
+            .content {
+                margin-left: 0;
+            }
+            .sidebar {
+                position: static;
+                width: 100%;
+                height: auto;
+            }
+            .toggle-btn {
+                display: block;
+            }
+        }
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+            padding: 32px 40px 32px 40px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .form-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .form-header img {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            margin-bottom: 8px;
+        }
+        .form-header h1 {
+            margin: 0;
+            font-size: 1.3em;
+            color: #008b8b;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        .horizontal-form {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        .form-row {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+        .form-row label {
+            flex: 0 0 160px;
+            font-weight: 500;
+            color: #008b8b;
+            font-size: 1em;
+            text-align: right;
+            margin-right: 0;
+        }
+        .form-row input,
+        .form-row select {
+            flex: 1;
+            padding: 12px 14px;
+            border: 1.5px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            background: #f8fefe;
+            color: #222;
+            transition: border 0.2s;
+        }
+        .form-row input:focus,
+        .form-row select:focus {
+            border: 1.5px solid #008b8b;
+            outline: none;
+        }
+        .form-row input[type="file"] {
+            background: none;
+            border: none;
+            padding: 0;
+        }
+        .submit-btn {
+            width: 100%;
+            background: #008b8b;
+            color: #fff;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            padding: 14px 0;
+            font-size: 1.08em;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.2s;
+            letter-spacing: 1px;
+        }
+        .submit-btn:hover {
+            background: #005f5f;
+        }
+        .message.success {
+            background: #e6f9f7;
+            color: #008b8b;
+            border: 1px solid #b2dfdb;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            text-align: center;
+            font-size: 1em;
+        }
+        .message.error {
+            background: #f8d7da;
+            color: #c62828;
+            border: 1px solid #f5c6cb;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            text-align: center;
+            font-size: 1em;
+        }
+        @media (max-width: 700px) {
+            .container {
+                padding: 12px 4vw;
+            }
+            .form-row label {
+                flex: 0 0 100px;
+                font-size: 0.98em;
+            }
+            .form-row input, .form-row select {
+                font-size: 0.98em;
+            }
+        }
+        @media (max-width: 500px) {
+            .container {
+                padding: 4px 2vw;
+            }
+            .form-row {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 4px;
+            }
+            .form-row label {
+                text-align: left;
+                margin-bottom: 2px;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Sidebar -->
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-header" style="text-align:center; position:relative;">
-            <button id="sidebarToggle" style="background:none; border:none; position:absolute; left:8px; top:8px; cursor:pointer; outline:none; width:28px; height:28px; padding:0;">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-            <img src="StaffImageServlet?staffID=<%= session.getAttribute("staffID") %>" alt="Profile Picture" class="profile-icon">
-            <h2 style="margin-top:8px;">
-                <%= session.getAttribute("staffName") %><br>
-                <%= session.getAttribute("staffID") %>
-            </h2>
-        </div>
-        <div class="menu">
-            <a href="<%= request.getContextPath() %>/StaffDashboardServlet">HOME</a>
-            <a href="<%= request.getContextPath() %>/staffBooking.jsp">BOOKING</a>
-            <a href="<%= request.getContextPath() %>/StaffAdabPointServlet">ADAB POINT</a>
-            <a href="<%= request.getContextPath() %>/addClub.jsp">CLUB REGISTRATION</a>
-            <a href="<%= request.getContextPath() %>/addStaff.jsp">ADD STAFF</a>
-        </div>
+
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+    <img src="StaffImageServlet?staffID=${staffID}" alt="Profile" class="profile-pic" />
+    <h2>
+        <%= session.getAttribute("staffName") %><br>
+        <%= session.getAttribute("staffID") %>
+    </h2>
+    <div class="menu">
+        <a href="<%= request.getContextPath() %>/StaffDashboardServlet">DASHBOARD</a>
+        <a href="<%= request.getContextPath() %>/staffBooking.jsp">BOOKING</a>
+        <a href="<%= request.getContextPath() %>/StaffAdabPointServlet">ADAB POINT</a>
+        <a href="<%= request.getContextPath() %>/addClub.jsp">CLUB REGISTRATION</a>
+        <a href="<%= request.getContextPath() %>/addStaff.jsp">ADD STAFF</a>
+    </div>
+    <div style="position: absolute; bottom: 20px; width: 80%; left: 10%;">
         <form action="index.jsp" method="get">
-            <button type="submit">Logout</button>
+            <button type="submit" class="activity-btn">Logout</button>
         </form>
     </div>
-    <!-- Top Navigation Bar -->
-    <div class="topbar">
-        <div class="dashboard-title">ADD STAFF</div>
-        <div class="top-icons">
-            <img src="image/umpsa.png" alt="UMPSA" class="umpsa-icon">
-            <button class="notification-btn" id="notificationBtn">
-                <img src="image/bell.png" alt="Notification">
-            </button>
-            <div class="notification-dropdown" id="notificationDropdown">
-                <p>No new notifications</p>
-            </div>
-            <img src="StaffImageServlet?staffID=<%= session.getAttribute("staffID") %>" class="profile-icon" id="profileBtn">
+</div>
+
+<!-- Toggle Button -->
+<button class="toggle-btn" id="toggleBtn">☰</button>
+
+<!-- Topbar -->
+<div class="topbar">
+    <div class="dashboard-title">ADD STAFF</div>
+    <div class="top-icons">
+        <img src="image/umpsa.png" class="umpsa-icon" alt="UMPSA">
+        <button class="notification-btn" id="notificationBtn">
+            <img src="image/bell.png" alt="Notification">
+        </button>
+        <div class="notification-dropdown" id="notificationDropdown">
+            <p>No new notifications</p>
         </div>
+        <img src="StaffImageServlet?staffID=${staffID}" alt="Profile" class="profile-icon" id="profileBtn">
     </div>
+</div>
     <div class="content">
         <!-- FORM SECTION STARTS HERE (do not change this part) -->
         <div class="container">
@@ -390,24 +375,24 @@
                     Error: <%= request.getParameter("error") %>
                 </div>
             <% } %>
-            <form action="<%= request.getContextPath() %>/AddStaffServlet" method="post" enctype="multipart/form-data">
-                <div class="form-group">
+            <form action="<%= request.getContextPath() %>/AddStaffServlet" method="post" enctype="multipart/form-data" class="horizontal-form">
+                <div class="form-row">
                     <label for="staffID">Staff ID:</label>
                     <input type="number" id="staffID" name="staffID" required placeholder="Enter staff ID">
                 </div>
-                <div class="form-group">
+                <div class="form-row">
                     <label for="staffName">Staff Name:</label>
                     <input type="text" id="staffName" name="staffName" required placeholder="Enter full name">
                 </div>
-                <div class="form-group">
+                <div class="form-row">
                     <label for="staffEmail">Staff Email:</label>
                     <input type="email" id="staffEmail" name="staffEmail" required placeholder="e.g. staff@university.edu">
                 </div>
-                <div class="form-group">
+                <div class="form-row">
                     <label for="staffPhone">Staff Phone:</label>
                     <input type="tel" id="staffPhone" name="staffPhone" required placeholder="e.g. 012-3456789">
                 </div>
-                <div class="form-group">
+                <div class="form-row">
                     <label for="staffDep">Staff Department:</label>
                     <select id="staffDep" name="staffDep" required>
                         <option value="">Select Department</option>
@@ -422,11 +407,11 @@
                         <option value="Administration">Administration</option>
                     </select>
                 </div>
-                <div class="form-group">
+                <div class="form-row">
                     <label for="staffPassword">Staff Password:</label>
                     <input type="password" id="staffPassword" name="staffPassword" required placeholder="Create a password">
                 </div>
-                <div class="form-group">
+                <div class="form-row">
                     <label>Profile Picture <span style='color:red'>*</span></label>
                     <input type="file" name="profilePic" accept="image/png, image/jpeg" required>
                 </div>
@@ -437,10 +422,9 @@
     </div>
     <script>
         const sidebar = document.getElementById('sidebar');
-        const toggleBtn = document.getElementById('sidebarToggle');
+        const toggleBtn = document.getElementById('toggleBtn');
         toggleBtn.addEventListener('click', function() {
-            sidebar.classList.toggle('collapsed');
-            document.body.classList.toggle('sidebar-collapsed');
+            sidebar.classList.toggle('closed');
         });
     </script>
 </body>
