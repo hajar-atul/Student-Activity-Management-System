@@ -477,7 +477,6 @@
           <div class="form-group full-width">
             <label for="description">Description</label>
             <textarea id="description" name="description" placeholder="Enter activity description..." maxlength="65535" required></textarea>
-            <div class="help-text">Max 65,535 characters</div>
           </div>
           
           <div class="form-group full-width">

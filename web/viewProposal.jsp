@@ -1,17 +1,17 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="model.ACTIVITY, model.CLUB" %>
+<%@ page import="model.ACTIVITY" %>
 <%
     String activityId = request.getParameter("activityID");
-    ACTIVITY activity = (activityId != null) ? ACTIVITY.getActivityById(activityId) : null;
-    CLUB club = (activity != null) ? CLUB.getClubById(activity.getClubID()) : null;
-    String clubName = (club != null) ? club.getClubName() : "N/A";
+    ACTIVITY activity = null;
+    if (activityId != null) {
+        activity = ACTIVITY.getActivityById(activityId);
+    }
 %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>View Activity Proposal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <title>View Proposal</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Poppins', Arial, sans-serif; background: #f6f6f6; }
@@ -21,7 +21,7 @@
           background-color: #238B87;
           color: white;
           position: fixed;
-          padding: 30px 20px 20px 20px;
+          padding: 40px 20px 20px 20px;
           overflow-y: auto;
           z-index: 10;
           text-align: center;
@@ -34,76 +34,62 @@
           aspect-ratio: 1 / 1;
           border-radius: 50%;
           object-fit: cover;
-          margin-bottom: 10px;
+          margin-bottom: 30px;
           border: 3px solid white;
           background: #fff;
-        }
-        .sidebar .mpp-title {
-          font-weight: bold;
-          font-size: 18px;
-          margin-bottom: 30px;
-          line-height: 1.2;
-          letter-spacing: 1px;
         }
         .sidebar ul {
           list-style: none;
           padding-left: 0;
-          margin-top: 20px;
           width: 100%;
         }
         .sidebar ul li {
           margin-bottom: 15px;
+          margin-top: 20px;
         }
         .sidebar ul li a {
           color: white;
           text-decoration: none;
-          padding: 12px 0;
+          padding: 13px 0;
           display: block;
           border-radius: 5px;
           font-size: 16px;
           transition: background-color 0.2s ease;
           width: 100%;
+          text-align: center;
         }
         .sidebar ul li a.active, .sidebar ul li a:hover {
           background-color: #1a7e7c;
           font-weight: bold;
         }
-        .toggle-btn {
-          position: fixed;
-          left: 20px;
-          top: 20px;
-          z-index: 1000;
-          background-color: #219a98;
-          color: white;
-          border: none;
-          padding: 10px 15px;
-          cursor: pointer;
-          border-radius: 5px;
-          font-size: 22px;
-          display: none;
-        }
         .main-content {
           margin-left: 270px;
-          transition: margin-left 0.3s ease;
           min-height: 100vh;
+          background: #f6f6f6;
         }
         .header {
           display: flex;
           align-items: center;
           background-color: #238B87;
-          color: #333;
-          padding: 18px 40px 18px 40px;
+          color: #fff;
+          padding: 18px 40px;
           box-shadow: 0 2px 4px rgba(0,0,0,0.05);
           position: sticky;
           top: 0;
           z-index: 5;
           gap: 20px;
+          justify-content: space-between;
+        }
+        .header-title {
+          font-size: 32px;
+          font-weight: bold;
+          letter-spacing: 1px;
         }
         .header .top-icons {
           display: flex;
           align-items: center;
           gap: 18px;
-          margin-left: auto;
+          position: relative;
         }
         .header .top-icons img {
           width: 45px;
@@ -121,104 +107,44 @@
         .notification-dropdown {
           display: none;
           position: absolute;
-          top: 80px;
+          top: 60px;
           right: 60px;
-          background-color: white;
-          color: black;
+          background-color: #fff;
+          color: #222;
           border: 1px solid #ccc;
           border-radius: 8px;
-          padding: 10px;
-          width: 200px;
+          padding: 14px 18px;
+          width: 240px;
           box-shadow: 0 2px 8px rgba(0,0,0,0.15);
           z-index: 100;
-        }
-        @media (max-width: 900px) {
-          .main-content { margin-left: 0; }
-          .sidebar { position: static; width: 100%; height: auto; }
-          .toggle-btn { display: block; }
-        }
-        /* Proposal card styles (from previous) */
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: #fff;
-            padding: 36px 48px;
-            border-radius: 16px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.10);
-        }
-        h1 { text-align: center; color: #238B87; margin-bottom: 32px; }
-        .detail-row {
-            margin-bottom: 18px;
-            font-size: 18px;
-            display: flex;
-            align-items: flex-start;
-        }
-        .detail-row strong {
-            display: inline-block;
-            width: 200px;
-            color: #00796B;
-            font-weight: 600;
-        }
-        .detail-row span { color: #333; flex: 1; }
-        .poster {
-            display: block;
-            margin: 0 auto 18px auto;
-            width: 100%;
-            max-width: 340px;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-        }
-        .actions {
-            text-align: center;
-            margin-top: 40px;
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-        }
-        .action-btn {
-            text-decoration: none;
-            color: #fff;
-            padding: 12px 30px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 500;
-            transition: background 0.2s;
-        }
-        .approve-btn { background: #4caf50; }
-        .reject-btn { background: #f44336; }
-        .back-btn { background: #777; }
-        .file-link {
-            color: #00796B;
-            text-decoration: underline;
-            font-weight: 500;
-        }
-        @media (max-width: 700px) {
-            .container { padding: 18px 6vw; }
-            .detail-row strong { width: 120px; }
+          font-size: 16px;
         }
         .activity-btn {
-                width: 100%;
-                padding: 15px;
-                background-color: #f44336;
-                color: white;
-                border: none;
-                border-radius: 8px;
-                font-size: 16px;
-                font-weight: bold;
-                cursor: pointer;
-                transition: background-color 0.2s;
-                margin: 0;
-            }
-             .activity-btn:hover {
-                background-color: #d32f2f;
-            }
+          width: 100%;
+          padding: 15px;
+          background-color: #f44336;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          font-size: 16px;
+          font-weight: bold;
+          cursor: pointer;
+          transition: background-color 0.2s;
+          margin: 0;
+        }
+        .activity-btn:hover {
+          background-color: #d32f2f;
+        }
+        .container { max-width: 700px; margin: 40px auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); padding: 32px; }
+        h1 { color: #008b8b; margin-bottom: 24px; }
+        .proposal-info { margin-bottom: 32px; }
+        .label { font-weight: bold; color: #333; display: inline-block; width: 180px; }
+        .value { color: #444; }
+        .back-btn { background: #008b8b; color: #fff; border: none; border-radius: 6px; padding: 10px 24px; font-size: 16px; cursor: pointer; text-decoration: none; }
+        .back-btn:hover { background: #005f5f; }
     </style>
 </head>
 <body>
-
-<button class="toggle-btn" onclick="toggleSidebar()">☰</button>
 
 <div class="sidebar" id="sidebar">
   <img src="image/mppUMPSA.jpg" alt="MPP Logo" class="profile-pic">
@@ -233,106 +159,113 @@
     <form action="index.jsp">
         <button type="submit" class="activity-btn">Logout</button>
     </form>
-</div>
+  </div>
 </div>
 
 <div class="main-content" id="mainContent">
   <div class="header">
-    <button class="toggle-btn" onclick="toggleSidebar()" style="display:block;">☰</button>
+    <div class="header-title">VIEW PROPOSAL</div>
     <div class="top-icons">
-      <img src="image/umpsa.png" alt="Logo UMP">
-      <button class="notification-btn" id="notificationBtn" style="background:none; border:none; cursor:pointer; padding:0;">
-        <img src="image/bell.png" alt="Notifications">
-      </button>
-      <img src="image/mppUMPSA.jpg" alt="Profile" class="profile-icon">
+      <img src="image/umpsa.png" alt="UMPSA Logo">
+      <img src="image/bell.png" alt="Notifications" id="notificationBtn" style="cursor:pointer;">
+      <img src="image/mppUMPSA.jpg" alt="MPP Logo" class="profile-icon">
+      <div class="notification-dropdown" id="notificationDropdown">
+        <strong>Notifications</strong>
+        <ul style="margin:10px 0 0 0; padding:0 0 0 18px;">
+          <li>No new notifications</li>
+        </ul>
+      </div>
     </div>
   </div>
-  <div class="notification-dropdown" id="notificationDropdown">
-    <p>No new notifications</p>
-  </div>
-
-  <div class="container">
-    <h1>Activity Proposal Details</h1>
-    <% if (activity != null) { %>
-        <% if (activity.getPosterImage() != null && activity.getPosterImage().length > 0) { %>
-            <img class="poster" src="ActivityImageServlet?activityID=<%= activity.getActivityID() %>&type=poster" alt="Activity Poster" />
-        <% } %>
-        <div class="detail-row">
-            <strong>Activity Name:</strong>
-            <span><%= activity.getActivityName() %></span>
-        </div>
-        <div class="detail-row">
-            <strong>Club:</strong>
-            <span><%= clubName %></span>
-        </div>
-        <div class="detail-row">
-            <strong>Type:</strong>
-            <span><%= activity.getActivityType() %></span>
-        </div>
-        <div class="detail-row">
-            <strong>Date:</strong>
-            <span><%= activity.getActivityDate() %></span>
-        </div>
-        <div class="detail-row">
-            <strong>Venue:</strong>
-            <span><%= activity.getActivityVenue() %></span>
-        </div>
-        <div class="detail-row">
-            <strong>Status:</strong>
-            <span><%= activity.getActivityStatus() %></span>
-        </div>
-        <div class="detail-row">
-            <strong>Budget (RM):</strong>
-            <span><%= String.format("%.2f", activity.getActivityBudget()) %></span>
-        </div>
-        <div class="detail-row">
-            <strong>Adab Points:</strong>
-            <span><%= activity.getAdabPoint() %></span>
-        </div>
-        <div class="detail-row">
-            <strong>Description:</strong>
-            <span><%= activity.getActivityDesc() %></span>
-        </div>
-        <% if (activity.getProposalFile() != null && activity.getProposalFile().length > 0) { %>
-        <div class="detail-row">
-            <strong>Proposal File:</strong>
-            <span><a class="file-link" href="ActivityImageServlet?activityID=<%= activity.getActivityID() %>&type=proposal" target="_blank">Download/View</a></span>
-        </div>
-        <% } %>
-        <% if ("Approved".equalsIgnoreCase(activity.getActivityStatus()) && activity.getQrImage() != null && activity.getQrImage().length > 0) { %>
-        <div class="detail-row">
-            <strong>QR Image:</strong>
-            <span><a class="file-link" href="ActivityImageServlet?activityID=<%= activity.getActivityID() %>&type=qr" target="_blank">View QR</a></span>
-        </div>
-        <% } %>
-        <div class="actions">
-            <% if ("Pending".equalsIgnoreCase(activity.getActivityStatus())) { %>
-                <a href="handleProposal?action=approve&activityID=<%= activity.getActivityID() %>" class="action-btn approve-btn">Approve</a>
-                <a href="handleProposal?action=reject&activityID=<%= activity.getActivityID() %>" class="action-btn reject-btn">Reject</a>
+    <div class="container">
+        <h1>View Proposal</h1>
+        <% if (activity != null) { %>
+        <div class="proposal-info">
+            <% if (activity.getPosterImage() != null) { %>
+              <div style="text-align:center; margin-bottom:24px;">
+                <img src="ActivityFileServlet?activityID=<%= activity.getActivityID() %>&type=poster" alt="Poster Image" style="max-width:220px; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.08); cursor:pointer;" id="posterThumb">
+              </div>
+              <!-- Modal for full-size poster image -->
+              <div id="posterModal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.7); align-items:center; justify-content:center;">
+                <span id="closeModal" style="position:absolute; top:30px; right:50px; color:#fff; font-size:40px; font-weight:bold; cursor:pointer;">&times;</span>
+                <img src="ActivityFileServlet?activityID=<%= activity.getActivityID() %>&type=poster" alt="Poster Image" style="max-width:80vw; max-height:80vh; border-radius:12px; box-shadow:0 4px 24px rgba(0,0,0,0.25); display:block; margin:auto;">
+              </div>
+              <script>
+                document.getElementById('posterThumb').onclick = function() {
+                  document.getElementById('posterModal').style.display = 'flex';
+                };
+                document.getElementById('closeModal').onclick = function() {
+                  document.getElementById('posterModal').style.display = 'none';
+                };
+                document.getElementById('posterModal').onclick = function(e) {
+                  if (e.target === this) this.style.display = 'none';
+                };
+              </script>
             <% } %>
-            <a href="adminDashboardPage.jsp" class="action-btn back-btn">Back</a>
+            <div><span class="label">Activity ID:</span> <span class="value"><%= activity.getActivityID() %></span></div>
+            <div><span class="label">Name:</span> <span class="value"><%= activity.getActivityName() %></span></div>
+            <div><span class="label">Type:</span> <span class="value"><%= activity.getActivityType() %></span></div>
+            <div><span class="label">Description:</span> <span class="value"><%= activity.getActivityDesc() %></span></div>
+            <div><span class="label">Date:</span> <span class="value"><%= activity.getActivityDate() %></span></div>
+            <div><span class="label">Venue:</span> <span class="value"><%= activity.getActivityVenue() %></span></div>
+            <div><span class="label">Status:</span> <span class="value"><%= activity.getActivityStatus() %></span></div>
+            <div><span class="label">Budget:</span> <span class="value"><%= activity.getActivityBudget() %></span></div>
+            <div><span class="label">Adab Point:</span> <span class="value"><%= activity.getAdabPoint() %></span></div>
+            <div><span class="label">Proposal File:</span> <span class="value">
+                <% if (activity.getProposalFile() != null) { %>
+                  <a href="ActivityFileServlet?activityID=<%= activity.getActivityID() %>&type=proposal" target="_blank">Download Proposal File</a>
+                <% } else { %>
+                  <span>No file</span>
+                <% } %>
+            </span></div>
+            <div><span class="label">QR Image:</span> <span class="value">
+                <% if (activity.getQrImage() != null) { %>
+                  <img src="ActivityFileServlet?activityID=<%= activity.getActivityID() %>&type=qr" alt="QR Image" style="max-width:120px; cursor:pointer;" id="qrThumb">
+                  <!-- Modal for full-size QR image -->
+                  <div id="qrModal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.7); align-items:center; justify-content:center;">
+                    <span id="closeQrModal" style="position:absolute; top:30px; right:50px; color:#fff; font-size:40px; font-weight:bold; cursor:pointer;">&times;</span>
+                    <img src="ActivityFileServlet?activityID=<%= activity.getActivityID() %>&type=qr" alt="QR Image" style="max-width:60vw; max-height:60vh; border-radius:12px; box-shadow:0 4px 24px rgba(0,0,0,0.25); display:block; margin:auto;">
+                  </div>
+                  <script>
+                    document.getElementById('qrThumb').onclick = function() {
+                      document.getElementById('qrModal').style.display = 'flex';
+                    };
+                    document.getElementById('closeQrModal').onclick = function() {
+                      document.getElementById('qrModal').style.display = 'none';
+                    };
+                    document.getElementById('qrModal').onclick = function(e) {
+                      if (e.target === this) this.style.display = 'none';
+                    };
+                  </script>
+                <% } else { %>
+                  <span>No QR image</span>
+                <% } %>
+            </span></div>
+            <div><span class="label">Activity Fee:</span> <span class="value"><%= activity.getActivityFee() %></span></div>
         </div>
-    <% } else { %>
-        <p>Activity not found.</p>
-        <div class="actions">
-            <a href="adminDashboardPage.jsp" class="action-btn back-btn">Back</a>
+        <% } else { %>
+        <div class="proposal-info">
+            <span style="color:#c00;">No activity found.</span>
         </div>
-    <% } %>
-  </div>
+        <% } %>
+        <a href="adminDashboardPage.jsp" class="back-btn">Back</a>
+    </div>
 </div>
 
 <script>
-  function toggleSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    const mainContent = document.getElementById('mainContent');
-    sidebar.classList.toggle('closed');
-    mainContent.classList.toggle('full-width');
-  }
-  document.getElementById("notificationBtn").addEventListener("click", function () {
-    const dropdown = document.getElementById("notificationDropdown");
-    dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+  document.addEventListener('DOMContentLoaded', function() {
+    var bell = document.getElementById('notificationBtn');
+    var dropdown = document.getElementById('notificationDropdown');
+    bell.addEventListener('click', function(e) {
+      e.stopPropagation();
+      dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    });
+    document.addEventListener('click', function(e) {
+      if (dropdown.style.display === 'block') {
+        dropdown.style.display = 'none';
+      }
+    });
   });
 </script>
-
 </body>
 </html> 

@@ -196,4 +196,41 @@ public class STAFF {
             return false;
         }
     }
+
+    // Update staff information including profile picture
+    public static boolean updateStaffWithProfilePicture(int staffID, String staffName, String staffEmail, String staffPhone, String staffDep, byte[] profilePicBlob) {
+        String sql = "UPDATE staff SET staffName=?, staffEmail=?, staffPhone=?, staffDep=?, profilePicBlob=? WHERE staffID=?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, staffName);
+            pstmt.setString(2, staffEmail);
+            pstmt.setString(3, staffPhone);
+            pstmt.setString(4, staffDep);
+            pstmt.setBytes(5, profilePicBlob);
+            pstmt.setInt(6, staffID);
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // Update staff information without changing profile picture
+    public static boolean updateStaffFromSettings(int staffID, String staffName, String staffEmail, String staffPhone, String staffDep) {
+        String sql = "UPDATE staff SET staffName=?, staffEmail=?, staffPhone=?, staffDep=? WHERE staffID=?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, staffName);
+            pstmt.setString(2, staffEmail);
+            pstmt.setString(3, staffPhone);
+            pstmt.setString(4, staffDep);
+            pstmt.setInt(5, staffID);
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.List, model.ACTIVITY, model.CLUB, model.REGISTERATION, model.STUDENT" %>
+<%@ page import="java.util.List, model.ACTIVITY, model.CLUB, model.REGISTERATION, model.STUDENT, org.json.JSONArray" %>
 <%
     List<CLUB> clubList = CLUB.getAllClubs();
     String selectedClubIdStr = request.getParameter("clubID");
@@ -11,20 +11,19 @@
         ? ACTIVITY.getActivitiesByClubId(selectedClubId)
         : ACTIVITY.getAllActivities();
     // Prepare data for the pie chart
-    StringBuilder activityLabels = new StringBuilder();
+    JSONArray activityLabelsJson = new JSONArray();
     StringBuilder activityCounts = new StringBuilder();
     int totalMembers = 0;
     for (ACTIVITY activity : activityList) {
         int count = REGISTERATION.getStudentCountForActivity(activity.getActivityID());
-        if (activityLabels.length() > 0) {
-            activityLabels.append(", ");
+        activityLabelsJson.put(activity.getActivityName());
+        if (activityCounts.length() > 0) {
             activityCounts.append(", ");
         }
-        activityLabels.append("\"").append(activity.getActivityName()).append("\"");
         activityCounts.append(count);
         totalMembers += count;
     }
-    String jsLabels = activityLabels.length() > 0 ? "[" + activityLabels.toString() + "]" : "[]";
+    String jsLabels = activityLabelsJson.toString();
     String jsCounts = activityCounts.length() > 0 ? "[" + activityCounts.toString() + "]" : "[]";
 %>
 <!DOCTYPE html>
@@ -146,6 +145,8 @@
       margin: 40px 0 30px 0;
       justify-content: center;
       align-items: stretch;
+      width: 100%;
+      max-width: 1200px;
     }
     .activity-btn {
                 width: 100%;
@@ -286,8 +287,11 @@
     .dashboard-card.flex-row {
       flex-direction: row;
       align-items: center;
-      justify-content: flex-start;
+      justify-content: space-between;
       gap: 24px;
+      min-width: 500px;
+      width: 100%;
+      max-width: 700px;
     }
     .dashboard-card.flex-row img {
       width: 130px;
@@ -300,7 +304,7 @@
       font-size: 20px;
       font-weight: 500;
       margin-bottom: 0;
-      text-align: left;
+      text-align: right;
       line-height: 1.2;
     }
     .dashboard-card canvas {
@@ -352,7 +356,7 @@
     </div>
     <div class="dashboard-card flex-row">
       <canvas id="activityPopularityChart" width="130" height="130"></canvas>
-      <div class="card-title">Activity<br>Popularity</div>
+      <div class="card-title" id="activityNameDisplay">Activity Popularity</div>
     </div>
   </div>
 
@@ -409,8 +413,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-  const activityLabels = JSON.parse('<%= jsLabels %>');
-  const activityCounts = JSON.parse('<%= jsCounts %>');
+  const activityLabels = JSON.parse('<%= jsLabels.replace("\"", "\\\"") %>');
+  const activityCounts = JSON.parse('<%= jsCounts.replace("\"", "\\\"") %>');
   const ctx = document.getElementById('activityPopularityChart').getContext('2d');
   const total = activityCounts.reduce((a, b) => a + b, 0);
 
@@ -426,6 +430,14 @@
       }]
     },
     options: {
+      onHover: function(event, chartElement) {
+        if (chartElement.length) {
+          var idx = chartElement[0].index;
+          document.getElementById('activityNameDisplay').textContent = activityLabels[idx];
+        } else {
+          document.getElementById('activityNameDisplay').textContent = 'Activity Popularity';
+        }
+      },
       plugins: {
         tooltip: {
           callbacks: {

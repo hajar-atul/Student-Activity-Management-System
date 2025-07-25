@@ -22,7 +22,7 @@
       background-color: #238B87;
       color: white;
       position: fixed;
-      padding: 30px 20px 20px 20px;
+      padding: 40px 20px 20px 20px;
       overflow-y: auto;
       z-index: 10;
       text-align: center;
@@ -35,16 +35,9 @@
       aspect-ratio: 1 / 1;
       border-radius: 50%;
       object-fit: cover;
-      margin-bottom: 10px;
+      margin-bottom: 30px;
       border: 3px solid white;
       background: #fff;
-    }
-    .sidebar .mpp-title {
-      font-weight: bold;
-      font-size: 18px;
-      margin-bottom: 30px;
-      line-height: 1.2;
-      letter-spacing: 1px;
     }
     .sidebar ul {
       list-style: none;
@@ -64,59 +57,40 @@
       font-size: 16px;
       transition: background-color 0.2s ease;
       width: 100%;
+      text-align: center;
     }
     .sidebar ul li a.active, .sidebar ul li a:hover {
       background-color: #1a7e7c;
       font-weight: bold;
     }
-    .toggle-btn {
-      position: fixed;
-      left: 20px;
-      top: 20px;
-      z-index: 1000;
-      background-color: #219a98;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      cursor: pointer;
-      border-radius: 5px;
-      font-size: 22px;
-      display: none;
-    }
     .main-content {
       margin-left: 270px;
-      transition: margin-left 0.3s ease;
       min-height: 100vh;
+      background: #f6f6f6;
     }
     .header {
       display: flex;
       align-items: center;
       background-color: #238B87;
-      color: #333;
-      padding: 18px 40px 18px 40px;
+      color: #fff;
+      padding: 18px 40px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.05);
       position: sticky;
       top: 0;
       z-index: 5;
       gap: 20px;
+      justify-content: space-between;
     }
-    .header .search-container {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-    }
-    .header .search-container input {
-      width: 350px;
-      padding: 8px 16px;
-      border-radius: 20px;
-      border: 1px solid #ccc;
-      font-size: 16px;
-      outline: none;
+    .header-title {
+      font-size: 32px;
+      font-weight: bold;
+      letter-spacing: 1px;
     }
     .header .top-icons {
       display: flex;
       align-items: center;
       gap: 18px;
+      position: relative;
     }
     .header .top-icons img {
       width: 45px;
@@ -130,6 +104,37 @@
       border-radius: 50%;
       border: none;
       background: transparent;
+    }
+    .notification-dropdown {
+      display: none;
+      position: absolute;
+      top: 60px;
+      right: 60px;
+      background-color: #fff;
+      color: #222;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 14px 18px;
+      width: 240px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      z-index: 100;
+      font-size: 16px;
+    }
+    .activity-btn {
+      width: 100%;
+      padding: 15px;
+      background-color: #f44336;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      margin: 0;
+    }
+    .activity-btn:hover {
+      background-color: #d32f2f;
     }
     .activity-section {
       padding: 40px 40px 0 40px;
@@ -237,27 +242,9 @@
       .overview-cards { flex-direction: column; gap: 18px; }
       .activity-section { padding: 20px 10px 0 10px; }
     }
-    .activity-btn {
-                width: 100%;
-                padding: 15px;
-                background-color: #f44336;
-                color: white;
-                border: none;
-                border-radius: 8px;
-                font-size: 16px;
-                font-weight: bold;
-                cursor: pointer;
-                transition: background-color 0.2s;
-                margin: 0;
-            }
-             .activity-btn:hover {
-                background-color: #d32f2f;
-            }
   </style>
 </head>
 <body>
-
-<button class="toggle-btn" onclick="toggleSidebar()">☰</button>
 
 <div class="sidebar" id="sidebar">
   <img src="image/mppUMPSA.jpg" alt="MPP Logo" class="profile-pic">
@@ -272,18 +259,22 @@
     <form action="index.jsp">
         <button type="submit" class="activity-btn">Logout</button>
     </form>
-</div>
+  </div>
 </div>
 
 <div class="main-content" id="mainContent">
   <div class="header">
-    <button class="toggle-btn" onclick="toggleSidebar()" style="display:block;">☰</button>
-    <div class="top-icons" style="margin-left:auto;">
-      <img src="image/umpsa.png" alt="Logo UMP" style="width:45px;height:45px;">
-      <button class="notification-btn" id="notificationBtn" style="background:none; border:none; cursor:pointer; padding:0;">
-        <img src="image/bell.png" alt="Notifications">
-      </button>
-      <img src="image/mppUMPSA.jpg" alt="Profile" class="profile-icon">
+    <div class="header-title">MANAGE ACTIVITIES</div>
+    <div class="top-icons">
+      <img src="image/umpsa.png" alt="UMPSA Logo">
+      <img src="image/bell.png" alt="Notifications" id="notificationBtn" style="cursor:pointer;">
+      <img src="image/mppUMPSA.jpg" alt="MPP Logo" class="profile-icon">
+      <div class="notification-dropdown" id="notificationDropdown">
+        <strong>Notifications</strong>
+        <ul style="margin:10px 0 0 0; padding:0 0 0 18px;">
+          <li>No new notifications</li>
+        </ul>
+      </div>
     </div>
   </div>
   <div class="notification-dropdown" id="notificationDropdown" style="display:none; position:absolute; top:80px; right:60px; background-color:white; color:black; border:1px solid #ccc; border-radius:8px; padding:10px; width:200px; box-shadow:0 2px 8px rgba(0,0,0,0.15); z-index:100;">
@@ -389,15 +380,18 @@
 </div>
 
 <script>
-  function toggleSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    const mainContent = document.getElementById('mainContent');
-    sidebar.classList.toggle('closed');
-    mainContent.classList.toggle('full-width');
-  }
-  document.getElementById("notificationBtn").addEventListener("click", function () {
-    const dropdown = document.getElementById("notificationDropdown");
-    dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+  document.addEventListener('DOMContentLoaded', function() {
+    var bell = document.getElementById('notificationBtn');
+    var dropdown = document.getElementById('notificationDropdown');
+    bell.addEventListener('click', function(e) {
+      e.stopPropagation();
+      dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    });
+    document.addEventListener('click', function(e) {
+      if (dropdown.style.display === 'block') {
+        dropdown.style.display = 'none';
+      }
+    });
   });
 </script>
 

@@ -279,6 +279,7 @@
         <a href="<%= request.getContextPath() %>/StaffAdabPointServlet">ADAB POINT</a>
         <a href="<%= request.getContextPath() %>/addClub.jsp">CLUB REGISTRATION</a>
         <a href="<%= request.getContextPath() %>/addStaff.jsp">ADD STAFF</a>
+        <a href="<%= request.getContextPath() %>/staffSettings.jsp">SETTINGS</a>
     </div>
     <div style="position: absolute; bottom: 20px; width: 80%; left: 10%;">
         <form action="index.jsp" method="get">
@@ -314,6 +315,7 @@
                 <a href="staffBooking.jsp" class="action-btn">ALL BOOKING</a>
                 <a href="staffBooking.jsp?type=venue" class="action-btn">VENUE BOOKING</a>
                 <a href="staffBooking.jsp?type=resource" class="action-btn">RESOURCE BOOKING</a>
+                <a href="staffBooking.jsp?type=approved" class="action-btn" style="background:#388e3c; color:white;">APPROVED BOOKING</a>
                 <a href="staffBooking.jsp?type=rejected" class="action-btn" style="background:#c62828; color:white;">REJECTED BOOKING</a>
             </div>
 
@@ -381,18 +383,40 @@
                         </td>
                         <td><%= activityName %></td>
                         <td>
-                            <form action="<%= request.getContextPath() %>/UpdateBookingStatusServlet" method="post" style="display:inline;">
-                                <input type="hidden" name="bookingId" value="<%= booking.getBookingID() %>">
-                                <input type="hidden" name="status" value="Approved">
-                                <input type="hidden" name="redirectPage" value="staffBooking.jsp">
-                                <button type="submit" class="btn approve">Approve</button>
-                            </form>
-                            <form action="<%= request.getContextPath() %>/UpdateBookingStatusServlet" method="post" style="display:inline;">
-                                <input type="hidden" name="bookingId" value="<%= booking.getBookingID() %>">
-                                <input type="hidden" name="status" value="Rejected">
-                                <input type="hidden" name="redirectPage" value="staffBooking.jsp">
-                                <button type="submit" class="btn reject">Reject</button>
-                            </form>
+                            <% if ("Pending".equalsIgnoreCase(booking.getStatus())) { %>
+                                <div class="action-buttons">
+                                    <form action="<%= request.getContextPath() %>/UpdateBookingStatusServlet" method="post" style="display:inline;">
+                                        <input type="hidden" name="bookingId" value="<%= booking.getBookingID() %>">
+                                        <input type="hidden" name="status" value="Approved">
+                                        <input type="hidden" name="redirectPage" value="staffBooking.jsp">
+                                        <button type="submit" class="btn approve">Approve</button>
+                                    </form>
+                                    <form action="<%= request.getContextPath() %>/UpdateBookingStatusServlet" method="post" style="display:inline;">
+                                        <input type="hidden" name="bookingId" value="<%= booking.getBookingID() %>">
+                                        <input type="hidden" name="status" value="Rejected">
+                                        <input type="hidden" name="redirectPage" value="staffBooking.jsp">
+                                        <button type="submit" class="btn reject">Reject</button>
+                                    </form>
+                                </div>
+                            <% } else { %>
+                                <div class="edit-link-container" id="edit-link-<%= booking.getBookingID() %>">
+                                    <a href="#" class="edit-link" style="color:#1976d2; text-decoration:underline; font-weight:600;" onclick="showEditButtons('<%= booking.getBookingID() %>'); return false;">Edit</a>
+                                </div>
+                                <div class="action-buttons" id="action-buttons-<%= booking.getBookingID() %>" style="display:none;">
+                                    <form action="<%= request.getContextPath() %>/UpdateBookingStatusServlet" method="post" style="display:inline;">
+                                        <input type="hidden" name="bookingId" value="<%= booking.getBookingID() %>">
+                                        <input type="hidden" name="status" value="Approved">
+                                        <input type="hidden" name="redirectPage" value="staffBooking.jsp">
+                                        <button type="submit" class="btn approve">Approve</button>
+                                    </form>
+                                    <form action="<%= request.getContextPath() %>/UpdateBookingStatusServlet" method="post" style="display:inline;">
+                                        <input type="hidden" name="bookingId" value="<%= booking.getBookingID() %>">
+                                        <input type="hidden" name="status" value="Rejected">
+                                        <input type="hidden" name="redirectPage" value="staffBooking.jsp">
+                                        <button type="submit" class="btn reject">Reject</button>
+                                    </form>
+                                </div>
+                            <% } %>
                         </td>
                     </tr>
                     <% } %>
@@ -408,6 +432,11 @@
         sidebar.classList.toggle('closed');
         document.body.classList.toggle('sidebar-collapsed');
     });
+
+    function showEditButtons(bookingId) {
+        document.getElementById('edit-link-' + bookingId).style.display = 'none';
+        document.getElementById('action-buttons-' + bookingId).style.display = 'inline-block';
+    }
 </script>
 </body>
 </html>

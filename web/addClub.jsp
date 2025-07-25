@@ -268,6 +268,7 @@
         <a href="<%= request.getContextPath() %>/StaffAdabPointServlet">ADAB POINT</a>
         <a href="<%= request.getContextPath() %>/addClub.jsp">CLUB REGISTRATION</a>
         <a href="<%= request.getContextPath() %>/addStaff.jsp">ADD STAFF</a>
+        <a href="<%= request.getContextPath() %>/staffSettings.jsp">SETTINGS</a>
     </div>
     <div style="position: absolute; bottom: 20px; width: 80%; left: 10%;">
         <form action="index.jsp" method="get">
