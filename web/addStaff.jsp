@@ -363,7 +363,7 @@
         <div class="container">
             <div class="form-header">
                 <img src="image/userIcon.png" alt="User Icon">
-                <h1>Add New Staff</h1>
+                <h1 style="color: black;">Add New Staff</h1>
             </div>
             <% if (request.getParameter("success") != null) { %>
                 <div class="message success">
@@ -377,23 +377,23 @@
             <% } %>
             <form action="<%= request.getContextPath() %>/AddStaffServlet" method="post" enctype="multipart/form-data" class="horizontal-form">
                 <div class="form-row">
-                    <label for="staffID">Staff ID:</label>
+                    <label for="staffID" style="color: black;">Staff ID:</label>
                     <input type="number" id="staffID" name="staffID" required placeholder="Enter staff ID">
                 </div>
                 <div class="form-row">
-                    <label for="staffName">Staff Name:</label>
+                    <label for="staffName" style="color: black;">Staff Name:</label>
                     <input type="text" id="staffName" name="staffName" required placeholder="Enter full name">
                 </div>
                 <div class="form-row">
-                    <label for="staffEmail">Staff Email:</label>
-                    <input type="email" id="staffEmail" name="staffEmail" required placeholder="e.g. staff@university.edu">
+                    <label for="staffEmail" style="color: black;">Staff Email:</label>
+                    <input type="email" id="staffEmail" name="staffEmail" required placeholder="e.g. staff@ump.edu">
                 </div>
                 <div class="form-row">
-                    <label for="staffPhone">Staff Phone:</label>
+                    <label for="staffPhone" style="color: black;">Staff Phone:</label>
                     <input type="tel" id="staffPhone" name="staffPhone" required placeholder="e.g. 012-3456789">
                 </div>
                 <div class="form-row">
-                    <label for="staffDep">Staff Department:</label>
+                    <label for="staffDep" style="color: black;">Staff Department:</label>
                     <select id="staffDep" name="staffDep" required>
                         <option value="">Select Department</option>
                         <option value="Computer Science">Computer Science</option>
@@ -408,11 +408,11 @@
                     </select>
                 </div>
                 <div class="form-row">
-                    <label for="staffPassword">Staff Password:</label>
+                    <label for="staffPassword" style="color: black;">Staff Password:</label>
                     <input type="password" id="staffPassword" name="staffPassword" required placeholder="Create a password">
                 </div>
                 <div class="form-row">
-                    <label>Profile Picture <span style='color:red'>*</span></label>
+                    <label style="color: black;">Profile Picture <span style='color:red'>*</span></label>
                     <input type="file" name="profilePic" accept="image/png, image/jpeg" required>
                 </div>
                 <button type="submit" class="submit-btn">Add Staff</button>

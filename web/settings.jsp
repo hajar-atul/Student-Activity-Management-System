@@ -6,7 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en">W
 <head>
     <meta charset="UTF-8">
     <title>Student Settings</title>

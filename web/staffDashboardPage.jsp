@@ -263,12 +263,6 @@
                 <p style="margin:0; color:#444; font-weight:bold;">Approved Bookings</p>
             </div>
         </div>
-        <div style="display:flex; gap:24px; max-width:900px; margin:0 auto 24px auto;">
-            <div class="dashboard-card-clickable" style="flex:1; background:#ffeaea; border-radius:12px; padding:24px 0; text-align:center; box-shadow:0 2px 8px rgba(255,0,0,0.08);">
-                <h3 style="margin:0 0 8px 0; font-size:2em; color:#c62828;">Rejected Bookings</h3>
-                <p style="margin:0; color:#c62828; font-weight:bold;">View all rejected venue and resource bookings</p>
-            </div>
-        </div>
 
         <div style="max-width:900px; margin:0 auto 32px auto; background:#fff; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.04); padding:24px;">
             <h3 style="color:#222; margin-bottom:16px;">Rejected Bookings List</h3>
