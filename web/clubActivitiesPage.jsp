@@ -335,18 +335,7 @@
         <div style="background: #f8d7da; color: #721c24; padding: 12px; margin-bottom: 20px; border-radius: 6px; text-align: center; font-weight: 500;">
           <%= errorMsg.replace("+", " ") %>
         </div>
-      <% } %>
-      
-      <!-- Create Activity Button -->
-      <div style="margin-bottom: 20px; text-align: right;">
-        <a href="createActivity.jsp" 
-           style="background: #00796B; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: 500; transition: background-color 0.3s ease;"
-           onmouseover="this.style.background='#004d40'"
-           onmouseout="this.style.background='#00796B'">
-          ➕ Create New Activity
-        </a>
-      </div>
-      
+      <% } %>     
       <div style="margin-bottom: 20px; display: flex; gap: 10px; align-items: center;">
         <span style="font-weight: 500;">Sort:</span>
         <form method="get" style="display:inline;">

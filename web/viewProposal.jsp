@@ -14,6 +14,7 @@
     <title>View Proposal</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; overflow: hidden; }
         body { font-family: 'Poppins', Arial, sans-serif; background: #f6f6f6; }
         .sidebar {
           width: 270px;
@@ -178,6 +179,7 @@
     </div>
   </div>
     <div class="container">
+        <a href="adminDashboardPage.jsp" class="back-btn" style="margin-bottom: 18px; display: inline-block;">&larr; Back</a>
         <h1>View Proposal</h1>
         <% if (activity != null) { %>
         <div class="proposal-info">
@@ -248,7 +250,7 @@
             <span style="color:#c00;">No activity found.</span>
         </div>
         <% } %>
-        <a href="adminDashboardPage.jsp" class="back-btn">Back</a>
+        <!-- Remove the back button from the bottom -->
     </div>
 </div>
 
