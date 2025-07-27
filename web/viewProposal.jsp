@@ -136,13 +136,191 @@
         .activity-btn:hover {
           background-color: #d32f2f;
         }
-        .container { max-width: 700px; margin: 40px auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); padding: 32px; }
-        h1 { color: #008b8b; margin-bottom: 24px; }
-        .proposal-info { margin-bottom: 32px; }
-        .label { font-weight: bold; color: #333; display: inline-block; width: 180px; }
-        .value { color: #444; }
-        .back-btn { background: #008b8b; color: #fff; border: none; border-radius: 6px; padding: 10px 24px; font-size: 16px; cursor: pointer; text-decoration: none; }
-        .back-btn:hover { background: #005f5f; }
+        .container { 
+          max-width: 1000px; 
+          margin: 30px auto; 
+          background: #fff; 
+          border-radius: 12px; 
+          box-shadow: 0 4px 20px rgba(0,0,0,0.08); 
+          padding: 30px; 
+          overflow: hidden;
+        }
+        h1 { 
+          color: #238B87; 
+          margin-bottom: 32px; 
+          font-size: 28px;
+          font-weight: 600;
+          letter-spacing: -0.5px;
+        }
+        .proposal-info { 
+          margin-bottom: 32px; 
+        }
+        .info-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 16px;
+        }
+        .info-item {
+          display: flex;
+          flex-direction: column;
+          padding: 16px;
+          border: 1px solid #e9ecef;
+          border-radius: 8px;
+          background: #fafbfc;
+          transition: all 0.2s ease;
+          min-height: 80px;
+        }
+        .info-item:hover {
+          background-color: #fff;
+          border-color: #238B87;
+          box-shadow: 0 2px 8px rgba(35, 139, 135, 0.1);
+          transform: translateY(-1px);
+        }
+        .label { 
+          font-weight: 600; 
+          color: #555; 
+          font-size: 11px;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          margin-bottom: 6px;
+          color: #238B87;
+        }
+        .value { 
+          color: #333; 
+          font-size: 14px;
+          line-height: 1.3;
+          font-weight: 500;
+        }
+        .value a {
+          color: #238B87;
+          text-decoration: none;
+          font-weight: 500;
+          transition: color 0.2s ease;
+        }
+        .value a:hover {
+          color: #1a7e7c;
+          text-decoration: underline;
+        }
+        .back-btn { 
+          background: #238B87; 
+          color: #fff; 
+          border: none; 
+          border-radius: 8px; 
+          padding: 12px 24px; 
+          font-size: 14px; 
+          font-weight: 500;
+          cursor: pointer; 
+          text-decoration: none; 
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          transition: all 0.2s ease;
+          margin-bottom: 24px;
+        }
+        .back-btn:hover { 
+          background: #1a7e7c; 
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(35, 139, 135, 0.3);
+        }
+        .poster-section {
+          text-align: center;
+          margin-bottom: 32px;
+          padding: 24px;
+          background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+          border-radius: 12px;
+          border: 1px solid #e9ecef;
+        }
+        .poster-section img {
+          max-width: 280px;
+          border-radius: 12px;
+          box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+          cursor: pointer;
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .poster-section img:hover {
+          transform: scale(1.02);
+          box-shadow: 0 12px 32px rgba(0,0,0,0.18);
+        }
+        .qr-section {
+          display: inline-flex;
+          align-items: center;
+          gap: 12px;
+        }
+        .qr-section img {
+          max-width: 80px;
+          border-radius: 8px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+          cursor: pointer;
+          transition: transform 0.2s ease;
+        }
+        .qr-section img:hover {
+          transform: scale(1.05);
+        }
+        .status-badge {
+          display: inline-block;
+          padding: 6px 12px;
+          border-radius: 20px;
+          font-size: 12px;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+        .status-pending {
+          background-color: #fff3cd;
+          color: #856404;
+        }
+        .status-approved {
+          background-color: #d4edda;
+          color: #155724;
+        }
+        .status-rejected {
+          background-color: #f8d7da;
+          color: #721c24;
+        }
+        .no-data {
+          color: #6c757d;
+          font-style: italic;
+          font-size: 14px;
+        }
+        .error-message {
+          color: #dc3545;
+          background-color: #f8d7da;
+          border: 1px solid #f5c6cb;
+          border-radius: 8px;
+          padding: 16px;
+          text-align: center;
+          font-weight: 500;
+        }
+        
+        /* Responsive design for smaller screens */
+        @media (max-width: 768px) {
+          .info-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+          }
+          .container {
+            max-width: 95%;
+            padding: 20px;
+            margin: 15px auto;
+          }
+          .main-content {
+            margin-left: 0;
+          }
+          .sidebar {
+            display: none;
+          }
+        }
+        
+        @media (max-width: 480px) {
+          .info-grid {
+            grid-template-columns: 1fr;
+            gap: 10px;
+          }
+          .info-item {
+            padding: 12px;
+            min-height: 70px;
+          }
+        }
     </style>
 </head>
 <body>
@@ -179,78 +357,105 @@
     </div>
   </div>
     <div class="container">
-        <a href="adminDashboardPage.jsp" class="back-btn" style="margin-bottom: 18px; display: inline-block;">&larr; Back</a>
-        <h1>View Proposal</h1>
+        <a href="adminDashboardPage.jsp" class="back-btn">
+            <span>&larr;</span>
+            <span>Back to Dashboard</span>
+        </a>
+        <h1>Activity Proposal Details</h1>
         <% if (activity != null) { %>
+        <% if (activity.getPosterImage() != null) { %>
+          <div class="poster-section">
+            <img src="ActivityFileServlet?activityID=<%= activity.getActivityID() %>&type=poster" alt="Poster Image" id="posterThumb">
+          </div>
+          <!-- Modal for full-size poster image -->
+          <div id="posterModal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.8); align-items:center; justify-content:center;">
+            <span id="closeModal" style="position:absolute; top:30px; right:50px; color:#fff; font-size:40px; font-weight:bold; cursor:pointer;">&times;</span>
+            <img src="ActivityFileServlet?activityID=<%= activity.getActivityID() %>&type=poster" alt="Poster Image" style="max-width:80vw; max-height:80vh; border-radius:12px; box-shadow:0 4px 24px rgba(0,0,0,0.25); display:block; margin:auto;">
+          </div>
+        <% } %>
+        
         <div class="proposal-info">
-            <% if (activity.getPosterImage() != null) { %>
-              <div style="text-align:center; margin-bottom:24px;">
-                <img src="ActivityFileServlet?activityID=<%= activity.getActivityID() %>&type=poster" alt="Poster Image" style="max-width:220px; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.08); cursor:pointer;" id="posterThumb">
-              </div>
-              <!-- Modal for full-size poster image -->
-              <div id="posterModal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.7); align-items:center; justify-content:center;">
-                <span id="closeModal" style="position:absolute; top:30px; right:50px; color:#fff; font-size:40px; font-weight:bold; cursor:pointer;">&times;</span>
-                <img src="ActivityFileServlet?activityID=<%= activity.getActivityID() %>&type=poster" alt="Poster Image" style="max-width:80vw; max-height:80vh; border-radius:12px; box-shadow:0 4px 24px rgba(0,0,0,0.25); display:block; margin:auto;">
-              </div>
-              <script>
-                document.getElementById('posterThumb').onclick = function() {
-                  document.getElementById('posterModal').style.display = 'flex';
-                };
-                document.getElementById('closeModal').onclick = function() {
-                  document.getElementById('posterModal').style.display = 'none';
-                };
-                document.getElementById('posterModal').onclick = function(e) {
-                  if (e.target === this) this.style.display = 'none';
-                };
-              </script>
-            <% } %>
-            <div><span class="label">Activity ID:</span> <span class="value"><%= activity.getActivityID() %></span></div>
-            <div><span class="label">Name:</span> <span class="value"><%= activity.getActivityName() %></span></div>
-            <div><span class="label">Type:</span> <span class="value"><%= activity.getActivityType() %></span></div>
-            <div><span class="label">Description:</span> <span class="value"><%= activity.getActivityDesc() %></span></div>
-            <div><span class="label">Date:</span> <span class="value"><%= activity.getActivityDate() %></span></div>
-            <div><span class="label">Venue:</span> <span class="value"><%= activity.getActivityVenue() %></span></div>
-            <div><span class="label">Status:</span> <span class="value"><%= activity.getActivityStatus() %></span></div>
-            <div><span class="label">Budget:</span> <span class="value"><%= activity.getActivityBudget() %></span></div>
-            <div><span class="label">Adab Point:</span> <span class="value"><%= activity.getAdabPoint() %></span></div>
-            <div><span class="label">Proposal File:</span> <span class="value">
-                <% if (activity.getProposalFile() != null) { %>
-                  <a href="ActivityFileServlet?activityID=<%= activity.getActivityID() %>&type=proposal" target="_blank">Download Proposal File</a>
-                <% } else { %>
-                  <span>No file</span>
-                <% } %>
-            </span></div>
-            <div><span class="label">QR Image:</span> <span class="value">
-                <% if (activity.getQrImage() != null) { %>
-                  <img src="ActivityFileServlet?activityID=<%= activity.getActivityID() %>&type=qr" alt="QR Image" style="max-width:120px; cursor:pointer;" id="qrThumb">
-                  <!-- Modal for full-size QR image -->
-                  <div id="qrModal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.7); align-items:center; justify-content:center;">
-                    <span id="closeQrModal" style="position:absolute; top:30px; right:50px; color:#fff; font-size:40px; font-weight:bold; cursor:pointer;">&times;</span>
-                    <img src="ActivityFileServlet?activityID=<%= activity.getActivityID() %>&type=qr" alt="QR Image" style="max-width:60vw; max-height:60vh; border-radius:12px; box-shadow:0 4px 24px rgba(0,0,0,0.25); display:block; margin:auto;">
-                  </div>
-                  <script>
-                    document.getElementById('qrThumb').onclick = function() {
-                      document.getElementById('qrModal').style.display = 'flex';
-                    };
-                    document.getElementById('closeQrModal').onclick = function() {
-                      document.getElementById('qrModal').style.display = 'none';
-                    };
-                    document.getElementById('qrModal').onclick = function(e) {
-                      if (e.target === this) this.style.display = 'none';
-                    };
-                  </script>
-                <% } else { %>
-                  <span>No QR image</span>
-                <% } %>
-            </span></div>
-            <div><span class="label">Activity Fee:</span> <span class="value"><%= activity.getActivityFee() %></span></div>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="label">Activity ID</span>
+                    <span class="value"><%= activity.getActivityID() %></span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Activity Name</span>
+                    <span class="value"><%= activity.getActivityName() %></span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Activity Type</span>
+                    <span class="value"><%= activity.getActivityType() %></span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Description</span>
+                    <span class="value"><%= activity.getActivityDesc() %></span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Date</span>
+                    <span class="value"><%= activity.getActivityDate() %></span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Venue</span>
+                    <span class="value"><%= activity.getActivityVenue() %></span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Status</span>
+                    <span class="value">
+                        <span class="status-badge status-<%= activity.getActivityStatus().toLowerCase() %>">
+                            <%= activity.getActivityStatus() %>
+                        </span>
+                    </span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Budget</span>
+                    <span class="value">RM <%= activity.getActivityBudget() %></span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Adab Point</span>
+                    <span class="value"><%= activity.getAdabPoint() %> points</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Activity Fee</span>
+                    <span class="value">RM <%= activity.getActivityFee() %></span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Proposal File</span>
+                    <span class="value">
+                        <% if (activity.getProposalFile() != null) { %>
+                          <a href="ActivityFileServlet?activityID=<%= activity.getActivityID() %>&type=proposal" target="_blank">📄 Download Proposal</a>
+                        <% } else { %>
+                          <span class="no-data">No file uploaded</span>
+                        <% } %>
+                    </span>
+                </div>
+                <div class="info-item">
+                    <span class="label">QR Code</span>
+                    <span class="value">
+                        <% if (activity.getQrImage() != null) { %>
+                          <div class="qr-section">
+                            <img src="ActivityFileServlet?activityID=<%= activity.getActivityID() %>&type=qr" alt="QR Image" id="qrThumb">
+                            <span>Click to enlarge</span>
+                          </div>
+                          <!-- Modal for full-size QR image -->
+                          <div id="qrModal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.8); align-items:center; justify-content:center;">
+                            <span id="closeQrModal" style="position:absolute; top:30px; right:50px; color:#fff; font-size:40px; font-weight:bold; cursor:pointer;">&times;</span>
+                            <img src="ActivityFileServlet?activityID=<%= activity.getActivityID() %>&type=qr" alt="QR Image" style="max-width:60vw; max-height:60vh; border-radius:12px; box-shadow:0 4px 24px rgba(0,0,0,0.25); display:block; margin:auto;">
+                          </div>
+                        <% } else { %>
+                          <span class="no-data">No QR code generated</span>
+                        <% } %>
+                    </span>
+                </div>
+            </div>
         </div>
         <% } else { %>
-        <div class="proposal-info">
-            <span style="color:#c00;">No activity found.</span>
+        <div class="error-message">
+            <strong>No activity found.</strong><br>
+            The requested activity proposal could not be located.
         </div>
         <% } %>
-        <!-- Remove the back button from the bottom -->
     </div>
 </div>
 
@@ -267,6 +472,52 @@
         dropdown.style.display = 'none';
       }
     });
+    
+    // Poster modal functionality
+    var posterThumb = document.getElementById('posterThumb');
+    var posterModal = document.getElementById('posterModal');
+    var closeModal = document.getElementById('closeModal');
+    
+    if (posterThumb) {
+      posterThumb.onclick = function() {
+        posterModal.style.display = 'flex';
+      };
+    }
+    
+    if (closeModal) {
+      closeModal.onclick = function() {
+        posterModal.style.display = 'none';
+      };
+    }
+    
+    if (posterModal) {
+      posterModal.onclick = function(e) {
+        if (e.target === this) this.style.display = 'none';
+      };
+    }
+    
+    // QR modal functionality
+    var qrThumb = document.getElementById('qrThumb');
+    var qrModal = document.getElementById('qrModal');
+    var closeQrModal = document.getElementById('closeQrModal');
+    
+    if (qrThumb) {
+      qrThumb.onclick = function() {
+        qrModal.style.display = 'flex';
+      };
+    }
+    
+    if (closeQrModal) {
+      closeQrModal.onclick = function() {
+        qrModal.style.display = 'none';
+      };
+    }
+    
+    if (qrModal) {
+      qrModal.onclick = function(e) {
+        if (e.target === this) this.style.display = 'none';
+      };
+    }
   });
 </script>
 </body>
