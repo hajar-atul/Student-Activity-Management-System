@@ -1,30 +1,20 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.List, model.ACTIVITY, model.CLUB, model.REGISTERATION, model.STUDENT, org.json.JSONArray" %>
+<%@ page import="java.util.List, model.ACTIVITY, model.CLUB, model.REGISTERATION, model.STUDENT, java.util.Collections, java.util.Comparator" %>
 <%
     List<CLUB> clubList = CLUB.getAllClubs();
+    // Sort clubs alphabetically by club name
+    Collections.sort(clubList, new Comparator<CLUB>() {
+        @Override
+        public int compare(CLUB club1, CLUB club2) {
+            return club1.getClubName().compareToIgnoreCase(club2.getClubName());
+        }
+    });
     String selectedClubIdStr = request.getParameter("clubID");
     Integer selectedClubId = null;
     if (selectedClubIdStr != null && !selectedClubIdStr.isEmpty()) {
         selectedClubId = Integer.parseInt(selectedClubIdStr);
     }
-    List<ACTIVITY> activityList = (selectedClubId != null)
-        ? ACTIVITY.getActivitiesByClubId(selectedClubId)
-        : ACTIVITY.getAllActivities();
-    // Prepare data for the pie chart
-    JSONArray activityLabelsJson = new JSONArray();
-    StringBuilder activityCounts = new StringBuilder();
-    int totalMembers = 0;
-    for (ACTIVITY activity : activityList) {
-        int count = REGISTERATION.getStudentCountForActivity(activity.getActivityID());
-        activityLabelsJson.put(activity.getActivityName());
-        if (activityCounts.length() > 0) {
-            activityCounts.append(", ");
-        }
-        activityCounts.append(count);
-        totalMembers += count;
-    }
-    String jsLabels = activityLabelsJson.toString();
-    String jsCounts = activityCounts.length() > 0 ? "[" + activityCounts.toString() + "]" : "[]";
+    List<ACTIVITY.ActivityParticipantCount> activityList = ACTIVITY.getActivitiesWithParticipantCountsByClub(selectedClubId);
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -35,6 +25,10 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Poppins', Arial, sans-serif; background: #f6f6f6; }
+    html, body {
+      overflow: hidden;
+      height: 100%;
+    }
     .sidebar {
       width: 270px;
       height: 100vh;
@@ -289,9 +283,9 @@
       align-items: center;
       justify-content: space-between;
       gap: 24px;
-      min-width: 500px;
+      min-width: 700px;
       width: 100%;
-      max-width: 700px;
+      max-width: 1100px;
     }
     .dashboard-card.flex-row img {
       width: 130px;
@@ -308,11 +302,30 @@
       line-height: 1.2;
     }
     .dashboard-card canvas {
-      width: 130px !important;
-      height: 130px !important;
+      width: 500px !important;
+      height: 500px !important;
       max-width: 100%;
       margin: 0 10px 0 0;
       display: block;
+    }
+    .top-badge {
+      display: inline-block;
+      background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%);
+      color: #222;
+      font-weight: bold;
+      font-size: 15px;
+      padding: 4px 14px;
+      border-radius: 16px;
+      margin-left: 8px;
+      box-shadow: 0 2px 8px rgba(255,215,0,0.15);
+      letter-spacing: 1px;
+      vertical-align: middle;
+      border: 2px solid #FFA500;
+      animation: pop 1s infinite alternate;
+    }
+    @keyframes pop {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.08); }
     }
   </style>
 </head>
@@ -349,17 +362,6 @@
       </div>
     </div>
   </div>
-
-  <div class="dashboard-cards">
-    <div class="dashboard-card no-border">
-      <img src="image/Graduation.jpg" alt="Students">
-    </div>
-    <div class="dashboard-card flex-row">
-      <canvas id="activityPopularityChart" width="130" height="130"></canvas>
-      <div class="card-title" id="activityNameDisplay">Activity Popularity</div>
-    </div>
-  </div>
-
   <form method="get" id="clubFilterForm" style="margin: 30px 0 20px 80px;">
     <label for="clubFilter">Filter by Club :</label>
     <select id="clubFilter" name="clubID" onchange="document.getElementById('clubFilterForm').submit()">
@@ -376,6 +378,7 @@
     <table class="student-table">
       <thead>
         <tr>
+          <th>RANK</th>
           <th>ACTIVITY</th>
           <th>CLUB</th>
           <th>STUDENT</th>
@@ -384,16 +387,23 @@
       <tbody>
         <% if (activityList.isEmpty()) { %>
         <tr>
-            <td colspan="3">No activities found.</td>
+            <td colspan="4">No activities found.</td>
         </tr>
         <% } else {
-            for (ACTIVITY activity : activityList) {
+            int rowNum = 0;
+            for (ACTIVITY.ActivityParticipantCount apc : activityList) {
+                ACTIVITY activity = apc.activity;
                 CLUB club = CLUB.getClubById(activity.getClubID());
                 String clubName = (club != null) ? club.getClubName() : "N/A";
-                int studentCount = REGISTERATION.getStudentCountForActivity(activity.getActivityID());
+                int studentCount = apc.participantCount;
         %>
         <tr>
-          <td><%= activity.getActivityName() %></td>
+          <td style="font-weight:bold; font-size:18px; color:#238B87; text-align:center;">
+            <%= (rowNum+1) %>
+          </td>
+          <td>
+            <%= activity.getActivityName() %>
+          </td>
           <td><%= clubName %></td>
           <td>
             <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
@@ -402,7 +412,7 @@
             </div>
           </td>
         </tr>
-        <%
+        <% rowNum++;
             }
         }
         %>
@@ -410,52 +420,6 @@
     </table>
   </div>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-  const activityLabels = JSON.parse('<%= jsLabels.replace("\"", "\\\"") %>');
-  const activityCounts = JSON.parse('<%= jsCounts.replace("\"", "\\\"") %>');
-  const ctx = document.getElementById('activityPopularityChart').getContext('2d');
-  const total = activityCounts.reduce((a, b) => a + b, 0);
-
-  new Chart(ctx, {
-    type: 'pie',
-    data: {
-      labels: activityLabels,
-      datasets: [{
-        data: activityCounts,
-        backgroundColor: [
-          '#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f', '#edc949', '#af7aa1', '#ff9da7', '#9c755f', '#bab0ab'
-        ],
-      }]
-    },
-    options: {
-      onHover: function(event, chartElement) {
-        if (chartElement.length) {
-          var idx = chartElement[0].index;
-          document.getElementById('activityNameDisplay').textContent = activityLabels[idx];
-        } else {
-          document.getElementById('activityNameDisplay').textContent = 'Activity Popularity';
-        }
-      },
-      plugins: {
-        tooltip: {
-          callbacks: {
-            label: function(context) {
-              const count = context.parsed;
-              const percent = total > 0 ? ((count / total) * 100).toFixed(1) : 0;
-              return `${context.label}: ${count} member(s) (${percent}%)`;
-            }
-          }
-        },
-        legend: {
-          display: true,
-          position: 'right'
-        }
-      }
-    }
-  });
-</script>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {

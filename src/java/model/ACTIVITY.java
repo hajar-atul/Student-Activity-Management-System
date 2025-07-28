@@ -833,7 +833,7 @@ public static java.util.List<ACTIVITY> getActivitiesByStatus(String status) {
     try {
         Class.forName("com.mysql.cj.jdbc.Driver");
         try (java.sql.Connection conn = java.sql.DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
-            String sql = "SELECT * FROM activity WHERE TRIM(LOWER(activityStatus)) = ?";
+            String sql = "SELECT * FROM activity WHERE TRIM(LOWER(activityStatus)) = ? ORDER BY activityID DESC";
             java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, status.trim().toLowerCase());
             java.sql.ResultSet rs = stmt.executeQuery();
@@ -878,5 +878,91 @@ public static boolean deleteActivityById(String activityID) {
     }
     return false;
 }
+
+    public static class ActivityParticipantCount {
+        public ACTIVITY activity;
+        public int participantCount;
+        public ActivityParticipantCount(ACTIVITY activity, int participantCount) {
+            this.activity = activity;
+            this.participantCount = participantCount;
+        }
+    }
+
+    public static java.util.List<ActivityParticipantCount> getActivitiesWithParticipantCounts() {
+        java.util.List<ActivityParticipantCount> result = new java.util.ArrayList<>();
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            try (java.sql.Connection conn = java.sql.DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
+                String sql = "SELECT a.*, COUNT(r.studID) AS participantCount FROM activity a LEFT JOIN registration r ON a.activityID = r.activityID GROUP BY a.activityID ORDER BY participantCount DESC";
+                java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
+                java.sql.ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    ACTIVITY activity = new ACTIVITY();
+                    activity.setActivityID(rs.getString("activityID"));
+                    activity.setActivityName(rs.getString("activityName"));
+                    activity.setActivityType(rs.getString("activityType"));
+                    activity.setActivityDesc(rs.getString("activityDesc"));
+                    activity.setActivityDate(rs.getString("activityDate"));
+                    activity.setActivityVenue(rs.getString("activityVenue"));
+                    activity.setActivityStatus(rs.getString("activityStatus"));
+                    activity.setActivityBudget(rs.getDouble("activityBudget"));
+                    activity.setAdabPoint(rs.getInt("adabPoint"));
+                    activity.setProposalFile(rs.getBytes("proposalFile"));
+                    activity.setQrImage(rs.getBytes("qrImage"));
+                    activity.setPosterImage(rs.getBytes("posterImage"));
+                    activity.setClubID(rs.getInt("clubID"));
+                    activity.setActivityFee(rs.getDouble("activityFee"));
+                    try { activity.setAppealReason(rs.getString("appealReason")); } catch(Exception e) { activity.setAppealReason(null); }
+                    int count = rs.getInt("participantCount");
+                    result.add(new ActivityParticipantCount(activity, count));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public static java.util.List<ActivityParticipantCount> getActivitiesWithParticipantCountsByClub(Integer clubId) {
+        java.util.List<ActivityParticipantCount> result = new java.util.ArrayList<>();
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            try (java.sql.Connection conn = java.sql.DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
+                String sql = "SELECT a.*, COUNT(r.studID) AS participantCount FROM activity a LEFT JOIN registration r ON a.activityID = r.activityID";
+                if (clubId != null) {
+                    sql += " WHERE a.clubID = ?";
+                }
+                sql += " GROUP BY a.activityID ORDER BY participantCount DESC";
+                java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
+                if (clubId != null) {
+                    stmt.setInt(1, clubId);
+                }
+                java.sql.ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    ACTIVITY activity = new ACTIVITY();
+                    activity.setActivityID(rs.getString("activityID"));
+                    activity.setActivityName(rs.getString("activityName"));
+                    activity.setActivityType(rs.getString("activityType"));
+                    activity.setActivityDesc(rs.getString("activityDesc"));
+                    activity.setActivityDate(rs.getString("activityDate"));
+                    activity.setActivityVenue(rs.getString("activityVenue"));
+                    activity.setActivityStatus(rs.getString("activityStatus"));
+                    activity.setActivityBudget(rs.getDouble("activityBudget"));
+                    activity.setAdabPoint(rs.getInt("adabPoint"));
+                    activity.setProposalFile(rs.getBytes("proposalFile"));
+                    activity.setQrImage(rs.getBytes("qrImage"));
+                    activity.setPosterImage(rs.getBytes("posterImage"));
+                    activity.setClubID(rs.getInt("clubID"));
+                    activity.setActivityFee(rs.getDouble("activityFee"));
+                    try { activity.setAppealReason(rs.getString("appealReason")); } catch(Exception e) { activity.setAppealReason(null); }
+                    int count = rs.getInt("participantCount");
+                    result.add(new ActivityParticipantCount(activity, count));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 
 }

@@ -1,7 +1,64 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.List, model.ACTIVITY, model.CLUB, model.STUDENT" %>
+<%@ page import="java.util.List, model.ACTIVITY, model.CLUB, model.STUDENT, java.util.Collections, java.util.Comparator, java.util.ArrayList" %>
 <%
-    List<ACTIVITY> pendingProposals = ACTIVITY.getActivitiesByStatus("Pending");
+    List<CLUB> clubList = CLUB.getAllClubs();
+    // Sort clubs alphabetically by club name
+    Collections.sort(clubList, new Comparator<CLUB>() {
+        @Override
+        public int compare(CLUB club1, CLUB club2) {
+            return club1.getClubName().compareToIgnoreCase(club2.getClubName());
+        }
+    });
+    
+    String selectedClubIdStr = request.getParameter("clubID");
+    Integer selectedClubId = null;
+    boolean noClubsSelected = false;
+    if (selectedClubIdStr != null && !selectedClubIdStr.isEmpty()) {
+        if ("none".equals(selectedClubIdStr)) {
+            noClubsSelected = true;
+        } else {
+            selectedClubId = Integer.parseInt(selectedClubIdStr);
+        }
+    }
+    
+    List<ACTIVITY> allPendingProposals = ACTIVITY.getActivitiesByStatus("Pending");
+    List<ACTIVITY> pendingProposals = allPendingProposals;
+    
+    // Filter by selected club if specified
+    if (noClubsSelected) {
+        pendingProposals = new ArrayList<ACTIVITY>();
+    } else if (selectedClubId != null) {
+        pendingProposals = new ArrayList<ACTIVITY>();
+        for (ACTIVITY proposal : allPendingProposals) {
+            if (proposal.getClubID() == selectedClubId) {
+                pendingProposals.add(proposal);
+            }
+        }
+    }
+    
+    String appealClubIdStr = request.getParameter("appealClubID");
+    Integer selectedAppealClubId = null;
+    boolean noAppealClubsSelected = false;
+    if (appealClubIdStr != null && !appealClubIdStr.isEmpty()) {
+        if ("none".equals(appealClubIdStr)) {
+            noAppealClubsSelected = true;
+        } else {
+            selectedAppealClubId = Integer.parseInt(appealClubIdStr);
+        }
+    }
+    List<ACTIVITY> allAppealActivities = ACTIVITY.getActivitiesByStatus("Appeal Pending");
+    List<ACTIVITY> filteredAppealActivities = allAppealActivities;
+    if (noAppealClubsSelected) {
+        filteredAppealActivities = new ArrayList<ACTIVITY>();
+    } else if (selectedAppealClubId != null) {
+        filteredAppealActivities = new ArrayList<ACTIVITY>();
+        for (ACTIVITY appeal : allAppealActivities) {
+            if (appeal.getClubID() == selectedAppealClubId) {
+                filteredAppealActivities.add(appeal);
+            }
+        }
+    }
+    
     List<ACTIVITY> appealActivities = ACTIVITY.getActivitiesByStatus("Appeal Pending");
     int totalStudents = STUDENT.getTotalStudents();
     int totalClubs = CLUB.getTotalClubs();
@@ -16,6 +73,10 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Poppins', Arial, sans-serif; background: #f6f6f6; }
+    html, body {
+      overflow: hidden;
+      height: 100%;
+    }
     .sidebar {
       width: 270px;
       height: 100vh;
@@ -201,23 +262,23 @@
       background: #fff;
       border-radius: 18px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-      padding: 38px 56px;
+      padding: 24px 64px;
       display: flex;
       align-items: center;
       gap: 24px;
       min-width: 270px;
-      min-height: 120px;
-      font-size: 22px;
+      min-height: 70px;
+      font-size: 20px;
     }
     .overview-card .icon {
-      font-size: 70px;
+      font-size: 48px;
       color: #219a98;
-      width: 70px;
+      width: 48px;
       text-align: center;
     }
     .overview-card .icon img {
-      width: 70px;
-      height: 70px;
+      width: 48px;
+      height: 48px;
       object-fit: contain;
     }
     .overview-card .info {
@@ -226,12 +287,12 @@
       align-items: flex-start;
     }
     .overview-card .info .number {
-      font-size: 36px;
+      font-size: 28px;
       font-weight: bold;
       color: #222;
     }
     .overview-card .info .label {
-      font-size: 20px;
+      font-size: 16px;
       color: #555;
       margin-top: 2px;
     }
@@ -241,6 +302,17 @@
       .toggle-btn { display: block; }
       .overview-cards { flex-direction: column; gap: 18px; }
       .activity-section { padding: 20px 10px 0 10px; }
+    }
+    #proposalTableContainer {
+      max-height: 2000px;
+      opacity: 1;
+      overflow: hidden;
+      transition: max-height 0.5s cubic-bezier(0.4,0,0.2,1), opacity 0.4s cubic-bezier(0.4,0,0.2,1);
+    }
+    #proposalTableContainer.hidden-slide {
+      max-height: 0;
+      opacity: 0;
+      pointer-events: none;
     }
   </style>
 </head>
@@ -282,12 +354,47 @@
   </div>
 
   <div class="activity-section">
+          <div class="overview-section">
+      <div class="overview-title">Overview</div>
+      <div class="overview-cards">
+        <div class="overview-card">
+          <div class="icon"><img src="image/userIcon.png" alt="Student Icon"></div>
+          <div class="info">
+            <div class="number"><%= totalStudents %></div>
+            <div class="label">Student</div>
+          </div>
+        </div>
+        <div class="overview-card">
+          <div class="icon"><img src="image/clubIcon.jpg" alt="Club Icon"></div>
+          <div class="info">
+            <div class="number"><%= totalClubs %></div>
+            <div class="label">Club</div>
+          </div>
+        </div>
+      </div>
+    </div>
     <h2>Proposal Requests</h2>
     <% if (message != null) { %>
       <div style="background: #c8f7c5; color: #218838; padding: 12px; margin-bottom: 20px; border-radius: 6px; text-align: center; font-weight: 500;">
         <%= message.replace("+", " ") %>
       </div>
     <% } %>
+    
+    <!-- Club Filter Form -->
+    <form method="get" id="clubFilterForm" style="margin-bottom: 20px;">
+      <label for="clubFilter" style="font-weight: bold; font-size: 16px; margin-right: 10px;">Filter by Club:</label>
+      <select id="clubFilter" name="clubID" style="padding: 8px 12px; border-radius: 5px; border: 2px solid #222; font-size: 16px; margin-right: 10px;">
+        <option value="">All Clubs</option>
+        <option value="none" <%= (noClubsSelected ? "selected" : "") %>>No Clubs</option>
+        <% for (CLUB club : clubList) { %>
+          <option value="<%= club.getClubId() %>" <%= (selectedClubId != null && club.getClubId() == selectedClubId) ? "selected" : "" %>>
+            <%= club.getClubName() %>
+          </option>
+        <% } %>
+      </select>
+      <input type="hidden" name="appealClubID" id="hiddenAppealClubID" value="<%= appealClubIdStr != null ? appealClubIdStr : "" %>">
+    </form>
+    <div id="proposalTableContainer">
     <table class="proposal-table">
       <thead>
         <tr>
@@ -320,9 +427,24 @@
       <% } %>
       </tbody>
     </table>
+    </div>
 
     <!-- Appeal Pending Activities Section -->
     <h2 style="margin-top:40px;">Appeal Activities</h2>
+    <!-- Appeal Club Filter Form -->
+    <form method="get" id="appealClubFilterForm" style="margin-bottom: 20px;">
+      <label for="appealClubFilter" style="font-weight: bold; font-size: 16px; margin-right: 10px;">Filter by Club:</label>
+      <select id="appealClubFilter" name="appealClubID" style="padding: 8px 12px; border-radius: 5px; border: 2px solid #222; font-size: 16px; margin-right: 10px;">
+        <option value="">All Clubs</option>
+        <option value="none" <%= (noAppealClubsSelected ? "selected" : "") %>>No Clubs</option>
+        <% for (CLUB club : clubList) { %>
+          <option value="<%= club.getClubId() %>" <%= (selectedAppealClubId != null && club.getClubId() == selectedAppealClubId) ? "selected" : "" %>>
+            <%= club.getClubName() %>
+          </option>
+        <% } %>
+      </select>
+      <input type="hidden" name="clubID" id="hiddenClubID" value="<%= selectedClubIdStr != null ? selectedClubIdStr : "" %>">
+    </form>
     <table class="proposal-table">
       <thead>
         <tr>
@@ -334,8 +456,8 @@
         </tr>
       </thead>
       <tbody>
-      <% if (appealActivities != null && !appealActivities.isEmpty()) {
-          for (ACTIVITY appeal : appealActivities) {
+      <% if (filteredAppealActivities != null && !filteredAppealActivities.isEmpty()) {
+          for (ACTIVITY appeal : filteredAppealActivities) {
               CLUB club = CLUB.getClubById(appeal.getClubID());
               String clubName = (club != null) ? club.getClubName() : "N/A";
       %>
@@ -356,26 +478,6 @@
       <% } %>
       </tbody>
     </table>
-
-    <div class="overview-section">
-      <div class="overview-title">Overview</div>
-      <div class="overview-cards">
-        <div class="overview-card">
-          <div class="icon"><img src="image/userIcon.png" alt="Student Icon"></div>
-          <div class="info">
-            <div class="number"><%= totalStudents %></div>
-            <div class="label">Student</div>
-          </div>
-        </div>
-        <div class="overview-card">
-          <div class="icon"><img src="image/clubIcon.jpg" alt="Club Icon"></div>
-          <div class="info">
-            <div class="number"><%= totalClubs %></div>
-            <div class="label">Club</div>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </div>
 
@@ -391,6 +493,28 @@
       if (dropdown.style.display === 'block') {
         dropdown.style.display = 'none';
       }
+    });
+  });
+
+  function updateProposalTableVisibility() {
+    var clubFilter = document.getElementById('clubFilter');
+    var proposalTableContainer = document.getElementById('proposalTableContainer');
+    if (clubFilter.value === 'none') {
+      proposalTableContainer.classList.add('hidden-slide');
+    } else {
+      proposalTableContainer.classList.remove('hidden-slide');
+    }
+  }
+  document.addEventListener('DOMContentLoaded', function() {
+    updateProposalTableVisibility();
+    document.getElementById('clubFilter').addEventListener('change', function() {
+      updateProposalTableVisibility();
+      document.getElementById('hiddenAppealClubID').value = document.getElementById('appealClubFilter').value;
+      document.getElementById('clubFilterForm').submit();
+    });
+    document.getElementById('appealClubFilter').addEventListener('change', function() {
+      document.getElementById('hiddenClubID').value = document.getElementById('clubFilter').value;
+      document.getElementById('appealClubFilterForm').submit();
     });
   });
 </script>

@@ -15,7 +15,7 @@
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/student?useSSL=false&serverTimezone=UTC", "root", "");
-            stmt = conn.prepareStatement("SELECT activityID, activityName FROM activity WHERE clubID = ?");
+            stmt = conn.prepareStatement("SELECT activityID, activityName FROM activity WHERE clubID = ? AND activityStatus = 'approved'");
             stmt.setInt(1, clubID);
             rs = stmt.executeQuery();
             while (rs.next()) {
