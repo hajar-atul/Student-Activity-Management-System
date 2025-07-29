@@ -146,8 +146,12 @@
                 </div>
             <% } %>
 
+            <% String studID = request.getParameter("studID"); %>
+            <% String clubID = request.getParameter("clubID"); %>
+            <% String staffID = request.getParameter("staffID"); %>
+            <% if (studID != null) { %>
             <form action="UpdatePasswordServlet" method="post" onsubmit="return validateForm()">
-                <input type="hidden" name="studID" value="<%= request.getParameter("studID") %>">
+                <input type="hidden" name="studID" value="<%= studID %>">
                 
                 <div class="form-group">
                     <label for="newPassword">New Password:</label>
@@ -163,6 +167,41 @@
 
                 <button type="submit" class="button">Update Password</button>
             </form>
+            <% } else if (clubID != null) { %>
+            <form action="UpdatePasswordServlet" method="post" onsubmit="return validateForm()">
+                <input type="hidden" name="clubID" value="<%= clubID %>">
+                
+                <div class="form-group">
+                    <label for="newPassword">New Password:</label>
+                    <input type="password" id="newPassword" name="newPassword" required 
+                           placeholder="Enter new password">
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password:</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required 
+                           placeholder="Confirm new password">
+                </div>
+
+                <button type="submit" class="button">Update Password</button>
+            </form>
+            <% } %>
+            <% if (staffID != null) { %>
+            <form action="UpdatePasswordServlet" method="post" onsubmit="return validateForm()">
+                <input type="hidden" name="staffID" value="<%= staffID %>">
+                <div class="form-group">
+                    <label for="newPassword">New Password:</label>
+                    <input type="password" id="newPassword" name="newPassword" required 
+                           placeholder="Enter new password">
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password:</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required 
+                           placeholder="Confirm new password">
+                </div>
+                <button type="submit" class="button">Update Password</button>
+            </form>
+            <% } %>
         </div>
     </div>
 

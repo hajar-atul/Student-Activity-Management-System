@@ -89,6 +89,22 @@
         <servlet-name>VenueBookingServlet</servlet-name>
         <url-pattern>/VenueBookingServlet</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>ClubForgotPasswordServlet</servlet-name>
+        <servlet-class>Controller.ClubForgotPasswordServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ClubForgotPasswordServlet</servlet-name>
+        <url-pattern>/ClubForgotPasswordServlet</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>StaffForgotPasswordServlet</servlet-name>
+        <servlet-class>Controller.StaffForgotPasswordServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>StaffForgotPasswordServlet</servlet-name>
+        <url-pattern>/StaffForgotPasswordServlet</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>

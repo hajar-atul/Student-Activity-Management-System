@@ -111,18 +111,18 @@
     }
 
     .logout-container .LOGOUT-btn {
-      display: block;
-      width: 100%;
-      padding: 10px;
-      background-color: #d82215d2;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      text-align: center;
-      font-size: 16px;
-      font-weight: bold;
-      transition: background-color 0.2s;
-      cursor: pointer;
+     width: 100%;
+                padding: 15px;
+                background-color: #f44336;
+            color: white;
+            border: none;
+                border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+                cursor: pointer;
+            transition: background-color 0.2s;
+                margin: 0;
+position: absolute; bottom: 20px; width: 80%; left: 10%;
     }
 
     .logout-container .LOGOUT-btn:hover {

@@ -157,7 +157,13 @@
     }
 
     .error-message {
-         color:red; font-weight: bold; margin-bottom: 20px;
+        color: #dc3545;
+        font-size: 14px;
+        margin: 10px 0;
+        text-align: center;
+        padding: 10px;
+        background-color: #f8d7da;
+        border-radius: 4px;
     }
   </style>
 </head>
@@ -183,7 +189,7 @@
     </div>
   <% } else if ("invalid_credentials".equals(request.getParameter("error"))) { %>
     <div class="error-message">
-      Wrong Password. Please try again.
+      Invalid Club ID or Password. Please try again.
     </div>
   <% } else if ("invalid_club_id".equals(request.getParameter("error"))) { %>
     <div class="error-message">
@@ -193,7 +199,7 @@
 
   <% if ("club_not_registered".equals(request.getParameter("error"))) { %>
     <div class="error-message">
-      Club not registered. Please register your club at HEP (Higher Education Department).
+      Club not registered. Please register your club first.
     </div>
   <% } %>
 
@@ -221,7 +227,7 @@
         <input type="password" name="password" required>
 
         <div class="forgot-password">
-          <a href="#">Forgot Password?</a>
+          <a href="clubForgot.jsp">Forgot Password?</a>
         </div>
 
         <button type="submit" class="button">SIGN IN</button>

@@ -15,6 +15,8 @@ import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 
 @WebServlet("/NextEventServlet")
 public class NextEventServlet extends HttpServlet {
@@ -35,42 +37,30 @@ public class NextEventServlet extends HttpServlet {
                            "JOIN registration r ON a.activityID = r.activityID " +
                            "WHERE r.studID = ? AND a.activityDate >= CURDATE() " +
                            "ORDER BY a.activityDate ASC " +
-                           "LIMIT 1";
+                           "LIMIT 5";
                 
                 PreparedStatement stmt = conn.prepareStatement(sql);
                 stmt.setString(1, studID);
                 ResultSet rs = stmt.executeQuery();
                 
-                if (rs.next()) {
-                    // Store next event info in session
-                    session.setAttribute("nextEventID", rs.getString("activityID"));
-                    session.setAttribute("nextEventName", rs.getString("activityName"));
-                    session.setAttribute("nextEventDate", rs.getString("activityDate"));
-                    session.setAttribute("daysUntilEvent", rs.getInt("daysUntil"));
-                    
-                    // Check if poster image exists
+                List<ActivityInfo> eventList = new ArrayList<>();
+                while (rs.next()) {
+                    String id = rs.getString("activityID");
+                    String name = rs.getString("activityName");
+                    String date = rs.getString("activityDate");
+                    int daysUntil = rs.getInt("daysUntil");
                     byte[] posterImage = rs.getBytes("posterImage");
-                    session.setAttribute("nextEventHasPoster", posterImage != null && posterImage.length > 0);
-                } else {
-                    // No upcoming events
-                    session.setAttribute("nextEventID", null);
-                    session.setAttribute("nextEventName", null);
-                    session.setAttribute("nextEventDate", null);
-                    session.setAttribute("daysUntilEvent", null);
-                    session.setAttribute("nextEventHasPoster", false);
+                    boolean hasPoster = posterImage != null && posterImage.length > 0;
+                    eventList.add(new ActivityInfo(id, name, date, daysUntil, hasPoster));
                 }
-                
+                session.setAttribute("upcomingEvents", eventList);
                 rs.close();
                 stmt.close();
                 
             } catch (Exception e) {
                 e.printStackTrace();
                 // Set default values on error
-                session.setAttribute("nextEventID", null);
-                session.setAttribute("nextEventName", null);
-                session.setAttribute("nextEventDate", null);
-                session.setAttribute("daysUntilEvent", null);
-                session.setAttribute("nextEventHasPoster", false);
+                session.setAttribute("upcomingEvents", new ArrayList<ActivityInfo>());
             }
         }
         
@@ -82,5 +72,18 @@ public class NextEventServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         doGet(request, response);
+    }
+
+    public static class ActivityInfo implements java.io.Serializable {
+        public String id, name, date;
+        public int daysUntil;
+        public boolean hasPoster;
+        public ActivityInfo(String id, String name, String date, int daysUntil, boolean hasPoster) {
+            this.id = id;
+            this.name = name;
+            this.date = date;
+            this.daysUntil = daysUntil;
+            this.hasPoster = hasPoster;
+        }
     }
 } 

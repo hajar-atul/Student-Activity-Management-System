@@ -40,7 +40,7 @@ public class ADMIN {
     // Check if a student is an admin
     public static boolean isAdmin(int studID) {
         String sql = "SELECT* FROM admin WHERE studID = ?";
-        try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
+        try (Connection conn = util.DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, studID);
             ResultSet rs = pstmt.executeQuery();

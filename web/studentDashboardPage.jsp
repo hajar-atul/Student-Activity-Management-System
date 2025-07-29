@@ -318,12 +318,12 @@
     <!-- Refresh upcoming activities data -->
     <%
         // Check if upcoming activities data needs to be loaded
-        if (session.getAttribute("upcomingActivities") == null) {
+        if (session.getAttribute("upcomingEvents") == null) {
     %>
         <script>
             // Load upcoming activities data when page loads
             window.addEventListener('load', function() {
-                window.location.href = 'UpcomingActivitiesServlet';
+                window.location.href = 'NextEventServlet';
             });
         </script>
     <%
@@ -364,42 +364,41 @@
             <div class="profile-box" style="background: #ffe9c8; border-left: 6px solid #ff9800; padding: 20px;">
               <h2 style="color: #c27000; margin-bottom: 20px; font-size: 16px; text-align: center;">UPCOMING ACTIVITIES</h2>
               <% 
-                  java.util.List<Controller.UpcomingActivitiesServlet.ActivityInfo> upcomingActivities = 
-                      (java.util.List<Controller.UpcomingActivitiesServlet.ActivityInfo>) session.getAttribute("upcomingActivities");
-                  
-                  if (upcomingActivities != null && !upcomingActivities.isEmpty()) {
+                  java.util.List<Controller.NextEventServlet.ActivityInfo> upcomingEvents = 
+                      (java.util.List<Controller.NextEventServlet.ActivityInfo>) session.getAttribute("upcomingEvents");
+                  if (upcomingEvents != null && !upcomingEvents.isEmpty()) {
               %>
                 <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;">
-                  <% for (int i = 0; i < Math.min(upcomingActivities.size(), 4); i++) { 
-                      Controller.UpcomingActivitiesServlet.ActivityInfo activity = upcomingActivities.get(i);
+                  <% for (int i = 0; i < Math.min(upcomingEvents.size(), 5); i++) { 
+                      Controller.NextEventServlet.ActivityInfo activity = upcomingEvents.get(i);
                   %>
-                    <% if (activity.getHasPoster()) { %>
-                      <div class="activity-poster" style="position: relative; width: 100px; height: 140px; cursor: pointer;" 
-                           data-name="<%= activity.getActivityName() %>"
-                           data-date="<%= activity.getActivityDate() %>"
-                           data-days="<%= activity.getDaysUntil() %>"
-                           data-club="<%= activity.getClubName() != null ? activity.getClubName() : "Unknown Club" %>">
-                        <img src="ActivityImageServlet?activityID=<%= activity.getActivityID() %>&type=poster" 
+                    <% if (activity.hasPoster) { %>
+                      <div class="activity-poster" style="position: relative; width: 110px; height: 150px; cursor: pointer;"
+                           data-name="<%= activity.name %>"
+                           data-date="<%= activity.date %>"
+                           data-days="<%= activity.daysUntil %>"
+                           data-club="-">
+                        <img src="ActivityImageServlet?activityID=<%= activity.id %>&type=poster" 
                              alt="Event Poster" 
                              style="width: 100%; height: 100%; border-radius: 12px; object-fit: cover; border: 3px solid #ff9800; box-shadow: 0 4px 12px rgba(255,152,0,0.3); transition: transform 0.2s, box-shadow 0.2s;">
                         <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.8)); border-radius: 0 0 9px 9px; padding: 6px 4px;">
                           <p style="font-size: 12px; font-weight: bold; color: white; margin: 0; text-align: center; text-shadow: 1px 1px 1px rgba(0,0,0,0.8);">
-                            <%= activity.getDaysUntil() %>d
+                            <%= activity.daysUntil %>d
                           </p>
                         </div>
                       </div>
                     <% } else { %>
-                      <div class="activity-poster" style="position: relative; width: 100px; height: 140px; cursor: pointer;" 
-                           data-name="<%= activity.getActivityName() %>"
-                           data-date="<%= activity.getActivityDate() %>"
-                           data-days="<%= activity.getDaysUntil() %>"
-                           data-club="<%= activity.getClubName() != null ? activity.getClubName() : "Unknown Club" %>">
+                      <div class="activity-poster" style="position: relative; width: 110px; height: 150px; cursor: pointer;"
+                           data-name="<%= activity.name %>"
+                           data-date="<%= activity.date %>"
+                           data-days="<%= activity.daysUntil %>"
+                           data-club="-">
                         <div style="width: 100%; height: 100%; border-radius: 12px; background: #ffcc80; display: flex; align-items: center; justify-content: center; border: 3px solid #ff9800; box-shadow: 0 4px 12px rgba(255,152,0,0.3); transition: transform 0.2s, box-shadow 0.2s;">
                           <span style="font-size: 30px; color: #e65100;">📅</span>
                         </div>
                         <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.8)); border-radius: 0 0 9px 9px; padding: 6px 4px;">
                           <p style="font-size: 12px; font-weight: bold; color: white; margin: 0; text-align: center; text-shadow: 1px 1px 1px rgba(0,0,0,0.8);">
-                            <%= activity.getDaysUntil() %>d
+                            <%= activity.daysUntil %>d
                           </p>
                         </div>
                       </div>
@@ -408,7 +407,7 @@
                 </div>
               <% } else { %>
                 <div style="text-align: center; padding: 10px;">
-                  <div style="width: 100px; height: 140px; border-radius: 12px; background: #ffcc80; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px auto; border: 3px solid #ff9800;">
+                  <div style="width: 110px; height: 150px; border-radius: 12px; background: #ffcc80; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px auto; border: 3px solid #ff9800;">
                     <span style="font-size: 30px; color: #e65100;">📅</span>
                   </div>
                   <p style="font-size: 14px; color: #cc7000; margin: 0; font-weight: 500;">No upcoming events</p>

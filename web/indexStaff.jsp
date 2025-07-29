@@ -178,7 +178,12 @@
       Please select a valid role before submitting.
     </p>
   <% } %>
-    <% if ("wrong_password".equals(request.getParameter("error"))) { %>
+  <% if ("not_registered".equals(request.getParameter("error"))) { %>
+    <p style="color:red; font-weight: bold; margin-bottom: 20px;">
+      Could Not find your ID. Please Sign Up first
+    </p>
+  <% } %>
+  <% if ("wrong_password".equals(request.getParameter("error"))) { %>
     <p style="color:red; font-weight: bold; margin-bottom: 20px;">
       Wrong password. Please try again.
     </p>
@@ -208,7 +213,7 @@
         <input type="password" name="password" required>
 
         <div class="forgot-password">
-          <a href="#">Forgot Password?</a>
+          <a href="staffForgot.jsp">Forgot Password?</a>
         </div>
 
         <button type="submit" class="button">SIGN IN</button>

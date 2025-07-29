@@ -137,12 +137,12 @@
           background-color: #d32f2f;
         }
         .container { 
-          max-width: 1000px; 
-          margin: 30px auto; 
+          max-width: 1400px; 
+          margin: 40px auto; 
           background: #fff; 
-          border-radius: 12px; 
-          box-shadow: 0 4px 20px rgba(0,0,0,0.08); 
-          padding: 30px; 
+          border-radius: 16px; 
+          box-shadow: 0 8px 32px rgba(0,0,0,0.12); 
+          padding: 50px; 
           overflow: hidden;
         }
         h1 { 
@@ -156,19 +156,14 @@
           margin-bottom: 32px; 
         }
         .info-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
+          display: flex;
+          flex-direction: row;
           gap: 16px;
+          flex-wrap: wrap;
         }
         .info-item {
-          display: flex;
-          flex-direction: column;
-          padding: 16px;
-          border: 1px solid #e9ecef;
-          border-radius: 8px;
-          background: #fafbfc;
-          transition: all 0.2s ease;
-          min-height: 80px;
+          flex: 1 1 220px;
+          min-width: 220px;
         }
         .info-item:hover {
           background-color: #fff;
@@ -253,9 +248,6 @@
           cursor: pointer;
           transition: transform 0.2s ease;
         }
-        .qr-section img:hover {
-          transform: scale(1.05);
-        }
         .status-badge {
           display: inline-block;
           padding: 6px 12px;
@@ -321,6 +313,24 @@
             min-height: 70px;
           }
         }
+        .qr-modal {
+          display: none;
+          opacity: 0;
+          pointer-events: none;
+          position: fixed;
+          z-index: 9999;
+          left: 0; top: 0;
+          width: 100vw; height: 100vh;
+          background: rgba(0,0,0,0.8);
+          align-items: center;
+          justify-content: center;
+          transition: opacity 0.2s ease;
+        }
+        .qr-modal.show {
+          display: flex;
+          opacity: 1;
+          pointer-events: auto;
+        }
     </style>
 </head>
 <body>
@@ -376,10 +386,7 @@
         
         <div class="proposal-info">
             <div class="info-grid">
-                <div class="info-item">
-                    <span class="label">Activity ID</span>
-                    <span class="value"><%= activity.getActivityID() %></span>
-                </div>
+                <!-- Activity ID removed -->
                 <div class="info-item">
                     <span class="label">Activity Name</span>
                     <span class="value"><%= activity.getActivityName() %></span>
@@ -439,7 +446,7 @@
                             <span>Click to enlarge</span>
                           </div>
                           <!-- Modal for full-size QR image -->
-                          <div id="qrModal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.8); align-items:center; justify-content:center;">
+                          <div id="qrModal" class="qr-modal">
                             <span id="closeQrModal" style="position:absolute; top:30px; right:50px; color:#fff; font-size:40px; font-weight:bold; cursor:pointer;">&times;</span>
                             <img src="ActivityFileServlet?activityID=<%= activity.getActivityID() %>&type=qr" alt="QR Image" style="max-width:60vw; max-height:60vh; border-radius:12px; box-shadow:0 4px 24px rgba(0,0,0,0.25); display:block; margin:auto;">
                           </div>
@@ -500,22 +507,35 @@
     var qrThumb = document.getElementById('qrThumb');
     var qrModal = document.getElementById('qrModal');
     var closeQrModal = document.getElementById('closeQrModal');
-    
+    // Preload QR image
+    if (qrThumb) {
+      var img = new Image();
+      img.src = qrThumb.src;
+    }
     if (qrThumb) {
       qrThumb.onclick = function() {
         qrModal.style.display = 'flex';
+        setTimeout(function() {
+          qrModal.classList.add('show');
+        }, 10);
       };
     }
-    
     if (closeQrModal) {
       closeQrModal.onclick = function() {
-        qrModal.style.display = 'none';
+        qrModal.classList.remove('show');
+        setTimeout(function() {
+          qrModal.style.display = 'none';
+        }, 200);
       };
     }
-    
     if (qrModal) {
       qrModal.onclick = function(e) {
-        if (e.target === this) this.style.display = 'none';
+        if (e.target === this) {
+          qrModal.classList.remove('show');
+          setTimeout(function() {
+            qrModal.style.display = 'none';
+          }, 200);
+        }
       };
     }
   });
