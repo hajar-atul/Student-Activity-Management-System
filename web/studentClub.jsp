@@ -38,13 +38,13 @@
                 left: 0;
                 top: 0;
                 z-index: 1001;
+                display: flex;
+                flex-direction: column;
                 transition: transform 0.3s ease;
             }
-
             .sidebar.closed {
                 transform: translateX(-100%);
             }
-
             .toggle-btn {
                 position: fixed;
                 top: 20px;
@@ -57,7 +57,6 @@
                 cursor: pointer;
                 z-index: 1002;
             }
-
             .sidebar img.profile-pic {
                 width: 100px;
                 aspect-ratio: 1 / 1;
@@ -68,17 +67,14 @@
                 border: 3px solid white;
                 box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
             }
-
             .sidebar h2 {
                 text-align: center;
                 font-size: 14px;
                 margin-top: 10px;
             }
-
             .menu {
                 margin-top: 30px;
             }
-
             .menu a {
                 display: block;
                 padding: 10px;
@@ -89,7 +85,22 @@
                 border-radius: 5px;
                 text-align: center;
             }
-
+            .activity-btn {
+                width: 100%;
+                padding: 15px;
+                background-color: #f44336;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                font-size: 16px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: background-color 0.2s;
+                margin: 0;
+            }
+            .activity-btn:hover {
+                background-color: #d32f2f;
+            }
             .topbar {
                 position: fixed;
                 top: 0;
@@ -104,37 +115,6 @@
                 padding: 0 30px;
                 z-index: 1000;
             }
-
-            .search-container {
-                display: flex;
-                align-items: center;
-                margin-left: 250px;
-                transition: margin-left 0.3s ease;
-            }
-
-            .sidebar.closed ~ .topbar .search-container {
-                margin-left: 70px;
-            }
-
-            .search-container input {
-                padding: 8px 12px;
-                border-radius: 20px;
-                border: none;
-                outline: none;
-                width: 200px;
-            }
-
-            .search-btn {
-                background: white;
-                border: none;
-                margin-left: -30px;
-                cursor: pointer;
-                font-weight: bold;
-                border-radius: 50%;
-                padding: 4px 8px;
-                color: #009B9D;
-            }
-
             .dashboard-title {
                 font-size: 26px;
                 font-weight: bold;
@@ -142,18 +122,15 @@
                 flex-grow: 1;
                 margin-left: 60px;
             }
-
             .top-icons {
                 display: flex;
                 align-items: center;
                 gap: 15px;
             }
-
             .top-icons img.umpsa-icon {
                 width: 40px;
                 height: 40px;
             }
-
             .notification-btn img,
             .profile-icon {
                 width: 36px;
@@ -161,7 +138,6 @@
                 border-radius: 50%;
                 cursor: pointer;
             }
-
             .notification-dropdown,
             .profile-dropdown {
                 display: none;
@@ -176,12 +152,10 @@
                 border-radius: 8px;
                 overflow: hidden;
             }
-
             .notification-dropdown.show,
             .profile-dropdown.show {
                 display: block;
             }
-
             .notification-dropdown p,
             .profile-dropdown a {
                 margin: 0;
@@ -191,11 +165,9 @@
                 color: black;
                 display: block;
             }
-
             .profile-dropdown a:hover {
                 background-color: #f0f0f0;
             }
-            
             .content {
                 padding: 100px 30px 20px 30px;
                 margin-left: 250px;
@@ -203,11 +175,9 @@
                 overflow: hidden;
                 transition: margin-left 0.3s ease;
             }
-
             .sidebar.closed ~ .content {
                 margin-left: 0;
             }
-
             .club-container {
                 max-width: 1200px;
                 margin: 0 auto;
@@ -235,40 +205,7 @@
             .available-clubs {
                 min-height: 550px;
                 max-height: 90%;
-            }
-
-            .current-membership.empty {
-                min-height: 150px;
-                max-height: 30%;
-            }
-
-            .available-clubs.empty {
-                min-height: 150px;
-                max-height: 30%;
-            }
-
-            .available-clubs {
                 position: relative;
-            }
-
-            .scroll-indicator {
-                position: absolute;
-                right: 15px;
-                top: 50%;
-                transform: translateY(-50%);
-                background: rgba(0, 139, 139, 0.8);
-                color: white;
-                padding: 8px 12px;
-                border-radius: 20px;
-                font-size: 12px;
-                pointer-events: none;
-                opacity: 0;
-                transition: opacity 0.3s;
-                z-index: 10;
-            }
-
-            .available-clubs:hover .scroll-indicator {
-                opacity: 1;
             }
 
             .clubs-grid {
@@ -454,22 +391,6 @@
                 color: #2c3e50;
                 font-size: 13px;
             }
-            .activity-btn {
-                width: 100%;
-                padding: 15px;
-                background-color: #f44336;
-                color: white;
-                border: none;
-                border-radius: 8px;
-                font-size: 16px;
-                font-weight: bold;
-                cursor: pointer;
-                transition: background-color 0.2s;
-                margin: 0;
-            }
-             .activity-btn:hover {
-                background-color: #d32f2f;
-            }
         </style>
     </head>
     <body>
@@ -492,10 +413,8 @@
                 </form>
             </div>
         </div>
-
         <!-- Toggle Button -->
         <button class="toggle-btn" id="toggleBtn">☰</button>
-
         <!-- Topbar -->
         <div class="topbar">
             <div class="dashboard-title">CLUBS</div>
@@ -514,7 +433,6 @@
                 </div>
             </div>
         </div>
-
         <!-- Main Content -->
         <div class="content" id="content">
             <div class="club-container">
@@ -664,29 +582,24 @@
             const notificationDropdown = document.getElementById('notificationDropdown');
             const profileBtn = document.getElementById('profileBtn');
             const profileDropdown = document.getElementById('profileDropdown');
-
             toggleBtn.addEventListener('click', () => {
                 sidebar.classList.toggle('closed');
             });
-
             notificationBtn.addEventListener('click', function (e) {
                 e.stopPropagation();
                 notificationDropdown.classList.toggle('show');
                 profileDropdown.classList.remove('show');
             });
-
             profileBtn.addEventListener('click', function (e) {
                 e.stopPropagation();
                 profileDropdown.classList.toggle('show');
                 notificationDropdown.classList.remove('show');
             });
-
             window.addEventListener('click', function () {
                 notificationDropdown.classList.remove('show');
                 profileDropdown.classList.remove('show');
             });
-
-            // Show scroll indicator only if horizontal scroll is possible
+            // Only keep scroll indicator JS
             function updateScrollIndicator() {
                 const grid = document.getElementById('clubsGrid');
                 const indicator = document.getElementById('scrollIndicator');

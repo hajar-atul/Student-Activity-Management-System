@@ -34,13 +34,13 @@
             left: 0;
             top: 0;
             z-index: 1001;
+            display: flex;
+            flex-direction: column;
             transition: transform 0.3s ease;
         }
-
         .sidebar.closed {
             transform: translateX(-100%);
         }
-
         .toggle-btn {
             position: fixed;
             top: 20px;
@@ -53,7 +53,6 @@
             cursor: pointer;
             z-index: 1002;
         }
-
         .sidebar img.profile-pic {
             width: 100px;
             aspect-ratio: 1 / 1;
@@ -64,17 +63,14 @@
             border: 3px solid white;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
         }
-
         .sidebar h2 {
             text-align: center;
             font-size: 14px;
             margin-top: 10px;
         }
-
         .menu {
             margin-top: 30px;
         }
-
         .menu a {
             display: block;
             padding: 10px;
@@ -85,7 +81,22 @@
             border-radius: 5px;
             text-align: center;
         }
-
+        .activity-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin: 0;
+        }
+        .activity-btn:hover {
+            background-color: #d32f2f;
+        }
         .topbar {
             position: fixed;
             top: 0;
@@ -100,37 +111,6 @@
             padding: 0 30px;
             z-index: 1000;
         }
-
-        .search-container {
-            display: flex;
-            align-items: center;
-            margin-left: 250px;
-            transition: margin-left 0.3s ease;
-        }
-
-        .sidebar.closed ~ .topbar .search-container {
-            margin-left: 70px;
-        }
-
-        .search-container input {
-            padding: 8px 12px;
-            border-radius: 20px;
-            border: none;
-            outline: none;
-            width: 200px;
-        }
-
-        .search-btn {
-            background: white;
-            border: none;
-            margin-left: -30px;
-            cursor: pointer;
-            font-weight: bold;
-            border-radius: 50%;
-            padding: 4px 8px;
-            color: #009B9D;
-        }
-
         .dashboard-title {
             font-size: 26px;
             font-weight: bold;
@@ -138,18 +118,15 @@
             flex-grow: 1;
             margin-left: 60px;
         }
-
         .top-icons {
             display: flex;
             align-items: center;
             gap: 15px;
         }
-
         .top-icons img.umpsa-icon {
             width: 40px;
             height: 40px;
         }
-
         .notification-btn img,
         .profile-icon {
             width: 36px;
@@ -157,7 +134,6 @@
             border-radius: 50%;
             cursor: pointer;
         }
-
         .notification-dropdown,
         .profile-dropdown {
             display: none;
@@ -172,12 +148,10 @@
             border-radius: 8px;
             overflow: hidden;
         }
-
         .notification-dropdown.show,
         .profile-dropdown.show {
             display: block;
         }
-
         .notification-dropdown p,
         .profile-dropdown a {
             margin: 0;
@@ -187,11 +161,9 @@
             color: black;
             display: block;
         }
-
         .profile-dropdown a:hover {
             background-color: #f0f0f0;
         }
-
         .content {
             padding: 100px 30px 20px 30px;
             margin-left: 250px;
@@ -199,11 +171,9 @@
             overflow-y: auto;
             transition: margin-left 0.3s ease;
         }
-
         .sidebar.closed ~ .content {
             margin-left: 0;
         }
-
         .settings-container {
             max-width: 800px;
             margin: 0 auto;
@@ -446,139 +416,136 @@
     </style>
 </head>
 <body>
-    <!-- Sidebar -->
-    <div class="sidebar" id="sidebar">
-        <img src="StudentImageServlet?studID=${studID}" alt="Profile" class="profile-pic" />
-        <h2>
-            <%= session.getAttribute("studName") %><br>
-            <%= session.getAttribute("studID") %>
-        </h2>
-        <div class="menu">
-            <a href="studentDashboardPage.jsp">DASHBOARD</a>
-            <a href="activities.jsp">ACTIVITIES</a>
-            <a href="studentClub.jsp">CLUBS</a>
-            <a href="SettingsServlet">SETTINGS</a>
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+    <img src="StudentImageServlet?studID=${studID}" alt="Profile" class="profile-pic" />
+    <h2>
+        <%= session.getAttribute("studName") %><br>
+        <%= session.getAttribute("studID") %>
+    </h2>
+    <div class="menu">
+        <a href="studentDashboardPage.jsp">DASHBOARD</a>
+        <a href="activities.jsp">ACTIVITIES</a>
+        <a href="studentClub.jsp">CLUBS</a>
+        <a href="SettingsServlet">SETTINGS</a>
+    </div>
+    <div style="position: absolute; bottom: 20px; width: 80%; left: 10%;">
+        <form action="index.jsp">
+            <button type="submit" class="activity-btn">Logout</button>
+        </form>
+    </div>
+</div>
+<!-- Toggle Button -->
+<button class="toggle-btn" id="toggleBtn">☰</button>
+<!-- Topbar -->
+<div class="topbar">
+    <div class="dashboard-title">SETTINGS</div>
+    <div class="top-icons">
+        <img src="image/umpsa.png" class="umpsa-icon" alt="UMPSA">
+        <button class="notification-btn" id="notificationBtn">
+            <img src="image/bell.png" alt="Notification">
+        </button>
+        <div class="notification-dropdown" id="notificationDropdown">
+            <p>No new notifications</p>
         </div>
-        <div style="position: absolute; bottom: 20px; width: 80%; left: 10%;">
-            <form action="index.jsp">
-                <button type="submit" class="activity-btn">Logout</button>
-            </form>
+        <img src="StudentImageServlet?studID=${studID}" alt="Profile" class="profile-icon" id="profileBtn">
+        <div class="profile-dropdown" id="profileDropdown">
+            <a href="profile.jsp">My Profile</a>
+            <a href="logout.jsp">Logout</a>
         </div>
     </div>
-
-    <!-- Toggle Button -->
-    <button class="toggle-btn" id="toggleBtn">☰</button>
-
-    <!-- Topbar -->
-    <div class="topbar">
-        <div class="dashboard-title">SETTINGS</div>
-        <div class="top-icons">
-            <img src="image/umpsa.png" class="umpsa-icon" alt="UMPSA">
-            <button class="notification-btn" id="notificationBtn">
-                <img src="image/bell.png" alt="Notification">
-            </button>
-            <div class="notification-dropdown" id="notificationDropdown">
-                <p>No new notifications</p>
+</div>
+<!-- Content -->
+<div class="content" id="content">
+    <div class="settings-container">
+        <form class="form-section" action="UpdateStudentServlet" method="post" enctype="multipart/form-data">
+            <!-- Profile Picture Section -->
+            <div class="profile-picture-section">
+                <h3 style="margin-bottom: 20px; color: #008b8b;">Profile Picture</h3>
+                <img src="StudentImageServlet?studID=${studID}" alt="Current Profile" class="current-profile-pic" id="currentProfilePic" />
+                <div class="file-input-container">
+                    <input type="file" name="profilePicture" id="profilePicture" accept="image/*" onchange="previewImage(this)" />
+                    <label for="profilePicture" class="file-input-label">Choose New Profile Picture</label>
+                </div>
+                <div class="file-info">
+                    Supported formats: JPG, PNG, GIF (Max size: 5MB)
+                </div>
             </div>
-            <img src="StudentImageServlet?studID=${studID}" alt="Profile" class="profile-icon" id="profileBtn">
-            <div class="profile-dropdown" id="profileDropdown">
-                <a href="profile.jsp">My Profile</a>
-                <a href="logout.jsp">Logout</a>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Student ID</label>
+                    <input type="text" name="studID" value="<%= session.getAttribute("studID") %>" readonly />
+                </div>
+                <div class="form-group">
+                    <label>Student Name</label>
+                    <input type="text" name="studName" value="<%= session.getAttribute("studName") %>" required />
+                </div>
             </div>
-        </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="studEmail" value="<%= session.getAttribute("studEmail") %>" required />
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="text" name="studNoPhone" value="<%= session.getAttribute("studNoPhone") %>" required />
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Course</label>
+                    <input type="text" name="studCourse" value="<%= session.getAttribute("studCourse") %>" required />
+                </div>
+                <div class="form-group">
+                    <label>Semester</label>
+                    <select name="studSemester" required>
+                        <option value="1" <%= "1".equals(session.getAttribute("studSemester")) ? "selected" : "" %>>Semester 1</option>
+                        <option value="2" <%= "2".equals(session.getAttribute("studSemester")) ? "selected" : "" %>>Semester 2</option>
+                        <option value="3" <%= "3".equals(session.getAttribute("studSemester")) ? "selected" : "" %>>Semester 3</option>
+                        <option value="4" <%= "4".equals(session.getAttribute("studSemester")) ? "selected" : "" %>>Semester 4</option>
+                        <option value="5" <%= "5".equals(session.getAttribute("studSemester")) ? "selected" : "" %>>Semester 5</option>
+                        <option value="6" <%= "6".equals(session.getAttribute("studSemester")) ? "selected" : "" %>>Semester 6</option>
+                        <option value="7" <%= "7".equals(session.getAttribute("studSemester")) ? "selected" : "" %>>Semester 7</option>
+                        <option value="8" <%= "8".equals(session.getAttribute("studSemester")) ? "selected" : "" %>>Semester 8</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Date of Birth</label>
+                    <input type="date" name="dob" value="<%= session.getAttribute("dob") %>" required />
+                </div>
+                <div class="form-group">
+                    <label>MUET Status</label>
+                    <select name="muetStatus" required>
+                        <option value="Not Taken" <%= "Not Taken".equals(session.getAttribute("muetStatus")) ? "selected" : "" %>>Not Taken</option>
+                        <option value="Band 3" <%= "Band 3".equals(session.getAttribute("muetStatus")) ? "selected" : "" %>>Band 3</option>
+                        <option value="Band 3.5" <%= "Band 3.5".equals(session.getAttribute("muetStatus")) ? "selected" : "" %>>Band 3.5</option>
+                        <option value="Band 4" <%= "Band 4".equals(session.getAttribute("muetStatus")) ? "selected" : "" %>>Band 4</option>
+                        <option value="Band 4.5" <%= "Band 4.5".equals(session.getAttribute("muetStatus")) ? "selected" : "" %>>Band 4.5</option>
+                        <option value="Band 5" <%= "Band 5".equals(session.getAttribute("muetStatus")) ? "selected" : "" %>>Band 5</option>
+                        <option value="Band 5.5" <%= "Band 5.5".equals(session.getAttribute("muetStatus")) ? "selected" : "" %>>Band 5.5</option>
+                        <option value="Band 6" <%= "Band 6".equals(session.getAttribute("muetStatus")) ? "selected" : "" %>>Band 6</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Advisor</label>
+                    <input type="text" name="advisor" value="<%= session.getAttribute("advisor") %>" required />
+                </div>
+            </div>
+            <div class="submit-section">
+                <button type="submit">Update Profile</button>
+            </div>
+        </form>
+        
+        <!-- Hidden fields for messages -->
+        <input type="hidden" id="successMsg" value="<%= request.getParameter("message") != null ? request.getParameter("message") : "" %>">
+        <input type="hidden" id="errorMsg" value="<%= request.getParameter("error") != null ? request.getParameter("error") : "" %>">
     </div>
-
-    <!-- Content -->
-    <div class="content" id="content">
-        <div class="settings-container">
-            <form class="form-section" action="UpdateStudentServlet" method="post" enctype="multipart/form-data">
-                <!-- Profile Picture Section -->
-                <div class="profile-picture-section">
-                    <h3 style="margin-bottom: 20px; color: #008b8b;">Profile Picture</h3>
-                    <img src="StudentImageServlet?studID=${studID}" alt="Current Profile" class="current-profile-pic" id="currentProfilePic" />
-                    <div class="file-input-container">
-                        <input type="file" name="profilePicture" id="profilePicture" accept="image/*" onchange="previewImage(this)" />
-                        <label for="profilePicture" class="file-input-label">Choose New Profile Picture</label>
-                    </div>
-                    <div class="file-info">
-                        Supported formats: JPG, PNG, GIF (Max size: 5MB)
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Student ID</label>
-                        <input type="text" name="studID" value="<%= session.getAttribute("studID") %>" readonly />
-                    </div>
-                    <div class="form-group">
-                        <label>Student Name</label>
-                        <input type="text" name="studName" value="<%= session.getAttribute("studName") %>" required />
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" name="studEmail" value="<%= session.getAttribute("studEmail") %>" required />
-                    </div>
-                    <div class="form-group">
-                        <label>Phone Number</label>
-                        <input type="text" name="studNoPhone" value="<%= session.getAttribute("studNoPhone") %>" required />
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Course</label>
-                        <input type="text" name="studCourse" value="<%= session.getAttribute("studCourse") %>" required />
-                    </div>
-                    <div class="form-group">
-                        <label>Semester</label>
-                        <select name="studSemester" required>
-                            <option value="1" <%= "1".equals(session.getAttribute("studSemester")) ? "selected" : "" %>>Semester 1</option>
-                            <option value="2" <%= "2".equals(session.getAttribute("studSemester")) ? "selected" : "" %>>Semester 2</option>
-                            <option value="3" <%= "3".equals(session.getAttribute("studSemester")) ? "selected" : "" %>>Semester 3</option>
-                            <option value="4" <%= "4".equals(session.getAttribute("studSemester")) ? "selected" : "" %>>Semester 4</option>
-                            <option value="5" <%= "5".equals(session.getAttribute("studSemester")) ? "selected" : "" %>>Semester 5</option>
-                            <option value="6" <%= "6".equals(session.getAttribute("studSemester")) ? "selected" : "" %>>Semester 6</option>
-                            <option value="7" <%= "7".equals(session.getAttribute("studSemester")) ? "selected" : "" %>>Semester 7</option>
-                            <option value="8" <%= "8".equals(session.getAttribute("studSemester")) ? "selected" : "" %>>Semester 8</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Date of Birth</label>
-                        <input type="date" name="dob" value="<%= session.getAttribute("dob") %>" required />
-                    </div>
-                    <div class="form-group">
-                        <label>MUET Status</label>
-                        <select name="muetStatus" required>
-                            <option value="Not Taken" <%= "Not Taken".equals(session.getAttribute("muetStatus")) ? "selected" : "" %>>Not Taken</option>
-                            <option value="Band 3" <%= "Band 3".equals(session.getAttribute("muetStatus")) ? "selected" : "" %>>Band 3</option>
-                            <option value="Band 3.5" <%= "Band 3.5".equals(session.getAttribute("muetStatus")) ? "selected" : "" %>>Band 3.5</option>
-                            <option value="Band 4" <%= "Band 4".equals(session.getAttribute("muetStatus")) ? "selected" : "" %>>Band 4</option>
-                            <option value="Band 4.5" <%= "Band 4.5".equals(session.getAttribute("muetStatus")) ? "selected" : "" %>>Band 4.5</option>
-                            <option value="Band 5" <%= "Band 5".equals(session.getAttribute("muetStatus")) ? "selected" : "" %>>Band 5</option>
-                            <option value="Band 5.5" <%= "Band 5.5".equals(session.getAttribute("muetStatus")) ? "selected" : "" %>>Band 5.5</option>
-                            <option value="Band 6" <%= "Band 6".equals(session.getAttribute("muetStatus")) ? "selected" : "" %>>Band 6</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Advisor</label>
-                        <input type="text" name="advisor" value="<%= session.getAttribute("advisor") %>" required />
-                    </div>
-                </div>
-                <div class="submit-section">
-                    <button type="submit">Update Profile</button>
-                </div>
-            </form>
-            
-            <!-- Hidden fields for messages -->
-            <input type="hidden" id="successMsg" value="<%= request.getParameter("message") != null ? request.getParameter("message") : "" %>">
-            <input type="hidden" id="errorMsg" value="<%= request.getParameter("error") != null ? request.getParameter("error") : "" %>">
-        </div>
-    </div>
+</div>
     
     <!-- Popup Overlay -->
     <div class="popup-overlay" id="popupOverlay"></div>
@@ -598,120 +565,95 @@
     </div>
     
     <script>
-        const sidebar = document.getElementById('sidebar');
-        const toggleBtn = document.getElementById('toggleBtn');
-        const notificationBtn = document.getElementById('notificationBtn');
-        const notificationDropdown = document.getElementById('notificationDropdown');
-        const profileBtn = document.getElementById('profileBtn');
-        const profileDropdown = document.getElementById('profileDropdown');
-
-        toggleBtn.addEventListener('click', () => {
-            sidebar.classList.toggle('closed');
-        });
-
-        notificationBtn.addEventListener('click', function (e) {
-            e.stopPropagation();
-            notificationDropdown.classList.toggle('show');
-            profileDropdown.classList.remove('show');
-        });
-
-        profileBtn.addEventListener('click', function (e) {
-            e.stopPropagation();
-            profileDropdown.classList.toggle('show');
-            notificationDropdown.classList.remove('show');
-        });
-
-        window.addEventListener('click', function () {
-            notificationDropdown.classList.remove('show');
-            profileDropdown.classList.remove('show');
-        });
-
-        function showPopup(type, message) {
-            const overlay = document.getElementById('popupOverlay');
-            const popup = document.getElementById(type + 'Popup');
-            const messageElement = document.getElementById(type + 'Message');
-            
-            messageElement.textContent = message;
-            overlay.style.display = 'block';
-            popup.style.display = 'block';
+const sidebar = document.getElementById('sidebar');
+const toggleBtn = document.getElementById('toggleBtn');
+const notificationBtn = document.getElementById('notificationBtn');
+const notificationDropdown = document.getElementById('notificationDropdown');
+const profileBtn = document.getElementById('profileBtn');
+const profileDropdown = document.getElementById('profileDropdown');
+toggleBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('closed');
+});
+notificationBtn.addEventListener('click', function (e) {
+    e.stopPropagation();
+    notificationDropdown.classList.toggle('show');
+    profileDropdown.classList.remove('show');
+});
+profileBtn.addEventListener('click', function (e) {
+    e.stopPropagation();
+    profileDropdown.classList.toggle('show');
+    notificationDropdown.classList.remove('show');
+});
+window.addEventListener('click', function () {
+    notificationDropdown.classList.remove('show');
+    profileDropdown.classList.remove('show');
+});
+// Only keep settings-related JS (popup, preview, validation)
+function showPopup(type, message) {
+    const overlay = document.getElementById('popupOverlay');
+    const popup = document.getElementById(type + 'Popup');
+    const messageElement = document.getElementById(type + 'Message');
+    messageElement.textContent = message;
+    overlay.style.display = 'block';
+    popup.style.display = 'block';
+}
+function closePopup() {
+    const overlay = document.getElementById('popupOverlay');
+    const successPopup = document.getElementById('successPopup');
+    const errorPopup = document.getElementById('errorPopup');
+    overlay.style.display = 'none';
+    successPopup.style.display = 'none';
+    errorPopup.style.display = 'none';
+}
+function previewImage(input) {
+    if (input.files && input.files[0]) {
+        const file = input.files[0];
+        if (file.size > 5 * 1024 * 1024) {
+            showPopup('error', 'File size must be less than 5MB');
+            input.value = '';
+            return;
         }
-        
-        function closePopup() {
-            const overlay = document.getElementById('popupOverlay');
-            const successPopup = document.getElementById('successPopup');
-            const errorPopup = document.getElementById('errorPopup');
-            
-            overlay.style.display = 'none';
-            successPopup.style.display = 'none';
-            errorPopup.style.display = 'none';
+        if (!file.type.match('image.*')) {
+            showPopup('error', 'Please select an image file');
+            input.value = '';
+            return;
         }
-        
-        function previewImage(input) {
-            if (input.files && input.files[0]) {
-                const file = input.files[0];
-                
-                // Check file size (5MB limit)
-                if (file.size > 5 * 1024 * 1024) {
-                    showPopup('error', 'File size must be less than 5MB');
-                    input.value = '';
-                    return;
-                }
-                
-                // Check file type
-                if (!file.type.match('image.*')) {
-                    showPopup('error', 'Please select an image file');
-                    input.value = '';
-                    return;
-                }
-                
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('currentProfilePic').src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-        
-        // Close popup when clicking on overlay
-        document.getElementById('popupOverlay').addEventListener('click', function() {
-            closePopup();
-        });
-        
-        // Show popup on page load if there are messages
-        window.onload = function() {
-            var successMsg = document.getElementById('successMsg').value;
-            var errorMsg = document.getElementById('errorMsg').value;
-            
-            if (successMsg && successMsg.trim() !== '') {
-                showPopup('success', successMsg);
-            }
-            
-            if (errorMsg && errorMsg.trim() !== '') {
-                showPopup('error', errorMsg);
-            }
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('currentProfilePic').src = e.target.result;
         };
-        
-        // Form validation
-        document.querySelector('form').addEventListener('submit', function(e) {
-            const fileInput = document.getElementById('profilePicture');
-            if (fileInput.files.length > 0) {
-                const file = fileInput.files[0];
-                
-                // Check file size again on submit
-                if (file.size > 5 * 1024 * 1024) {
-                    e.preventDefault();
-                    showPopup('error', 'File size must be less than 5MB');
-                    return;
-                }
-                
-                // Check file type again on submit
-                if (!file.type.match('image.*')) {
-                    e.preventDefault();
-                    showPopup('error', 'Please select an image file');
-                    return;
-                }
-            }
-        });
+        reader.readAsDataURL(file);
+    }
+}
+document.getElementById('popupOverlay').addEventListener('click', function() {
+    closePopup();
+});
+window.onload = function() {
+    var successMsg = document.getElementById('successMsg').value;
+    var errorMsg = document.getElementById('errorMsg').value;
+    if (successMsg && successMsg.trim() !== '') {
+        showPopup('success', successMsg);
+    }
+    if (errorMsg && errorMsg.trim() !== '') {
+        showPopup('error', errorMsg);
+    }
+};
+document.querySelector('form').addEventListener('submit', function(e) {
+    const fileInput = document.getElementById('profilePicture');
+    if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        if (file.size > 5 * 1024 * 1024) {
+            e.preventDefault();
+            showPopup('error', 'File size must be less than 5MB');
+            return;
+        }
+        if (!file.type.match('image.*')) {
+            e.preventDefault();
+            showPopup('error', 'Please select an image file');
+            return;
+        }
+    }
+});
     </script>
 </body>
 </html>
